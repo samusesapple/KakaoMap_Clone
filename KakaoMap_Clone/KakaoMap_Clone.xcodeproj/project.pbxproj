@@ -9,7 +9,7 @@
 /* Begin PBXBuildFile section */
 		F1F2112E2A19CC76000443AB /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1F2112D2A19CC76000443AB /* AppDelegate.swift */; };
 		F1F211302A19CC76000443AB /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1F2112F2A19CC76000443AB /* SceneDelegate.swift */; };
-		F1F211322A19CC76000443AB /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1F211312A19CC76000443AB /* ViewController.swift */; };
+		F1F211322A19CC76000443AB /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1F211312A19CC76000443AB /* MainViewController.swift */; };
 		F1F211352A19CC76000443AB /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F1F211332A19CC76000443AB /* Main.storyboard */; };
 		F1F211372A19CC77000443AB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F1F211362A19CC77000443AB /* Assets.xcassets */; };
 		F1F2113A2A19CC77000443AB /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F1F211382A19CC77000443AB /* LaunchScreen.storyboard */; };
@@ -50,13 +50,15 @@
 		F1F212DF2A19D9E1000443AB /* daum_th_line.png in Resources */ = {isa = PBXBuildFile; fileRef = F1F212C32A19D9E1000443AB /* daum_th_line.png */; };
 		F1F212E02A19D9E1000443AB /* map_pin_shadow.png in Resources */ = {isa = PBXBuildFile; fileRef = F1F212C42A19D9E1000443AB /* map_pin_shadow.png */; };
 		F1F212E12A19D9E1000443AB /* DaumMap.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F1F212C52A19D9E1000443AB /* DaumMap.framework */; };
+		F1F212E42A19DDA8000443AB /* UIView+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1F212E32A19DDA8000443AB /* UIView+Extensions.swift */; };
+		F1F212E62A19DDC2000443AB /* UIViewController+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1F212E52A19DDC2000443AB /* UIViewController+Extensions.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		F1F2112A2A19CC76000443AB /* KakaoMap_Clone.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = KakaoMap_Clone.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F1F2112D2A19CC76000443AB /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		F1F2112F2A19CC76000443AB /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		F1F211312A19CC76000443AB /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		F1F211312A19CC76000443AB /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		F1F211342A19CC76000443AB /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		F1F211362A19CC77000443AB /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		F1F211392A19CC77000443AB /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -106,6 +108,8 @@
 		F1F212C32A19D9E1000443AB /* daum_th_line.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = daum_th_line.png; sourceTree = "<group>"; };
 		F1F212C42A19D9E1000443AB /* map_pin_shadow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = map_pin_shadow.png; sourceTree = "<group>"; };
 		F1F212C52A19D9E1000443AB /* DaumMap.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = DaumMap.framework; sourceTree = "<group>"; };
+		F1F212E32A19DDA8000443AB /* UIView+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Extensions.swift"; sourceTree = "<group>"; };
+		F1F212E52A19DDC2000443AB /* UIViewController+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Extensions.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -152,8 +156,12 @@
 				F1F2129F2A19D9E1000443AB /* DaumMap.embeddedframework */,
 				F1F2112D2A19CC76000443AB /* AppDelegate.swift */,
 				F1F2112F2A19CC76000443AB /* SceneDelegate.swift */,
-				F1F211312A19CC76000443AB /* ViewController.swift */,
-				F1F211332A19CC76000443AB /* Main.storyboard */,
+				F1F212EB2A19F78F000443AB /* Service */,
+				F1F212E92A19F76F000443AB /* Model */,
+				F1F212E82A19F75E000443AB /* View */,
+				F1F212EA2A19F775000443AB /* ViewModel */,
+				F1F212E72A19F74C000443AB /* Controller */,
+				F1F212E22A19DD91000443AB /* Utilities */,
 				F1F211362A19CC77000443AB /* Assets.xcassets */,
 				F1F211382A19CC77000443AB /* LaunchScreen.storyboard */,
 				F1F2113B2A19CC77000443AB /* Info.plist */,
@@ -234,6 +242,52 @@
 				F1F212B82A19D9E1000443AB /* MTMapCircle.h */,
 			);
 			path = Headers;
+			sourceTree = "<group>";
+		};
+		F1F212E22A19DD91000443AB /* Utilities */ = {
+			isa = PBXGroup;
+			children = (
+				F1F212E32A19DDA8000443AB /* UIView+Extensions.swift */,
+				F1F212E52A19DDC2000443AB /* UIViewController+Extensions.swift */,
+			);
+			path = Utilities;
+			sourceTree = "<group>";
+		};
+		F1F212E72A19F74C000443AB /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				F1F211312A19CC76000443AB /* MainViewController.swift */,
+			);
+			path = Controller;
+			sourceTree = "<group>";
+		};
+		F1F212E82A19F75E000443AB /* View */ = {
+			isa = PBXGroup;
+			children = (
+				F1F211332A19CC76000443AB /* Main.storyboard */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		F1F212E92A19F76F000443AB /* Model */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		F1F212EA2A19F775000443AB /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		F1F212EB2A19F78F000443AB /* Service */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Service;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -334,8 +388,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F1F211322A19CC76000443AB /* ViewController.swift in Sources */,
+				F1F211322A19CC76000443AB /* MainViewController.swift in Sources */,
 				F1F2112E2A19CC76000443AB /* AppDelegate.swift in Sources */,
+				F1F212E62A19DDC2000443AB /* UIViewController+Extensions.swift in Sources */,
+				F1F212E42A19DDA8000443AB /* UIView+Extensions.swift in Sources */,
 				F1F211302A19CC76000443AB /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -398,7 +454,7 @@
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
-				EXCLUDED_ARCHS = arm64;
+				EXCLUDED_ARCHS = "";
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -459,7 +515,7 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				EXCLUDED_ARCHS = arm64;
+				EXCLUDED_ARCHS = "";
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -493,6 +549,10 @@
 				);
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = KakaoMap_Clone/Info.plist;
+				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "앱 활성화 상태에만 사용자 위치 정보 권한 요청";
+				INFOPLIST_KEY_NSLocationAlwaysUsageDescription = "사용자 위치 권한 요청 항상 허용";
+				INFOPLIST_KEY_NSLocationUsageDescription = "사용자 위치 권한 요청";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "앱 사용 중 사용자 위치 정보 권한 요청";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
@@ -531,6 +591,10 @@
 				);
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = KakaoMap_Clone/Info.plist;
+				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "앱 활성화 상태에만 사용자 위치 정보 권한 요청";
+				INFOPLIST_KEY_NSLocationAlwaysUsageDescription = "사용자 위치 권한 요청 항상 허용";
+				INFOPLIST_KEY_NSLocationUsageDescription = "사용자 위치 권한 요청";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "앱 사용 중 사용자 위치 정보 권한 요청";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
