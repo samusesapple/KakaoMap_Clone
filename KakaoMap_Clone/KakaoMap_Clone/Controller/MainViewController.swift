@@ -91,6 +91,7 @@ extension MainViewController: CLLocationManagerDelegate {
             locationManager.startUpdatingLocation()
             mapView.showCurrentLocationMarker = true
             mapView.currentLocationTrackingMode = .onWithHeading
+            mapView.showCurrentLocationMarker = true
             mapView.setMapCenter(MTMapPoint(geoCoord: MTMapPointGeo(latitude: latitude ?? 37.576568, longitude: longtitude ?? 127.029148)), animated: true)
             
         case .restricted, .notDetermined:
