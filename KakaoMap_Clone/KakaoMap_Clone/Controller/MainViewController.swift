@@ -62,7 +62,8 @@ class MainViewController: UIViewController {
     
     @objc private func searchBarTapped() {
         searchBarView.getSearchBar().resignFirstResponder()
-        navigationController?.pushViewController(SearchViewController(), animated: false)
+        navigationController?.pushViewController(SearchViewController(lon: String(longtitude ?? 37.576568),
+                                                                      lat: String(latitude ?? 127.029148)), animated: false)
     }
     
     // MARK: - Helpers

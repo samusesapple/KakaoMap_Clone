@@ -11,7 +11,7 @@ class SearchViewController: UIViewController {
 
     // MARK: - Properties
     
-    private let viewModel = SearchViewModel()
+    private var viewModel = SearchViewModel()
     
     private let searchBarView = CustomSearchBarView(placeholder: "장소 및 주소 검색", needBorderLine: true)
     
@@ -60,6 +60,18 @@ class SearchViewController: UIViewController {
     }()
     
     // MARK: - Lifecycle
+    
+    init(lon: String, lat: String) {
+        super.init(nibName: nil, bundle: nil)
+        let viewModel = SearchViewModel(lon: lon, lat: lat)
+        self.viewModel = viewModel
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -167,8 +179,12 @@ extension SearchViewController: UISearchBarDelegate, UISearchResultsUpdating {
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         guard let text = searchBar.text else { return }
         if text != " " {
-            viewModel.getAddressSearchResult(with: text) { [weak self] lon, lat, address, roadAddress in
-                self?.tableView.reloadData()
+//            viewModel.getAddressSearchResult(with: text) { [weak self] lon, lat, address, roadAddress in
+//                // 해당 주소에 대한 검색결과가 있을 시, self.dismiss 후 검색 결과에 대한 정보를 보여주는 view를 main에 띄워야함
+//                self?.tableView.reloadData()
+//            }
+            viewModel.getKeywordSearchResult(with: text) { results in
+                print(results.count)
             }
         }
     }

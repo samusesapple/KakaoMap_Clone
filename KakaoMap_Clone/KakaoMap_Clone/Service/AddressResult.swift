@@ -8,7 +8,7 @@
 import Foundation
 
 // MARK: - SearchAddress
-struct SearchAddress: Codable {
+struct AddressResult: Codable {
     let documents: [Document]?
 }
 
@@ -31,7 +31,6 @@ struct Document: Codable {
 // MARK: - Address
 struct Address: Codable {
     let addressName, bCode, hCode, mainAddressNo: String?
-    let region1DepthName, region2DepthName, region3DepthHName: String?
     let region3DepthName, subAddressNo, x, y: String?
 
     enum CodingKeys: String, CodingKey {
@@ -39,9 +38,6 @@ struct Address: Codable {
         case bCode = "b_code"
         case hCode = "h_code"
         case mainAddressNo = "main_address_no"
-        case region1DepthName = "region_1depth_name"
-        case region2DepthName = "region_2depth_name"
-        case region3DepthHName = "region_3depth_h_name"
         case region3DepthName = "region_3depth_name"
         case subAddressNo = "sub_address_no"
         case x, y

@@ -32,6 +32,11 @@ class SearchViewModel {
     
     private var searchHistories: [SearchHistory]?
     
+    private var searchPage: Int = 1
+    
+    private var longitude: String?
+    private var latitude: String?
+    
     // MARK: - Computed Properties
     /// [get] searchOption 배열 받기
     var getSearchOptions: [SearchOption] {
@@ -44,11 +49,12 @@ class SearchViewModel {
     
     // MARK: - Lifecycle
     
-    init() {
-//        getAddressSearchResult(with: "은하수로 436") { lon, lat, address, roadAddress in
-//            print("위도: \(lon), 경도: \(lat)")
-//        }
+    init(lon: String, lat: String) {
+        self.longitude = lon
+        self.latitude = lat
     }
+    
+    init() { }
     
     
     // MARK: - Functions
@@ -63,7 +69,7 @@ class SearchViewModel {
     
     /// 주소 검색하기 >> return: 위도, 경도, Address, RoadAddress
     func getAddressSearchResult(with address: String, completion: @escaping (String, String, Address, RoadAddress) -> Void) {
-        HttpClient.shared.search(with: address) { [weak self] result in
+        HttpClient.shared.searchAddress(with: address) { [weak self] result in
             guard let document = result.documents?.first else {
                 print("SearchVM - document 없음")
                 return
@@ -75,7 +81,7 @@ class SearchViewModel {
             // 검색 히스토리 배열에 추가하기
             let newHistory = SearchHistory(type: UIImage(systemName: "magnifyingglass")!, searchText: roadAddress.buildingName ?? address)
             
-            if let searchHistories = self?.searchHistories {
+            if (self?.searchHistories) != nil {
                 print("SearchVM - newHistory : \(newHistory)")
                 self?.searchHistories?.append(newHistory)
                 completion(latitude, longitude, addressData, roadAddress)
@@ -86,4 +92,24 @@ class SearchViewModel {
             }
         }
     }
+    
+    func getKeywordSearchResult(with keyword: String, completion: @escaping([Result]) -> Void) {
+        guard let lon = longitude,
+                let lat = latitude else {
+            print(#function)
+            return
+        }
+        HttpClient.shared.searchKeyword(with: keyword,
+                                        lon: lon,
+                                        lat: lat,
+                                        page: searchPage) { result in
+            guard let keywordResultArray = result.documents else {
+                print("SearchVM - 결과 없음")
+                return
+            }
+            print(keywordResultArray.first?.placeName as Any)
+            completion(keywordResultArray)
+        }
+    }
+    
 }
