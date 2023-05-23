@@ -42,7 +42,9 @@ class MainViewController: UIViewController {
     @objc private func showCurrentLocation() {
         print("현재 위치로 이동")
         if locationManager.authorizationStatus == .authorizedAlways || locationManager.authorizationStatus == .authorizedWhenInUse {
-            mapView.currentLocationTrackingMode = .onWithHeading
+            DispatchQueue.global(qos: .userInteractive).async { [weak self] in
+                self?.mapView.currentLocationTrackingMode = .onWithHeading
+            }
         }
     }
     
@@ -89,10 +91,15 @@ extension MainViewController: CLLocationManagerDelegate {
         case .authorizedAlways, .authorizedWhenInUse:
             print("GPS 권한설정 허용됨")
             locationManager.startUpdatingLocation()
-            mapView.showCurrentLocationMarker = true
-            mapView.currentLocationTrackingMode = .onWithHeading
-            mapView.showCurrentLocationMarker = true
-            mapView.setMapCenter(MTMapPoint(geoCoord: MTMapPointGeo(latitude: latitude ?? 37.576568, longitude: longtitude ?? 127.029148)), animated: true)
+            DispatchQueue.global(qos: .userInteractive).async { [weak self] in
+                self?.mapView.showCurrentLocationMarker = true
+                self?.mapView.currentLocationTrackingMode = .onWithHeading
+                self?.mapView.showCurrentLocationMarker = true
+                DispatchQueue.main.async {
+                    self?.mapView.setMapCenter(MTMapPoint(geoCoord: MTMapPointGeo(latitude: self?.latitude ?? 37.576568, longitude: self?.longtitude ?? 127.029148)), animated: true)
+                }
+            }
+
             
         case .restricted, .notDetermined:
             print("GPS 권한설정 X")
