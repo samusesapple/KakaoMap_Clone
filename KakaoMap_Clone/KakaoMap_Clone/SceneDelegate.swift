@@ -16,7 +16,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         
         let window = UIWindow(windowScene: windowScene)
-        window.rootViewController = MainViewController() // 시작할 VC 입력
+        let mainVC = UINavigationController(rootViewController: MainViewController())
+        
+        window.rootViewController = mainVC
         window.makeKeyAndVisible()
         self.window = window
     }

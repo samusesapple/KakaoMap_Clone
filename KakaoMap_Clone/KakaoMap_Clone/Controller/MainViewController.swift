@@ -28,18 +28,20 @@ class MainViewController: UIViewController {
         return button
     }()
     
-    private let searchBarView = CustomSearchBarView(placeholder: "장소를 검색해주세요")
+    private let searchBarView = CustomSearchBarView(placeholder: "장소를 검색해주세요", needBorderLine: false)
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        navigationController?.isNavigationBarHidden = true
+
         mapView.delegate = self
         
         locationManager.delegate = self
         locationManager.desiredAccuracy = kCLLocationAccuracyBest  // 배터리 최적화
         
-        searchBarView.getSearchBar().delegate = self
+        //        searchBarView.getSearchBar().delegate = self
         
-        configureUI()
+        setAutolayout()
         setActions()
 }
     
@@ -58,14 +60,19 @@ class MainViewController: UIViewController {
         print("메뉴 버튼 눌림")
     }
     
+    @objc private func searchBarTapped() {
+        searchBarView.getSearchBar().resignFirstResponder()
+        navigationController?.pushViewController(SearchViewController(), animated: false)
+    }
+    
     // MARK: - Helpers
     
-    private func configureUI() {
+    private func setAutolayout() {
         view.addSubview(mapView)
         mapView.setDimensions(height: view.frame.height, width: view.frame.width)
 
         mapView.addSubview(searchBarView)
-        searchBarView.setDimensions(height: 44, width: view.frame.width - 30)
+        searchBarView.setDimensions(height: 46, width: view.frame.width - 30)
         searchBarView.anchor(top: view.safeAreaLayoutGuide.topAnchor, paddingTop: 10)
         searchBarView.centerX(inView: mapView)
         
@@ -81,6 +88,7 @@ class MainViewController: UIViewController {
     private func setActions() {
         currentLocationButton.addTarget(self, action: #selector(showCurrentLocation), for: .touchUpInside)
         searchBarView.getMenuButton().addTarget(self, action: #selector(menuButtonTapped), for: .touchUpInside)
+        searchBarView.getSearchBar().searchTextField.addTarget(self, action: #selector(searchBarTapped), for: .editingDidBegin)
         hideKeyboardWhenTappedAround()
     }
     

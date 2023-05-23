@@ -8,6 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		F10BA3462A1C5BD300CCBE9D /* CustomSearchBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10BA3452A1C5BD300CCBE9D /* CustomSearchBarView.swift */; };
+		F10BA34A2A1C762A00CCBE9D /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10BA3492A1C762A00CCBE9D /* SearchViewController.swift */; };
+		F10BA34C2A1C829500CCBE9D /* MenuCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10BA34B2A1C829500CCBE9D /* MenuCollectionViewCell.swift */; };
+		F10BA34E2A1C9D0C00CCBE9D /* SearchViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10BA34D2A1C9D0C00CCBE9D /* SearchViewModel.swift */; };
 		F1F2112E2A19CC76000443AB /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1F2112D2A19CC76000443AB /* AppDelegate.swift */; };
 		F1F211302A19CC76000443AB /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1F2112F2A19CC76000443AB /* SceneDelegate.swift */; };
 		F1F211322A19CC76000443AB /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1F211312A19CC76000443AB /* MainViewController.swift */; };
@@ -56,6 +59,9 @@
 
 /* Begin PBXFileReference section */
 		F10BA3452A1C5BD300CCBE9D /* CustomSearchBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomSearchBarView.swift; sourceTree = "<group>"; };
+		F10BA3492A1C762A00CCBE9D /* SearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewController.swift; sourceTree = "<group>"; };
+		F10BA34B2A1C829500CCBE9D /* MenuCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuCollectionViewCell.swift; sourceTree = "<group>"; };
+		F10BA34D2A1C9D0C00CCBE9D /* SearchViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewModel.swift; sourceTree = "<group>"; };
 		F1F2112A2A19CC76000443AB /* KakaoMap_Clone.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = KakaoMap_Clone.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F1F2112D2A19CC76000443AB /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		F1F2112F2A19CC76000443AB /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -257,6 +263,7 @@
 			isa = PBXGroup;
 			children = (
 				F1F211312A19CC76000443AB /* MainViewController.swift */,
+				F10BA3492A1C762A00CCBE9D /* SearchViewController.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -265,6 +272,7 @@
 			isa = PBXGroup;
 			children = (
 				F10BA3452A1C5BD300CCBE9D /* CustomSearchBarView.swift */,
+				F10BA34B2A1C829500CCBE9D /* MenuCollectionViewCell.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -279,6 +287,7 @@
 		F1F212EA2A19F775000443AB /* ViewModel */ = {
 			isa = PBXGroup;
 			children = (
+				F10BA34D2A1C9D0C00CCBE9D /* SearchViewModel.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -389,8 +398,11 @@
 			files = (
 				F1F211322A19CC76000443AB /* MainViewController.swift in Sources */,
 				F1F2112E2A19CC76000443AB /* AppDelegate.swift in Sources */,
+				F10BA34A2A1C762A00CCBE9D /* SearchViewController.swift in Sources */,
+				F10BA34C2A1C829500CCBE9D /* MenuCollectionViewCell.swift in Sources */,
 				F10BA3462A1C5BD300CCBE9D /* CustomSearchBarView.swift in Sources */,
 				F1F212E62A19DDC2000443AB /* UIViewController+Extensions.swift in Sources */,
+				F10BA34E2A1C9D0C00CCBE9D /* SearchViewModel.swift in Sources */,
 				F1F212E42A19DDA8000443AB /* UIView+Extensions.swift in Sources */,
 				F1F211302A19CC76000443AB /* SceneDelegate.swift in Sources */,
 			);

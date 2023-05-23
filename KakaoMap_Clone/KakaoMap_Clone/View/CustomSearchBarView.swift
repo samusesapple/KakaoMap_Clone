@@ -15,7 +15,6 @@ class CustomSearchBarView: UIView {
         let button = UIButton(type: .system)
         button.tintColor = .black
         button.setImage(UIImage(systemName: "line.3.horizontal"), for: .normal)
-        button.setImage(UIImage(systemName: "chevron.left"), for: .selected)
         return button
     }()
     
@@ -25,7 +24,7 @@ class CustomSearchBarView: UIView {
         sb.autocapitalizationType = .none
         sb.autocorrectionType = .no
         sb.setImage(UIImage(), for: .search, state: .normal)
-        sb.searchTextField.borderStyle = .line
+        sb.searchTextField.borderStyle = .none
         sb.searchTextField.textAlignment = .left
         sb.searchTextField.backgroundColor = .white
         sb.searchTextField.textColor = .black
@@ -35,7 +34,7 @@ class CustomSearchBarView: UIView {
     
     // MARK: - Lifecycle
     
-    init(placeholder: String) {
+    init(placeholder: String, needBorderLine: Bool) {
         super.init(frame: .zero)
         
         self.layer.cornerRadius = 4
@@ -45,6 +44,9 @@ class CustomSearchBarView: UIView {
         searchBar.placeholder = placeholder
         
         setAutolayout()
+        if needBorderLine {
+            setBorderLine()
+        }
     }
     
     required init?(coder: NSCoder) {
@@ -61,6 +63,13 @@ class CustomSearchBarView: UIView {
         addSubview(searchBar)
         searchBar.anchor(left: menuButton.rightAnchor, right: self.rightAnchor, paddingLeft: 0, paddingRight: 10)
         searchBar.centerY(inView: self)
+    }
+    
+    private func setBorderLine() {
+        clipsToBounds = true
+        layer.borderColor = UIColor.lightGray.withAlphaComponent(0.5).cgColor
+        layer.borderWidth = 1
+        menuButton.setImage(UIImage(systemName: "chevron.left"), for: .normal)
     }
     
     func getMenuButton() -> UIButton {
