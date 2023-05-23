@@ -10,9 +10,9 @@ import CoreLocation
 
 class MainViewController: UIViewController {
     
-    let locationManager = CLLocationManager()
-    var longtitude: Double?
-    var latitude: Double?
+    private let locationManager = CLLocationManager()
+    private var longtitude: Double?
+    private var latitude: Double?
     
     private let mapView: MTMapView = {
         let mapView = MTMapView()
@@ -28,31 +28,47 @@ class MainViewController: UIViewController {
         return button
     }()
     
+    private let searchBarView = CustomSearchBarView(placeholder: "장소를 검색해주세요")
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         mapView.delegate = self
-        configureUI()
-        setLocationManager()
         
-        currentLocationButton.addTarget(self, action: #selector(showCurrentLocation), for: .touchUpInside)
-    }
+        locationManager.delegate = self
+        locationManager.desiredAccuracy = kCLLocationAccuracyBest  // 배터리 최적화
+        
+        searchBarView.getSearchBar().delegate = self
+        
+        configureUI()
+        setActions()
+}
     
     // MARK: - Actions
     
     @objc private func showCurrentLocation() {
         print("현재 위치로 이동")
         if locationManager.authorizationStatus == .authorizedAlways || locationManager.authorizationStatus == .authorizedWhenInUse {
-            DispatchQueue.global(qos: .userInteractive).async { [weak self] in
+            DispatchQueue.global(qos: .background).async { [weak self] in
                 self?.mapView.currentLocationTrackingMode = .onWithHeading
             }
         }
     }
     
+    @objc private func menuButtonTapped() {
+        print("메뉴 버튼 눌림")
+    }
+    
     // MARK: - Helpers
     
-    func configureUI() {
+    private func configureUI() {
         view.addSubview(mapView)
         mapView.setDimensions(height: view.frame.height, width: view.frame.width)
+
+        mapView.addSubview(searchBarView)
+        searchBarView.setDimensions(height: 44, width: view.frame.width - 30)
+        searchBarView.anchor(top: view.safeAreaLayoutGuide.topAnchor, paddingTop: 10)
+        searchBarView.centerX(inView: mapView)
+        
         
         mapView.addSubview(currentLocationButton)
         currentLocationButton.setDimensions(height: 50, width: 50)
@@ -62,12 +78,13 @@ class MainViewController: UIViewController {
         }
     }
     
-    func setLocationManager() {
-        locationManager.desiredAccuracy = kCLLocationAccuracyBest  // 배터리 최적화
-        locationManager.delegate = self
+    private func setActions() {
+        currentLocationButton.addTarget(self, action: #selector(showCurrentLocation), for: .touchUpInside)
+        searchBarView.getMenuButton().addTarget(self, action: #selector(menuButtonTapped), for: .touchUpInside)
+        hideKeyboardWhenTappedAround()
     }
     
-    func showRequestLocationServiceAlert() {
+    private func showRequestLocationServiceAlert() {
         let requestLocationServiceAlert = UIAlertController(title: "위치 정보 이용", message: "위치 서비스를 사용할 수 없습니다.\n디바이스의 '설정 > 개인정보 보호'에서 위치 서비스를 켜주세요.", preferredStyle: .alert)
         let presentSettings = UIAlertAction(title: "설정으로 이동", style: .destructive) { _ in
             if let appSetting = URL(string: UIApplication.openSettingsURLString) {
@@ -91,7 +108,7 @@ extension MainViewController: CLLocationManagerDelegate {
         case .authorizedAlways, .authorizedWhenInUse:
             print("GPS 권한설정 허용됨")
             locationManager.startUpdatingLocation()
-            DispatchQueue.global(qos: .userInteractive).async { [weak self] in
+            DispatchQueue.global(qos: .background).async { [weak self] in
                 self?.mapView.showCurrentLocationMarker = true
                 self?.mapView.currentLocationTrackingMode = .onWithHeading
                 self?.mapView.showCurrentLocationMarker = true
@@ -100,7 +117,6 @@ extension MainViewController: CLLocationManagerDelegate {
                 }
             }
 
-            
         case .restricted, .notDetermined:
             print("GPS 권한설정 X")
             locationManager.requestWhenInUseAuthorization()
@@ -125,5 +141,11 @@ extension MainViewController: CLLocationManagerDelegate {
 // MARK: - MTMapViewDelegate
 
 extension MainViewController: MTMapViewDelegate {
+    
+}
+
+// MARK: - UISearchBarDelegate
+
+extension MainViewController: UISearchBarDelegate {
     
 }
