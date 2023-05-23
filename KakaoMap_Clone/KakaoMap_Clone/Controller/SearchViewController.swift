@@ -52,6 +52,7 @@ class SearchViewController: UIViewController {
         let tv = UITableView()
         tv.tableHeaderView = header
         tv.backgroundColor = .white
+        tv.rowHeight = view.frame.height / 15
         tv.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
         tv.dataSource = self
         tv.delegate = self
@@ -68,6 +69,7 @@ class SearchViewController: UIViewController {
         setActions()
         
         searchBarView.getSearchBar().searchTextField.becomeFirstResponder()
+        searchBarView.getSearchBar().delegate = self
     }
 
     // MARK: - Actions
@@ -106,13 +108,13 @@ class SearchViewController: UIViewController {
 extension SearchViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
 
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return viewModel.searchOptions.count
+        return viewModel.getSearchOptions.count
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "menuCell", for: indexPath) as! MenuCollectionViewCell
         cell.contentView.backgroundColor = .clear
-        cell.configureUI(with: viewModel.searchOptions[indexPath.row])
+        cell.configureUI(with: viewModel.getSearchOptions[indexPath.row])
         return cell
     }
     
@@ -121,7 +123,7 @@ extension SearchViewController: UICollectionViewDelegate, UICollectionViewDataSo
     }
 
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let cellWidth = viewModel.getCellWidth(with: viewModel.searchOptions[indexPath.row])
+        let cellWidth = viewModel.getCellWidth(with: viewModel.getSearchOptions[indexPath.row])
         return CGSize(width: cellWidth, height: 45)
     }
 
@@ -132,16 +134,18 @@ extension SearchViewController: UICollectionViewDelegate, UICollectionViewDataSo
 extension SearchViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 10
+        print(viewModel.getSetSearchHistories.count)
+        return viewModel.getSetSearchHistories.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cell")! as UITableViewCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
         cell.backgroundColor = .clear
+        cell.textLabel?.text = viewModel.getSetSearchHistories[indexPath.row].searchText
+        cell.imageView?.image = viewModel.getSetSearchHistories[indexPath.row].type
         
         let backgroundColorView = UIView()
         backgroundColorView.backgroundColor = UIColor.lightGray.withAlphaComponent(0.5)
-        
         cell.selectedBackgroundView = backgroundColorView
         return cell
     }
@@ -151,4 +155,21 @@ extension SearchViewController: UITableViewDelegate, UITableViewDataSource {
         tableView.deselectRow(at: indexPath, animated: true)
     }
     
+}
+
+// MARK: - UISearchBarDelegate
+
+extension SearchViewController: UISearchBarDelegate, UISearchResultsUpdating {
+    func updateSearchResults(for searchController: UISearchController) {
+//        print("검색중")
+    }
+    
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        guard let text = searchBar.text else { return }
+        if text != " " {
+            viewModel.getAddressSearchResult(with: text) { [weak self] lon, lat, address, roadAddress in
+                self?.tableView.reloadData()
+            }
+        }
+    }
 }

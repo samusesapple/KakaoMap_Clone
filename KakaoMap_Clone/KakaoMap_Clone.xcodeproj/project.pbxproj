@@ -7,10 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		AD5756FF6B7DCE930742830F /* Pods_KakaoMap_Clone.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9B7903C5A0ED71AA5660026B /* Pods_KakaoMap_Clone.framework */; };
 		F10BA3462A1C5BD300CCBE9D /* CustomSearchBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10BA3452A1C5BD300CCBE9D /* CustomSearchBarView.swift */; };
 		F10BA34A2A1C762A00CCBE9D /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10BA3492A1C762A00CCBE9D /* SearchViewController.swift */; };
 		F10BA34C2A1C829500CCBE9D /* MenuCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10BA34B2A1C829500CCBE9D /* MenuCollectionViewCell.swift */; };
 		F10BA34E2A1C9D0C00CCBE9D /* SearchViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10BA34D2A1C9D0C00CCBE9D /* SearchViewModel.swift */; };
+		F10BA3502A1CBAA500CCBE9D /* HttpClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10BA34F2A1CBAA500CCBE9D /* HttpClient.swift */; };
+		F1B8F7552A1CC0BC00D3B45E /* SearchAddress.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1B8F7542A1CC0BC00D3B45E /* SearchAddress.swift */; };
 		F1F2112E2A19CC76000443AB /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1F2112D2A19CC76000443AB /* AppDelegate.swift */; };
 		F1F211302A19CC76000443AB /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1F2112F2A19CC76000443AB /* SceneDelegate.swift */; };
 		F1F211322A19CC76000443AB /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1F211312A19CC76000443AB /* MainViewController.swift */; };
@@ -58,10 +61,15 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		281B92ADB49BCA945191C97F /* Pods-KakaoMap_Clone.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KakaoMap_Clone.release.xcconfig"; path = "Target Support Files/Pods-KakaoMap_Clone/Pods-KakaoMap_Clone.release.xcconfig"; sourceTree = "<group>"; };
+		9003889F509E75CBAFFC9A29 /* Pods-KakaoMap_Clone.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KakaoMap_Clone.debug.xcconfig"; path = "Target Support Files/Pods-KakaoMap_Clone/Pods-KakaoMap_Clone.debug.xcconfig"; sourceTree = "<group>"; };
+		9B7903C5A0ED71AA5660026B /* Pods_KakaoMap_Clone.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_KakaoMap_Clone.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		F10BA3452A1C5BD300CCBE9D /* CustomSearchBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomSearchBarView.swift; sourceTree = "<group>"; };
 		F10BA3492A1C762A00CCBE9D /* SearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewController.swift; sourceTree = "<group>"; };
 		F10BA34B2A1C829500CCBE9D /* MenuCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuCollectionViewCell.swift; sourceTree = "<group>"; };
 		F10BA34D2A1C9D0C00CCBE9D /* SearchViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewModel.swift; sourceTree = "<group>"; };
+		F10BA34F2A1CBAA500CCBE9D /* HttpClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HttpClient.swift; sourceTree = "<group>"; };
+		F1B8F7542A1CC0BC00D3B45E /* SearchAddress.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchAddress.swift; sourceTree = "<group>"; };
 		F1F2112A2A19CC76000443AB /* KakaoMap_Clone.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = KakaoMap_Clone.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F1F2112D2A19CC76000443AB /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		F1F2112F2A19CC76000443AB /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -133,18 +141,29 @@
 				F1F211C82A19D0AD000443AB /* SystemConfiguration.framework in Frameworks */,
 				F1F2129E2A19D99F000443AB /* DaumMap.framework in Frameworks */,
 				F1F211C42A19D08C000443AB /* OpenGLES.framework in Frameworks */,
+				AD5756FF6B7DCE930742830F /* Pods_KakaoMap_Clone.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		BF4A694583B73075834BBCBF /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				9003889F509E75CBAFFC9A29 /* Pods-KakaoMap_Clone.debug.xcconfig */,
+				281B92ADB49BCA945191C97F /* Pods-KakaoMap_Clone.release.xcconfig */,
+			);
+			path = Pods;
+			sourceTree = "<group>";
+		};
 		F1F211212A19CC76000443AB = {
 			isa = PBXGroup;
 			children = (
 				F1F2112C2A19CC76000443AB /* KakaoMap_Clone */,
 				F1F2112B2A19CC76000443AB /* Products */,
 				F1F211B92A19D037000443AB /* Frameworks */,
+				BF4A694583B73075834BBCBF /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -187,6 +206,7 @@
 				F1F211BC2A19D046000443AB /* libc++.tbd */,
 				F1F211BA2A19D037000443AB /* CoreLocation.framework */,
 				F1F212822A19D99F000443AB /* DaumMap.framework */,
+				9B7903C5A0ED71AA5660026B /* Pods_KakaoMap_Clone.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -295,6 +315,8 @@
 		F1F212EB2A19F78F000443AB /* Service */ = {
 			isa = PBXGroup;
 			children = (
+				F10BA34F2A1CBAA500CCBE9D /* HttpClient.swift */,
+				F1B8F7542A1CC0BC00D3B45E /* SearchAddress.swift */,
 			);
 			path = Service;
 			sourceTree = "<group>";
@@ -306,9 +328,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = F1F2113E2A19CC77000443AB /* Build configuration list for PBXNativeTarget "KakaoMap_Clone" */;
 			buildPhases = (
+				53A0950E43113613BBB974FA /* [CP] Check Pods Manifest.lock */,
 				F1F211262A19CC76000443AB /* Sources */,
 				F1F211272A19CC76000443AB /* Frameworks */,
 				F1F211282A19CC76000443AB /* Resources */,
+				F62F020A085FBC7DDED0F496 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -391,13 +415,57 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		53A0950E43113613BBB974FA /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-KakaoMap_Clone-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		F62F020A085FBC7DDED0F496 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-KakaoMap_Clone/Pods-KakaoMap_Clone-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-KakaoMap_Clone/Pods-KakaoMap_Clone-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-KakaoMap_Clone/Pods-KakaoMap_Clone-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		F1F211262A19CC76000443AB /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F1B8F7552A1CC0BC00D3B45E /* SearchAddress.swift in Sources */,
 				F1F211322A19CC76000443AB /* MainViewController.swift in Sources */,
 				F1F2112E2A19CC76000443AB /* AppDelegate.swift in Sources */,
+				F10BA3502A1CBAA500CCBE9D /* HttpClient.swift in Sources */,
 				F10BA34A2A1C762A00CCBE9D /* SearchViewController.swift in Sources */,
 				F10BA34C2A1C829500CCBE9D /* MenuCollectionViewCell.swift in Sources */,
 				F10BA3462A1C5BD300CCBE9D /* CustomSearchBarView.swift in Sources */,
@@ -540,6 +608,7 @@
 		};
 		F1F2113F2A19CC77000443AB /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 9003889F509E75CBAFFC9A29 /* Pods-KakaoMap_Clone.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -581,6 +650,7 @@
 		};
 		F1F211402A19CC77000443AB /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 281B92ADB49BCA945191C97F /* Pods-KakaoMap_Clone.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
