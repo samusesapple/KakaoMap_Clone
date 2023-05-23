@@ -39,7 +39,7 @@ Authorization status 확인 후, currentLocationTrackingMode를 실행했음에�
 경고 메세지를 다시 읽어보니, 해당 코드의 실행시점에만 집중하고 UI 관련된 코드가 아니라는 경고 메세지 부분을 간과했었다. <br>
 mapView의 센터 위치를 잡는 코드를 제외한, mapView 설정하는 코드를 global queue에서 async하게 동작하도록 수정하여 문제를 해결할 수 있었다. <br>
 꼼꼼하게 경고 메세지를 확인하고 대처하는 것이 중요하다는 것을 다시 한번 깨달았다.
-<img width="941" alt="image" src="https://github.com/samusesapple/KakaoMap_Clone/assets/126672733/5ddfb667-70f4-4d94-9097-4854bd453c70">
+<img width="931" alt="image" src="https://github.com/samusesapple/KakaoMap_Clone/assets/126672733/704fd6ea-ccb3-43e4-ac94-a1a78cc3fb10">
 
 
 
