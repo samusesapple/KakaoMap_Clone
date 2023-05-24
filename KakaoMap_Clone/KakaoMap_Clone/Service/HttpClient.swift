@@ -19,9 +19,10 @@ class HttpClient {
     
     // MARK: - Functions
     
-    private func addressParameters(query: String) -> [String: Any] {
+    private func currentAddressParameters(lon: String, lat: String) -> [String: Any] {
         [
-            "query": query
+            "x": lon,
+            "y": lat
         ]
     }
     
@@ -35,19 +36,19 @@ class HttpClient {
     }
     
     /// 주소로 검색하기 (건물명, 도로명, 지번, 우편번호 및 좌표)
-    func searchAddress(with address: String, completion: @escaping (AddressResult) -> Void) {
-        let url = "https://dapi.kakao.com/v2/local/search/address.json"
+    func getCurrentAddress(lon: String, lat: String, completion: @escaping (CurrentAddressResult) -> Void) {
+        let url = "https://dapi.kakao.com/v2/local/geo/coord2regioncode.json"
         AF.request(url,
                    method: .get,
-                   parameters: addressParameters(query: address),
+                   parameters: currentAddressParameters(lon: lon, lat: lat),
                    encoding: URLEncoding.default,
                    headers: headers)
         .validate(statusCode: 200..<300)
-        .responseDecodable(of: AddressResult.self) { response in
+        .responseDecodable(of: CurrentAddressResult.self) { response in
             let result = response.result
             switch result {
-            case .success(let searchAddress):
-                completion(searchAddress)
+            case .success(let result):
+                completion(result)
             case .failure(let error):
                 print(error)
             }
@@ -79,5 +80,11 @@ class HttpClient {
                 print(error)
             }
         }
+    }
+    
+    /// url로부터 이미지 받아오기
+    func getImage(from url: String, completion: @escaping (UIImage) -> Void) {
+        let url = URL(string: url)!
+        
     }
 }

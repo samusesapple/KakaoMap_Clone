@@ -8,7 +8,7 @@
 import UIKit
 
 class SearchViewController: UIViewController {
-
+    
     // MARK: - Properties
     
     private var viewModel = SearchViewModel()
@@ -39,7 +39,7 @@ class SearchViewController: UIViewController {
     private lazy var tableView: UITableView = {
         let header = UIView()
         header.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: 80)
-    
+        
         let currentLabel = UILabel()
         currentLabel.text = "최근 검색"
         currentLabel.textColor = .black
@@ -81,7 +81,7 @@ class SearchViewController: UIViewController {
         searchBarView.getSearchBar().searchTextField.becomeFirstResponder()
         searchBarView.getSearchBar().delegate = self
     }
-
+    
     // MARK: - Actions
     
     @objc private func backButtonTapped() {
@@ -117,11 +117,11 @@ class SearchViewController: UIViewController {
 // MARK: - UICollectionViewDelegate & UICollectionViewDataSource & UICollectionViewDelegateFlowLayout
 
 extension SearchViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
-
+    
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return viewModel.getSearchOptions.count
     }
-
+    
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "menuCell", for: indexPath) as! MenuCollectionViewCell
         cell.contentView.backgroundColor = .clear
@@ -132,12 +132,12 @@ extension SearchViewController: UICollectionViewDelegate, UICollectionViewDataSo
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         print("선택한 장소 분류해서 보여주기")
     }
-
+    
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let cellWidth = viewModel.getCellWidth(with: viewModel.getSearchOptions[indexPath.row])
         return CGSize(width: cellWidth, height: 45)
     }
-
+    
 }
 
 // MARK: - UITableViewDelegate & UITableViewDataSource
@@ -162,8 +162,21 @@ extension SearchViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        print("선택된 장소의 상세 페이지 보여주기")
         tableView.deselectRow(at: indexPath, animated: true)
+
+        guard let cell = tableView.cellForRow(at: indexPath),
+        let keyword = cell.textLabel?.text,
+        let image = cell.imageView?.image else { return }
+        // 1. 장소 정보 없는 검색의 경우 - 현재 위치 기준으로 해당 키워드로 검색 -> SearchResultVC에 결과 띄우기
+        if image == UIImage(systemName: "magnifyingglass") {
+            viewModel.getKeywordSearchResult(with: keyword) { [weak self] results in
+                self?.tableView.reloadData()
+                let searchVC = SearchResultViewController(keyword: keyword, results: results)
+                searchVC.delegate = self
+                self?.navigationController?.pushViewController(searchVC, animated: false)
+            }
+        }
+        // 2. 장소 정보 있는 경우 - 장소의 상세 페이지 보여주기
     }
     
 }
@@ -172,16 +185,12 @@ extension SearchViewController: UITableViewDelegate, UITableViewDataSource {
 
 extension SearchViewController: UISearchBarDelegate, UISearchResultsUpdating {
     func updateSearchResults(for searchController: UISearchController) {
-//        print("검색중")
+        //        print("검색중")
     }
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         guard let text = searchBar.text else { return }
         if text != " " {
-//            viewModel.getAddressSearchResult(with: text) { [weak self] lon, lat, address, roadAddress in
-//                // 해당 주소에 대한 검색결과가 있을 시, self.dismiss 후 검색 결과에 대한 정보를 보여주는 view를 main에 띄워야함
-//                self?.tableView.reloadData()
-//            }
             viewModel.getKeywordSearchResult(with: text) { [weak self] results in
                 self?.tableView.reloadData()
                 let searchVC = SearchResultViewController(keyword: text, results: results)

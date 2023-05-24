@@ -10,10 +10,7 @@ import Foundation
 class MainViewModel {
     
     // MARK: - Stored Properties
-    
-    private var longtitude: Double = 0.0
-    private var latitude: Double = 0.0
-    
+
     
     // MARK: - Computed Properties
 
@@ -21,4 +18,17 @@ class MainViewModel {
     
     // MARK: - Methods
     
+    /// 현재 위치로 주소 정보 받기
+    func getAddressSearchResult(lon: Double, lat: Double, completion: @escaping (String) -> Void) {
+        let stringLon = String(lon)
+        let stringLat = String(lat)
+        HttpClient.shared.getCurrentAddress(lon: stringLon, lat: stringLat) { result in
+            guard let document = result.documents?.first,
+                  let currentAddress = document.addressName else {
+                print("SearchVM - document 없음")
+                return
+            }
+            completion(currentAddress)
+        }
+    }
 }

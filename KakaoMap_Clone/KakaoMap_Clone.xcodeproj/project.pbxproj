@@ -19,6 +19,7 @@
 		F1B8F75C2A1D9F0000D3B45E /* SearchResultViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1B8F75B2A1D9F0000D3B45E /* SearchResultViewController.swift */; };
 		F1B8F75E2A1DA08100D3B45E /* SearchResultViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1B8F75D2A1DA08100D3B45E /* SearchResultViewModel.swift */; };
 		F1B8F7602A1DCBD800D3B45E /* SearchResultTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1B8F75F2A1DCBD800D3B45E /* SearchResultTableViewCell.swift */; };
+		F1B8F7622A1DD87500D3B45E /* ReviewStarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1B8F7612A1DD87500D3B45E /* ReviewStarView.swift */; };
 		F1F2112E2A19CC76000443AB /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1F2112D2A19CC76000443AB /* AppDelegate.swift */; };
 		F1F211302A19CC76000443AB /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1F2112F2A19CC76000443AB /* SceneDelegate.swift */; };
 		F1F211322A19CC76000443AB /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1F211312A19CC76000443AB /* MainViewController.swift */; };
@@ -80,6 +81,7 @@
 		F1B8F75B2A1D9F0000D3B45E /* SearchResultViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultViewController.swift; sourceTree = "<group>"; };
 		F1B8F75D2A1DA08100D3B45E /* SearchResultViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultViewModel.swift; sourceTree = "<group>"; };
 		F1B8F75F2A1DCBD800D3B45E /* SearchResultTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultTableViewCell.swift; sourceTree = "<group>"; };
+		F1B8F7612A1DD87500D3B45E /* ReviewStarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewStarView.swift; sourceTree = "<group>"; };
 		F1F2112A2A19CC76000443AB /* KakaoMap_Clone.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = KakaoMap_Clone.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F1F2112D2A19CC76000443AB /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		F1F2112F2A19CC76000443AB /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -303,6 +305,7 @@
 			children = (
 				F1F211382A19CC77000443AB /* LaunchScreen.storyboard */,
 				F10BA3452A1C5BD300CCBE9D /* CustomSearchBarView.swift */,
+				F1B8F7612A1DD87500D3B45E /* ReviewStarView.swift */,
 				F10BA34B2A1C829500CCBE9D /* MenuCollectionViewCell.swift */,
 				F1B8F75F2A1DCBD800D3B45E /* SearchResultTableViewCell.swift */,
 			);
@@ -489,6 +492,7 @@
 				F1B8F75C2A1D9F0000D3B45E /* SearchResultViewController.swift in Sources */,
 				F10BA3462A1C5BD300CCBE9D /* CustomSearchBarView.swift in Sources */,
 				F1F212E62A19DDC2000443AB /* UIViewController+Extensions.swift in Sources */,
+				F1B8F7622A1DD87500D3B45E /* ReviewStarView.swift in Sources */,
 				F10BA34E2A1C9D0C00CCBE9D /* SearchViewModel.swift in Sources */,
 				F1F212E42A19DDA8000443AB /* UIView+Extensions.swift in Sources */,
 				F1B8F75E2A1DA08100D3B45E /* SearchResultViewModel.swift in Sources */,

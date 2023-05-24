@@ -33,8 +33,8 @@ class SearchResultViewController: UIViewController {
     private lazy var tableView: UITableView = {
         let tv = UITableView()
         tv.backgroundColor = .white
-        tv.rowHeight = view.frame.height / 15
-        tv.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
+        tv.rowHeight = (view.frame.height / 5) - 10
+        tv.register(SearchResultTableViewCell.self, forCellReuseIdentifier: "resultCell")
         tv.dataSource = self
         tv.delegate = self
         return tv
@@ -42,7 +42,7 @@ class SearchResultViewController: UIViewController {
     
     // MARK: - Lifecycle
     
-    init(keyword: String, results: [Any]) {
+    init(keyword: String, results: [KeywordDocument]) {
         super.init(nibName: nil, bundle: nil)
         let viewModel = SearchResultViewModel(keyword: keyword, results: results)
         self.viewModel = viewModel
@@ -117,27 +117,20 @@ class SearchResultViewController: UIViewController {
 extension SearchResultViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        print(viewModel.getResults.count)
         return viewModel.getResults.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
-        cell.backgroundColor = .clear
-//        cell.textLabel?.text = viewModel.getResults[indexPath.row].searchText
-//        cell.imageView?.image = viewModel.getResults[indexPath.row].type
-        
-        let backgroundColorView = UIView()
-        backgroundColorView.backgroundColor = UIColor.lightGray.withAlphaComponent(0.5)
-        cell.selectedBackgroundView = backgroundColorView
+        let cell = tableView.dequeueReusableCell(withIdentifier: "resultCell", for: indexPath) as! SearchResultTableViewCell
+        cell.configureUIwithData(data: viewModel.getResults[indexPath.row])
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         print("선택된 장소의 상세 페이지 보여주기")
         tableView.deselectRow(at: indexPath, animated: true)
-        let result = viewModel.getResults[indexPath.row] as? KeywordDocument
-        guard let placeName = result?.placeName else {
+        let result = viewModel.getResults[indexPath.row]
+        guard let placeName = result.placeName else {
             print("SearchResultVC - placeName error")
             return
         }

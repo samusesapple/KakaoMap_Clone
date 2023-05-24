@@ -92,7 +92,7 @@ class MainViewController: UIViewController {
         hideKeyboardWhenTappedAround()
     }
     
-    // 위치 사용 권한 허용 체크 및 locationManager 세팅
+    // 위치 사용 권한 허용 체크 및 locationManager 세팅 및 searchBar - placeholder 현재 위치로 세팅
     private func setLocationManager() {
         locationManager.delegate = self
         locationManager.desiredAccuracy = kCLLocationAccuracyBest  // 배터리 최적화
@@ -102,6 +102,14 @@ class MainViewController: UIViewController {
         
         DispatchQueue.global(qos: .background).async { [weak self] in
             self?.mapView.currentLocationTrackingMode = .onWithHeading
+            guard let coordinate = self?.locationManager.location?.coordinate else {
+                print("location update 아직 안된 상태")
+                return
+            }
+            self?.viewModel.getAddressSearchResult(lon: coordinate.longitude,
+                                             lat: coordinate.latitude) { currentAddress in
+                self?.searchBarView.getSearchBar().placeholder = currentAddress
+            }
         }
         
         

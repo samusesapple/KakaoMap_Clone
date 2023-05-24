@@ -10,16 +10,16 @@ import Foundation
 class SearchResultViewModel {
     
     // MARK: - Stored Properties
-    
+
     private var keyword: String?
     
-    private var results: [Any]?
+    private var results: [KeywordDocument]?
     
     private var tappedHistory: [SearchHistory] = []
     
     // MARK: - Computed Properties
     
-    var getResults: [Any] {
+    var getResults: [KeywordDocument] {
         get {
             return results ?? []
         }
@@ -34,7 +34,7 @@ class SearchResultViewModel {
     
     // MARK: - Initializer
     
-    init(keyword: String, results: [Any]) {
+    init(keyword: String, results: [KeywordDocument]) {
         self.keyword = keyword
         self.results = results
     }

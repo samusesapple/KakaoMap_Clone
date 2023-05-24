@@ -78,32 +78,6 @@ class SearchViewModel {
         }
     }
     
-    /// 주소 검색하기 >> return: 위도, 경도, Address, RoadAddress
-    func getAddressSearchResult(with address: String, completion: @escaping (String, String, Address, RoadAddress) -> Void) {
-        HttpClient.shared.searchAddress(with: address) { [weak self] result in
-            guard let document = result.documents?.first else {
-                print("SearchVM - document 없음")
-                return
-            }
-            guard let longitude = document.x,
-                  let latitude = document.y,
-                  let addressData = document.address,
-                  let roadAddress = document.roadAddress else { return }
-            // 검색 히스토리 배열에 추가하기
-            let newHistory = SearchHistory(type: UIImage(systemName: "magnifyingglass")!, searchText: roadAddress.buildingName ?? address)
-            
-            if (self?.searchHistories) != nil {
-                print("SearchVM - newHistory : \(newHistory)")
-                self?.searchHistories?.append(newHistory)
-                completion(latitude, longitude, addressData, roadAddress)
-            } else {
-                print("SearchVM - newHistory로 배열 초기화")
-                self?.searchHistories = [newHistory]
-                completion(latitude, longitude, addressData, roadAddress)
-            }
-        }
-    }
-    
     /// 현재 위치 기준 - 키워드로 검색하기
     func getKeywordSearchResult(with keyword: String, completion: @escaping([KeywordDocument]) -> Void) {
         guard let lon = longitude,
