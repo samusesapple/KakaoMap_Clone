@@ -11,8 +11,8 @@ import CoreLocation
 class MainViewController: UIViewController {
     
     private let locationManager = CLLocationManager()
-    private var longtitude: Double?
-    private var latitude: Double?
+    
+    private let viewModel = MainViewModel()
     
     private let mapView: MTMapView = {
         let mapView = MTMapView()
@@ -33,17 +33,13 @@ class MainViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationController?.isNavigationBarHidden = true
-
+        
         mapView.delegate = self
         
-        locationManager.delegate = self
-        locationManager.desiredAccuracy = kCLLocationAccuracyBest  // 배터리 최적화
-        
-        //        searchBarView.getSearchBar().delegate = self
-        
+        setLocationManager()
         setAutolayout()
         setActions()
-}
+    }
     
     // MARK: - Actions
     
@@ -61,9 +57,12 @@ class MainViewController: UIViewController {
     }
     
     @objc private func searchBarTapped() {
+        guard let location = locationManager.location else {
+            print("위치 정보 없음")
+            return
+        }
         searchBarView.getSearchBar().resignFirstResponder()
-        navigationController?.pushViewController(SearchViewController(lon: String(longtitude ?? 37.576568),
-                                                                      lat: String(latitude ?? 127.029148)), animated: false)
+        navigationController?.pushViewController(SearchViewController(lon: String(describing: location.coordinate.longitude),lat: String(describing: location.coordinate.latitude)), animated: false)
     }
     
     // MARK: - Helpers
@@ -71,7 +70,7 @@ class MainViewController: UIViewController {
     private func setAutolayout() {
         view.addSubview(mapView)
         mapView.setDimensions(height: view.frame.height, width: view.frame.width)
-
+        
         mapView.addSubview(searchBarView)
         searchBarView.setDimensions(height: 46, width: view.frame.width - 30)
         searchBarView.anchor(top: view.safeAreaLayoutGuide.topAnchor, paddingTop: 10)
@@ -93,6 +92,22 @@ class MainViewController: UIViewController {
         hideKeyboardWhenTappedAround()
     }
     
+    // 위치 사용 권한 허용 체크 및 locationManager 세팅
+    private func setLocationManager() {
+        locationManager.delegate = self
+        locationManager.desiredAccuracy = kCLLocationAccuracyBest  // 배터리 최적화
+        if locationManager.authorizationStatus != .authorizedAlways || locationManager.authorizationStatus != .authorizedWhenInUse {
+            locationManager.requestWhenInUseAuthorization()
+        }
+        
+        DispatchQueue.global(qos: .background).async { [weak self] in
+            self?.mapView.currentLocationTrackingMode = .onWithHeading
+        }
+        
+        
+    }
+    
+    // 사용자의 환경설정 - 위치 허용으로 안내
     private func showRequestLocationServiceAlert() {
         let requestLocationServiceAlert = UIAlertController(title: "위치 정보 이용", message: "위치 서비스를 사용할 수 없습니다.\n디바이스의 '설정 > 개인정보 보호'에서 위치 서비스를 켜주세요.", preferredStyle: .alert)
         let presentSettings = UIAlertAction(title: "설정으로 이동", style: .destructive) { _ in
@@ -112,6 +127,7 @@ class MainViewController: UIViewController {
 
 extension MainViewController: CLLocationManagerDelegate {
     
+    // 권한설정 변경된 경우 실행
     func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
         switch status {
         case .authorizedAlways, .authorizedWhenInUse:
@@ -122,10 +138,10 @@ extension MainViewController: CLLocationManagerDelegate {
                 self?.mapView.currentLocationTrackingMode = .onWithHeading
                 self?.mapView.showCurrentLocationMarker = true
                 DispatchQueue.main.async {
-                    self?.mapView.setMapCenter(MTMapPoint(geoCoord: MTMapPointGeo(latitude: self?.latitude ?? 37.576568, longitude: self?.longtitude ?? 127.029148)), animated: true)
+                    self?.mapView.setMapCenter(MTMapPoint(geoCoord: MTMapPointGeo(latitude: self?.locationManager.location?.coordinate.latitude ?? 37.576568, longitude: self?.locationManager.location?.coordinate.longitude ?? 127.029148)), animated: true)
                 }
             }
-
+            
         case .restricted, .notDetermined:
             print("GPS 권한설정 X")
             locationManager.requestWhenInUseAuthorization()
@@ -138,11 +154,11 @@ extension MainViewController: CLLocationManagerDelegate {
         }
     }
     
+    // 위치 업데이트 된 경우 실행
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         let currentLocation: CLLocation = locations[locations.count-1]
-        longtitude = currentLocation.coordinate.longitude.significand
-        latitude = currentLocation.coordinate.latitude.significand
-        mapView.setMapCenter(MTMapPoint(geoCoord: MTMapPointGeo(latitude: latitude ?? 37.576568, longitude: longtitude ?? 127.029148)), animated: true)
+        mapView.setMapCenter(MTMapPoint(geoCoord: MTMapPointGeo(latitude: currentLocation.coordinate.latitude,
+                                                                longitude: currentLocation.coordinate.latitude)), animated: true)
     }
     
 }
@@ -150,11 +166,5 @@ extension MainViewController: CLLocationManagerDelegate {
 // MARK: - MTMapViewDelegate
 
 extension MainViewController: MTMapViewDelegate {
-    
-}
-
-// MARK: - UISearchBarDelegate
-
-extension MainViewController: UISearchBarDelegate {
     
 }

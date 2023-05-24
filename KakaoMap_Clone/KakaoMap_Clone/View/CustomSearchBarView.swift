@@ -32,9 +32,16 @@ class CustomSearchBarView: UIView {
         return sb
     }()
     
+    private let cancelButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.tintColor = .darkGray
+        button.setImage(UIImage(systemName: "xmark"), for: .normal)
+        return button
+    }()
+    
     // MARK: - Lifecycle
     
-    init(placeholder: String, needBorderLine: Bool) {
+    init(placeholder: String, needBorderLine: Bool, needCancelButton: Bool = false) {
         super.init(frame: .zero)
         
         self.layer.cornerRadius = 4
@@ -43,9 +50,12 @@ class CustomSearchBarView: UIView {
         setupShadow(opacity: 0.2, radius: 1.5, offset: CGSize(width: 1.0, height: 0.5), color: .black)
         searchBar.placeholder = placeholder
         
-        setAutolayout()
-        if needBorderLine {
-            setBorderLine()
+        setAutolayout(needCancelButton: needCancelButton)
+        
+        if needBorderLine && !needCancelButton {
+            setBorderLine(needCancelButton: needCancelButton)
+        } else if needBorderLine && needCancelButton {
+            setBorderLine(needCancelButton: needCancelButton)
         }
     }
     
@@ -55,21 +65,45 @@ class CustomSearchBarView: UIView {
     
     // MARK: - Helpers
     
-    private func setAutolayout() {
+    private func setAutolayout(needCancelButton: Bool) {
         addSubview(menuButton)
-        menuButton.anchor(left: self.leftAnchor, paddingLeft: 10)
         menuButton.centerY(inView: self)
         
-        addSubview(searchBar)
-        searchBar.anchor(left: menuButton.rightAnchor, right: self.rightAnchor, paddingLeft: 0, paddingRight: 10)
-        searchBar.centerY(inView: self)
+        if !needCancelButton {
+            menuButton.anchor(left: self.leftAnchor, paddingLeft: 10)
+            
+            addSubview(searchBar)
+            searchBar.anchor(left: menuButton.rightAnchor, right: self.rightAnchor, paddingLeft: 0, paddingRight: 10)
+            searchBar.centerY(inView: self)
+        } else {
+            menuButton.anchor(left: self.leftAnchor, paddingLeft: 0)
+            
+            addSubview(cancelButton)
+            cancelButton.anchor(right: self.rightAnchor, paddingRight: 0)
+            cancelButton.centerY(inView: self)
+            
+            addSubview(searchBar)
+            searchBar.anchor(top: topAnchor, left: menuButton.rightAnchor, bottom: bottomAnchor, right: cancelButton.leftAnchor, paddingLeft: 10, paddingRight: 20)
+            searchBar.centerY(inView: self)
+        }
     }
-    
-    private func setBorderLine() {
-        clipsToBounds = true
-        layer.borderColor = UIColor.lightGray.withAlphaComponent(0.5).cgColor
-        layer.borderWidth = 1
-        menuButton.setImage(UIImage(systemName: "chevron.left"), for: .normal)
+
+    private func setBorderLine(needCancelButton: Bool) {
+        if !needCancelButton {
+            clipsToBounds = true
+            layer.borderColor = UIColor.lightGray.withAlphaComponent(0.5).cgColor
+            layer.borderWidth = 1
+            menuButton.setImage(UIImage(systemName: "chevron.left"), for: .normal)
+        } else {
+            clipsToBounds = true
+            searchBar.clipsToBounds = true
+            searchBar.layer.cornerRadius = 4
+            searchBar.layer.borderColor = UIColor.lightGray.withAlphaComponent(0.5).cgColor
+            searchBar.layer.borderWidth = 1
+            searchBar.searchTextField.clearButtonMode = .never
+            menuButton.setImage(UIImage(systemName: "map.fill"), for: .normal)
+            menuButton.tintColor = #colorLiteral(red: 0.03529411765, green: 0.5176470588, blue: 0.8901960784, alpha: 1)
+        }
     }
     
     func getMenuButton() -> UIButton {
@@ -79,4 +113,9 @@ class CustomSearchBarView: UIView {
     func getSearchBar() -> UISearchBar {
         return searchBar
     }
+    
+    func getCancelButton() -> UIButton {
+        return cancelButton
+    }
+    
 }

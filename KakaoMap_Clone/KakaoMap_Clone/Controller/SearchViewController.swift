@@ -71,8 +71,6 @@ class SearchViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
-    
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
@@ -113,6 +111,7 @@ class SearchViewController: UIViewController {
     private func setActions() {
         searchBarView.getMenuButton().addTarget(self, action: #selector(backButtonTapped), for: .touchUpInside)
     }
+    
 }
 
 // MARK: - UICollectionViewDelegate & UICollectionViewDataSource & UICollectionViewDelegateFlowLayout
@@ -183,9 +182,25 @@ extension SearchViewController: UISearchBarDelegate, UISearchResultsUpdating {
 //                // 해당 주소에 대한 검색결과가 있을 시, self.dismiss 후 검색 결과에 대한 정보를 보여주는 view를 main에 띄워야함
 //                self?.tableView.reloadData()
 //            }
-            viewModel.getKeywordSearchResult(with: text) { results in
-                print(results.count)
+            viewModel.getKeywordSearchResult(with: text) { [weak self] results in
+                self?.tableView.reloadData()
+                let searchVC = SearchResultViewController(keyword: text, results: results)
+                searchVC.delegate = self
+                self?.navigationController?.pushViewController(searchVC, animated: false)
             }
         }
     }
+}
+
+extension SearchViewController: SearchResultViewControllerDelegate {
+    
+    func needToPresentMainView() {
+        self.navigationController?.popViewController(animated: false)
+    }
+    
+    func passTappedHistory(newHistories: [SearchHistory]) {
+        viewModel.updateNewSearchHistory(newHistories)
+        tableView.reloadData()
+    }
+    
 }

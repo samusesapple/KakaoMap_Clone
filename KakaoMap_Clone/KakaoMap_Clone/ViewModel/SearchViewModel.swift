@@ -58,6 +58,17 @@ class SearchViewModel {
     
     
     // MARK: - Functions
+    
+    func updateNewSearchHistory(_ newHistories: [SearchHistory]) {
+        guard self.searchHistories != nil else {
+            self.searchHistories = newHistories
+            return
+        }
+        newHistories.forEach { newHistory in
+            self.searchHistories?.insert(newHistory, at: 0)
+        }
+    }
+    
     /// 글자수에 따라 collectionView Cell의 넓이 측정하여 Double 형태로 return
     func getCellWidth(with option: SearchOption) -> Double {
         if option.title.count <= 2 {
@@ -93,7 +104,8 @@ class SearchViewModel {
         }
     }
     
-    func getKeywordSearchResult(with keyword: String, completion: @escaping([Result]) -> Void) {
+    /// 현재 위치 기준 - 키워드로 검색하기
+    func getKeywordSearchResult(with keyword: String, completion: @escaping([KeywordDocument]) -> Void) {
         guard let lon = longitude,
                 let lat = latitude else {
             print(#function)
@@ -102,13 +114,24 @@ class SearchViewModel {
         HttpClient.shared.searchKeyword(with: keyword,
                                         lon: lon,
                                         lat: lat,
-                                        page: searchPage) { result in
+                                        page: searchPage) { [weak self] result in
             guard let keywordResultArray = result.documents else {
                 print("SearchVM - 결과 없음")
                 return
             }
             print(keywordResultArray.first?.placeName as Any)
-            completion(keywordResultArray)
+            // 검색 히스토리 배열에 추가하기
+            let newHistory = SearchHistory(type: UIImage(systemName: "magnifyingglass")!, searchText: keyword)
+            
+            if (self?.searchHistories) != nil {
+                print("SearchVM - newHistory KEYWORD : \(keyword)")
+                self?.searchHistories?.insert(newHistory, at: 0)
+                completion(keywordResultArray)
+            } else {
+                print("SearchVM - newHistory KEYWORD 로 배열 초기화")
+                self?.searchHistories = [newHistory]
+                completion(keywordResultArray)
+            }
         }
     }
     

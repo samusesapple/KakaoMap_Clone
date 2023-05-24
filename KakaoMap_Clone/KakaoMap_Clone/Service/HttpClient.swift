@@ -66,11 +66,14 @@ class HttpClient {
                                                  page: page),
                    encoding: URLEncoding.default,
                    headers: headers)
-        .validate(statusCode: 200..<300)
+        .validate(statusCode: 200..<600)
         .responseDecodable(of: KeywordResult.self) { response in
             let result = response.result
             switch result {
             case .success(let searchAddress):
+                print("keyword : \(keyword)")
+                print("lon : \(lon)")
+                print("lat: \(lat)")
                 completion(searchAddress)
             case .failure(let error):
                 print(error)

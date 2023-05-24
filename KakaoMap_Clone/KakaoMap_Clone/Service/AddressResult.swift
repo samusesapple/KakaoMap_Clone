@@ -9,11 +9,11 @@ import Foundation
 
 // MARK: - SearchAddress
 struct AddressResult: Codable {
-    let documents: [Document]?
+    let documents: [AddressDocument]?
 }
 
 // MARK: - Document
-struct Document: Codable {
+struct AddressDocument: Codable {
     let address: Address?
     let addressName, addressType: String?
     let roadAddress: RoadAddress?

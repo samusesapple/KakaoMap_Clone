@@ -8,12 +8,12 @@
 import Foundation
 // MARK: - KeywordResult
 struct KeywordResult: Codable {
-    let documents: [Result]?
+    let documents: [KeywordDocument]?
     let meta: Meta?
 }
 
 // MARK: - Document
-struct Result: Codable {
+struct KeywordDocument: Codable {
     let addressName, categoryGroupCode, categoryGroupName: String?
     let distance, id, phone, placeName: String?
     let placeURL: String?
