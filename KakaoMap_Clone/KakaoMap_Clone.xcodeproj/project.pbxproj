@@ -20,6 +20,8 @@
 		F1B8F75E2A1DA08100D3B45E /* SearchResultViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1B8F75D2A1DA08100D3B45E /* SearchResultViewModel.swift */; };
 		F1B8F7602A1DCBD800D3B45E /* SearchResultTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1B8F75F2A1DCBD800D3B45E /* SearchResultTableViewCell.swift */; };
 		F1B8F7622A1DD87500D3B45E /* ReviewStarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1B8F7612A1DD87500D3B45E /* ReviewStarView.swift */; };
+		F1B8F7662A1E097F00D3B45E /* CustomAlignmentAlertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1B8F7652A1E097F00D3B45E /* CustomAlignmentAlertView.swift */; };
+		F1B8F7682A1E109A00D3B45E /* CustomAlignmentAlertViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1B8F7672A1E109A00D3B45E /* CustomAlignmentAlertViewController.swift */; };
 		F1F2112E2A19CC76000443AB /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1F2112D2A19CC76000443AB /* AppDelegate.swift */; };
 		F1F211302A19CC76000443AB /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1F2112F2A19CC76000443AB /* SceneDelegate.swift */; };
 		F1F211322A19CC76000443AB /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1F211312A19CC76000443AB /* MainViewController.swift */; };
@@ -82,6 +84,8 @@
 		F1B8F75D2A1DA08100D3B45E /* SearchResultViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultViewModel.swift; sourceTree = "<group>"; };
 		F1B8F75F2A1DCBD800D3B45E /* SearchResultTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultTableViewCell.swift; sourceTree = "<group>"; };
 		F1B8F7612A1DD87500D3B45E /* ReviewStarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewStarView.swift; sourceTree = "<group>"; };
+		F1B8F7652A1E097F00D3B45E /* CustomAlignmentAlertView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomAlignmentAlertView.swift; sourceTree = "<group>"; };
+		F1B8F7672A1E109A00D3B45E /* CustomAlignmentAlertViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomAlignmentAlertViewController.swift; sourceTree = "<group>"; };
 		F1F2112A2A19CC76000443AB /* KakaoMap_Clone.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = KakaoMap_Clone.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F1F2112D2A19CC76000443AB /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		F1F2112F2A19CC76000443AB /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -296,6 +300,7 @@
 				F1F211312A19CC76000443AB /* MainViewController.swift */,
 				F10BA3492A1C762A00CCBE9D /* SearchViewController.swift */,
 				F1B8F75B2A1D9F0000D3B45E /* SearchResultViewController.swift */,
+				F1B8F7672A1E109A00D3B45E /* CustomAlignmentAlertViewController.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -308,6 +313,7 @@
 				F1B8F7612A1DD87500D3B45E /* ReviewStarView.swift */,
 				F10BA34B2A1C829500CCBE9D /* MenuCollectionViewCell.swift */,
 				F1B8F75F2A1DCBD800D3B45E /* SearchResultTableViewCell.swift */,
+				F1B8F7652A1E097F00D3B45E /* CustomAlignmentAlertView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -494,8 +500,10 @@
 				F1F212E62A19DDC2000443AB /* UIViewController+Extensions.swift in Sources */,
 				F1B8F7622A1DD87500D3B45E /* ReviewStarView.swift in Sources */,
 				F10BA34E2A1C9D0C00CCBE9D /* SearchViewModel.swift in Sources */,
+				F1B8F7662A1E097F00D3B45E /* CustomAlignmentAlertView.swift in Sources */,
 				F1F212E42A19DDA8000443AB /* UIView+Extensions.swift in Sources */,
 				F1B8F75E2A1DA08100D3B45E /* SearchResultViewModel.swift in Sources */,
+				F1B8F7682A1E109A00D3B45E /* CustomAlignmentAlertViewController.swift in Sources */,
 				F1F211302A19CC76000443AB /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

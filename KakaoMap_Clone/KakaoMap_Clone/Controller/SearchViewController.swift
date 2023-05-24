@@ -192,7 +192,6 @@ extension SearchViewController: UISearchBarDelegate, UISearchResultsUpdating {
         guard let text = searchBar.text else { return }
         if text != " " {
             viewModel.getKeywordSearchResult(with: text) { [weak self] results in
-                self?.tableView.reloadData()
                 let searchVC = SearchResultViewController(keyword: text, results: results)
                 searchVC.delegate = self
                 self?.navigationController?.pushViewController(searchVC, animated: false)

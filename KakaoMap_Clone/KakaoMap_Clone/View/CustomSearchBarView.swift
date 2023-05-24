@@ -34,7 +34,7 @@ class CustomSearchBarView: UIView {
     
     private let cancelButton: UIButton = {
         let button = UIButton(type: .system)
-        button.tintColor = .darkGray
+        button.tintColor = .black.withAlphaComponent(0.8)
         button.setImage(UIImage(systemName: "xmark"), for: .normal)
         return button
     }()
