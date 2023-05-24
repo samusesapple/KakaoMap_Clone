@@ -13,7 +13,7 @@ class CustomAlignmentAlertView: UIView {
         let view = UIView()
         view.backgroundColor = .white
         view.clipsToBounds = true
-        view.layer.cornerRadius = 5
+        view.layer.cornerRadius = 10
         
         [mainLabel, cancelButton, buttonStackView].forEach { view.addSubview($0) }
         return view
@@ -21,7 +21,7 @@ class CustomAlignmentAlertView: UIView {
     
     private let mainLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 17, weight: .semibold)
+        label.font = UIFont.systemFont(ofSize: 17, weight: .bold)
         label.textColor = .black.withAlphaComponent(0.8)
         return label
     }()
@@ -106,6 +106,7 @@ class CustomAlignmentAlertView: UIView {
             secondButton.setTitle("거리순", for: .normal)
             
             firstButton.layer.borderColor = #colorLiteral(red: 0.03529411765, green: 0.5176470588, blue: 0.8901960784, alpha: 1)
+            firstButton.tintColor = #colorLiteral(red: 0.03529411765, green: 0.5176470588, blue: 0.8901960784, alpha: 1)
         }
     }
     

@@ -8,5 +8,6 @@ target 'KakaoMap_Clone' do
   # Pods for KakaoMap_Clone
 
 pod 'Alamofire'
+pod 'JGProgressHUD'
 
 end
