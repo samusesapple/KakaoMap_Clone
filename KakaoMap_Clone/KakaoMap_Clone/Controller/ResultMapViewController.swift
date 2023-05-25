@@ -19,6 +19,20 @@ class ResultMapViewController: UIViewController {
     
     weak var delegate: ResultMapViewControllerDelegate?
     
+    private let mapView: MTMapView = {
+        let mapView = MTMapView()
+        mapView.baseMapType = .standard
+        return mapView
+    }()
+    
+    private lazy var headerContainerView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .white
+        view.setupShadow(opacity: 0.8, radius: 0.8, offset: CGSize(width: 1.3, height: 0.5), color: .darkGray)
+        [searchBarView, buttonsView].forEach { view.addSubview($0) }
+        return view
+    }()
+    
     private let searchBarView = CustomSearchBarView(placeholder: nil,
                                                     needBorderLine: true,
                                                     needCancelButton: true,
@@ -51,17 +65,12 @@ class ResultMapViewController: UIViewController {
         return view
     }()
     
-    private let borderLineView: UIView = {
-        let view = UIView()
-        view.backgroundColor = UIColor.lightGray.withAlphaComponent(0.5)
-        view.setupShadow(opacity: 0.8, radius: 0.8, offset: CGSize(width: 1.3, height: 0.5), color: .darkGray)
-        return view
-    }()
-    
     // MARK: - Lifecycle
     
-    init(title: String) {
+    init(title: String, results: [KeywordDocument]) {
         super.init(nibName: nil, bundle: nil)
+        let viewModel = SearchResultViewModel(keyword: title, results: results)
+        self.viewModel = viewModel
         searchBarView.getSearchBar().text = title
     }
     
@@ -69,15 +78,19 @@ class ResultMapViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
+    override func loadView() {
+        self.view = mapView
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
+        view.backgroundColor = .gray
         
         setAutolayout()
         setActions()
         setSearchBar()
     }
-
+    
     // MARK: - Actions
     
     @objc private func listButtonTapped() {
@@ -116,19 +129,12 @@ class ResultMapViewController: UIViewController {
     // MARK: - Helpers
     
     private func setAutolayout() {
-        view.addSubview(searchBarView)
-        searchBarView.setDimensions(height: 46, width: view.frame.width - 30)
-        searchBarView.anchor(top: view.safeAreaLayoutGuide.topAnchor, paddingTop: 10)
-        searchBarView.centerX(inView: view)
+        view.addSubview(headerContainerView)
+        headerContainerView.anchor(top: view.topAnchor, left: view.leftAnchor, right: view.rightAnchor, height: 46 + 46 + 60)
         
-        view.addSubview(buttonsView)
-        buttonsView.setDimensions(height: 46, width: view.frame.width)
-        buttonsView.anchor(top: searchBarView.bottomAnchor)
+        searchBarView.anchor(top: headerContainerView.topAnchor, left: view.leftAnchor, right: view.rightAnchor, paddingTop: 60, paddingLeft: 15, paddingRight: 15, height: 46)
         
-        view.addSubview(borderLineView)
-        borderLineView.setDimensions(height: 1, width: view.frame.width)
-        borderLineView.anchor(top: buttonsView.bottomAnchor)
-        
+        buttonsView.anchor(top: searchBarView.bottomAnchor, left: headerContainerView.leftAnchor, right: headerContainerView.rightAnchor, paddingBottom: 10, height: 46)
     }
     
     private func setActions() {
