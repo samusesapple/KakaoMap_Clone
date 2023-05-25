@@ -71,11 +71,11 @@ class HttpClient {
         .responseDecodable(of: KeywordResult.self) { response in
             let result = response.result
             switch result {
-            case .success(let searchAddress):
+            case .success(let searchResult):
                 print("keyword : \(keyword)")
                 print("lon : \(lon)")
                 print("lat: \(lat)")
-                completion(searchAddress)
+                completion(searchResult)
             case .failure(let error):
                 print(error)
             }

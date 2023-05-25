@@ -6,12 +6,15 @@
 //
 
 import UIKit
+import JGProgressHUD
 
 class SearchViewController: UIViewController {
     
     // MARK: - Properties
     
     private var viewModel = SearchViewModel()
+    
+    private let progressHud = JGProgressHUD(style: .dark)
     
     private let searchBarView = CustomSearchBarView(placeholder: "장소 및 주소 검색", needBorderLine: true)
     
@@ -80,6 +83,14 @@ class SearchViewController: UIViewController {
         
         searchBarView.getSearchBar().searchTextField.becomeFirstResponder()
         searchBarView.getSearchBar().delegate = self
+        
+        viewModel.showProgressHUD = { [weak self] in
+            self?.progressHud.show(in: (self?.view)!, animated: true)
+        }
+        
+        viewModel.dismissProgressHUD = { [weak self] in
+            self?.progressHud.dismiss()
+        }
     }
     
     // MARK: - Actions
@@ -145,7 +156,7 @@ extension SearchViewController: UICollectionViewDelegate, UICollectionViewDataSo
 extension SearchViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        print(viewModel.getSetSearchHistories.count)
+        print("SearchVC - TableView.rowsInSection Count: \(viewModel.getSetSearchHistories.count)")
         return viewModel.getSetSearchHistories.count
     }
     
@@ -190,6 +201,7 @@ extension SearchViewController: UISearchBarDelegate, UISearchResultsUpdating {
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         guard let text = searchBar.text else { return }
+        searchBar.resignFirstResponder()
         if text != " " {
             viewModel.getKeywordSearchResult(with: text) { [weak self] results in
                 let searchVC = SearchResultViewController(keyword: text, results: results)
@@ -208,6 +220,7 @@ extension SearchViewController: SearchResultViewControllerDelegate {
     
     func passTappedHistory(newHistories: [SearchHistory]) {
         viewModel.updateNewSearchHistory(newHistories)
+        searchBarView.getSearchBar().searchTextField.becomeFirstResponder()
         tableView.reloadData()
     }
     

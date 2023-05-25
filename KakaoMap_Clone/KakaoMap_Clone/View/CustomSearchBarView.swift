@@ -41,7 +41,7 @@ class CustomSearchBarView: UIView {
     
     // MARK: - Lifecycle
     
-    init(placeholder: String, needBorderLine: Bool, needCancelButton: Bool = false) {
+    init(placeholder: String?, needBorderLine: Bool, needCancelButton: Bool = false, isDetailView: Bool = false) {
         super.init(frame: .zero)
         
         self.layer.cornerRadius = 4
@@ -52,10 +52,14 @@ class CustomSearchBarView: UIView {
         
         setAutolayout(needCancelButton: needCancelButton)
         
-        if needBorderLine && !needCancelButton {
-            setBorderLine(needCancelButton: needCancelButton)
-        } else if needBorderLine && needCancelButton {
-            setBorderLine(needCancelButton: needCancelButton)
+        if !isDetailView {
+            if needBorderLine && !needCancelButton {
+                setBorderLine(needCancelButton: needCancelButton, isDetailView: false)
+            } else if needBorderLine && needCancelButton {
+                setBorderLine(needCancelButton: needCancelButton, isDetailView: false)
+            }
+        } else {
+            setBorderLine(needCancelButton: needCancelButton, isDetailView: isDetailView)
         }
     }
     
@@ -88,7 +92,7 @@ class CustomSearchBarView: UIView {
         }
     }
 
-    private func setBorderLine(needCancelButton: Bool) {
+    private func setBorderLine(needCancelButton: Bool, isDetailView: Bool) {
         if !needCancelButton {
             clipsToBounds = true
             layer.borderColor = UIColor.lightGray.withAlphaComponent(0.5).cgColor
@@ -101,8 +105,12 @@ class CustomSearchBarView: UIView {
             searchBar.layer.borderColor = UIColor.lightGray.withAlphaComponent(0.5).cgColor
             searchBar.layer.borderWidth = 1
             searchBar.searchTextField.clearButtonMode = .never
-            menuButton.setImage(UIImage(systemName: "map.fill"), for: .normal)
             menuButton.tintColor = #colorLiteral(red: 0.03529411765, green: 0.5176470588, blue: 0.8901960784, alpha: 1)
+            if !isDetailView {
+                menuButton.setImage(UIImage(systemName: "map.fill"), for: .normal)
+            } else if isDetailView {
+                menuButton.setImage(UIImage(systemName: "list.bullet"), for: .normal)
+            }
         }
     }
     

@@ -47,6 +47,9 @@ class SearchViewModel {
         return searchHistories ?? []
     }
     
+    var showProgressHUD = { }
+    var dismissProgressHUD = { }
+    
     // MARK: - Lifecycle
     
     init(lon: String, lat: String) {
@@ -81,29 +84,35 @@ class SearchViewModel {
     /// 현재 위치 기준 - 키워드로 검색하기
     func getKeywordSearchResult(with keyword: String, completion: @escaping([KeywordDocument]) -> Void) {
         guard let lon = longitude,
-                let lat = latitude else {
+              let lat = latitude else {
             print(#function)
             return
         }
+        showProgressHUD()
         HttpClient.shared.searchKeyword(with: keyword,
                                         lon: lon,
                                         lat: lat,
                                         page: searchPage) { [weak self] result in
-            guard let keywordResultArray = result.documents else {
+            guard let keywordResultArray = result.documents,
+                  let totalPage = result.meta?.pageableCount,
+                      totalPage > 1 else {
                 print("SearchVM - 결과 없음")
+                self?.dismissProgressHUD()
                 return
             }
-            print(keywordResultArray.first?.placeName as Any)
+            
             // 검색 히스토리 배열에 추가하기
             let newHistory = SearchHistory(type: UIImage(systemName: "magnifyingglass")!, searchText: keyword)
             
             if (self?.searchHistories) != nil {
                 print("SearchVM - newHistory KEYWORD : \(keyword)")
                 self?.searchHistories?.insert(newHistory, at: 0)
+                self?.dismissProgressHUD()
                 completion(keywordResultArray)
             } else {
                 print("SearchVM - newHistory KEYWORD 로 배열 초기화")
                 self?.searchHistories = [newHistory]
+                self?.dismissProgressHUD()
                 completion(keywordResultArray)
             }
         }

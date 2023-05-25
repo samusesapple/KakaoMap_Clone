@@ -1,26 +1,28 @@
 //
-//  SearchResultViewController.swift
+//  ResultMapViewController.swift
 //  KakaoMap_Clone
 //
-//  Created by Sam Sung on 2023/05/24.
+//  Created by Sam Sung on 2023/05/25.
 //
 
-import Foundation
+import UIKit
 
-protocol SearchResultViewControllerDelegate: AnyObject {
-    func needToPresentMainView()
-    func passTappedHistory(newHistories: [SearchHistory])
+protocol ResultMapViewControllerDelegate: AnyObject {
+    func needToShowSearchVC()
+    func needToShowMainVC()
 }
 
-class SearchResultViewController: UIViewController {
+class ResultMapViewController: UIViewController {
     // MARK: - Properties
     
     private var viewModel = SearchResultViewModel()
-    weak var delegate: SearchResultViewControllerDelegate?
     
-    private let searchBarView = CustomSearchBarView(placeholder: "장소 및 주소 검색",
+    weak var delegate: ResultMapViewControllerDelegate?
+    
+    private let searchBarView = CustomSearchBarView(placeholder: nil,
                                                     needBorderLine: true,
-                                                    needCancelButton: true)
+                                                    needCancelButton: true,
+                                                    isDetailView: true)
     
     private let centerAlignmentButton: UIButton = {
         let button = UIButton(type: .system)
@@ -52,26 +54,15 @@ class SearchResultViewController: UIViewController {
     private let borderLineView: UIView = {
         let view = UIView()
         view.backgroundColor = UIColor.lightGray.withAlphaComponent(0.5)
+        view.setupShadow(opacity: 0.8, radius: 0.8, offset: CGSize(width: 1.3, height: 0.5), color: .darkGray)
         return view
-    }()
-    
-    private lazy var tableView: UITableView = {
-        let tv = UITableView()
-        tv.backgroundColor = .white
-        tv.rowHeight = (view.frame.height / 5) - 10
-        tv.register(SearchResultTableViewCell.self, forCellReuseIdentifier: "resultCell")
-        tv.dataSource = self
-        tv.delegate = self
-        return tv
     }()
     
     // MARK: - Lifecycle
     
-    init(keyword: String, results: [KeywordDocument]) {
+    init(title: String) {
         super.init(nibName: nil, bundle: nil)
-        let viewModel = SearchResultViewModel(keyword: keyword, results: results)
-        self.viewModel = viewModel
-        searchBarView.getSearchBar().searchTextField.text = keyword
+        searchBarView.getSearchBar().text = title
     }
     
     required init?(coder: NSCoder) {
@@ -89,25 +80,21 @@ class SearchResultViewController: UIViewController {
 
     // MARK: - Actions
     
-    @objc private func mapButtonTapped() {
-        // ResultMapView에 정보 전달 및 띄우기
-        guard let title = searchBarView.getSearchBar().text else { return }
-        let resultMapVC = ResultMapViewController(title: title)
-        resultMapVC.delegate = self
-        navigationController?.pushViewController(resultMapVC, animated: false)
+    @objc private func listButtonTapped() {
+        // self.dismiss, SearchRsultVC 띄우기
+        self.navigationController?.popViewController(animated: false)
     }
     
     @objc private func searchBarTapped() {
-        // 선택했던 cell에 해당되는 장소의 정보를 SearchVC에 전달 필요
-        delegate?.passTappedHistory(newHistories: viewModel.getTappedHistory)
+        // 선택했던 cell에 해당되는 장소의 정보를 SearchVC에 전달 필요 + SearchResultVC dismiss
         navigationController?.popViewController(animated: false)
+        delegate?.needToShowSearchVC()
     }
     
     @objc private func cancelButtonTapped() {
         // 선택했던 cell에 해당되는 장소의 정보를 SearchVC에 전달 필요
-        delegate?.passTappedHistory(newHistories: viewModel.getTappedHistory)
         navigationController?.popViewController(animated: false)
-        delegate?.needToPresentMainView()
+        delegate?.needToShowMainVC()
     }
     
     @objc private func centerAlignmentButtonTapped() {
@@ -116,7 +103,6 @@ class SearchResultViewController: UIViewController {
         alertVC.modalPresentationStyle = UIModalPresentationStyle.overCurrentContext
         alertVC.modalTransitionStyle = UIModalTransitionStyle.crossDissolve
         present(alertVC, animated: true)
-        print(#function)
     }
     
     @objc private func accuracyAlignmentButtonTapped() {
@@ -125,7 +111,6 @@ class SearchResultViewController: UIViewController {
         alertVC.modalPresentationStyle = UIModalPresentationStyle.overCurrentContext
         alertVC.modalTransitionStyle = UIModalTransitionStyle.crossDissolve
         present(alertVC, animated: true)
-        print(#function)
     }
     
     // MARK: - Helpers
@@ -144,12 +129,10 @@ class SearchResultViewController: UIViewController {
         borderLineView.setDimensions(height: 1, width: view.frame.width)
         borderLineView.anchor(top: buttonsView.bottomAnchor)
         
-        view.addSubview(tableView)
-        tableView.anchor(top: borderLineView.bottomAnchor, left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor)
     }
     
     private func setActions() {
-        searchBarView.getMenuButton().addTarget(self, action: #selector(mapButtonTapped), for: .touchUpInside)
+        searchBarView.getMenuButton().addTarget(self, action: #selector(listButtonTapped), for: .touchUpInside)
         searchBarView.getSearchBar().searchTextField.addTarget(self, action: #selector(searchBarTapped), for: .editingDidBegin)
         searchBarView.getCancelButton().addTarget(self, action: #selector(cancelButtonTapped), for: .touchUpInside)
         
@@ -160,45 +143,4 @@ class SearchResultViewController: UIViewController {
     private func setSearchBar() {
         searchBarView.getSearchBar().showsCancelButton = false
     }
-}
-
-
-// MARK: - UITableViewDelegate & UITableViewDataSource
-
-extension SearchResultViewController: UITableViewDelegate, UITableViewDataSource {
-    
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return viewModel.getResults.count
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "resultCell", for: indexPath) as! SearchResultTableViewCell
-        cell.configureUIwithData(data: viewModel.getResults[indexPath.row])
-        return cell
-    }
-    
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        print("선택된 장소의 상세 페이지 보여주기")
-        tableView.deselectRow(at: indexPath, animated: true)
-        let result = viewModel.getResults[indexPath.row]
-        guard let placeName = result.placeName else {
-            print("SearchResultVC - placeName error")
-            return
-        }
-        viewModel.updateNewTappedHistory(location: placeName)
-    }
-    
-}
-
-// MARK: - ResultMapViewControllerDelegate
-
-extension SearchResultViewController: ResultMapViewControllerDelegate {
-    func needToShowSearchVC() {
-        searchBarTapped()
-    }
-    
-    func needToShowMainVC() {
-        cancelButtonTapped()
-    }
-    
 }
