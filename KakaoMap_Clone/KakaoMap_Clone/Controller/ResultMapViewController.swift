@@ -20,7 +20,7 @@ class ResultMapViewController: UIViewController {
     
     private var mapPoint: MTMapPoint?
     private var poiItem: MTMapPOIItem?
-
+    
     private var viewModel = SearchResultViewModel()
     
     weak var delegate: ResultMapViewControllerDelegate?
@@ -83,7 +83,7 @@ class ResultMapViewController: UIViewController {
         let label = UILabel()
         label.textColor = .black.withAlphaComponent(0.8)
         label.text = "카페 건"
-        label.font = UIFont.systemFont(ofSize: 17, weight: .medium)
+        label.font = UIFont.systemFont(ofSize: 17.5, weight: .medium)
         label.textAlignment = .left
         return label
     }()
@@ -133,7 +133,7 @@ class ResultMapViewController: UIViewController {
         setActions()
         setSearchBar()
         
-        configureUIwithData()
+        configureUIwithData(place: viewModel.getResults[0])
         
         setMapView()
     }
@@ -180,11 +180,10 @@ class ResultMapViewController: UIViewController {
     
     // MARK: - Helpers
     
-    private func configureUIwithData() {
-        guard let firstItem = viewModel.getResults.first else { return }
-        placeNameLabel.text = firstItem.placeName
-        placeCategoryLabel.text = firstItem.categoryGroupName
-        addressLabel.text = firstItem.roadAddressName
+    private func configureUIwithData(place: KeywordDocument) {
+        placeNameLabel.text = place.placeName
+        placeCategoryLabel.text = place.categoryGroupName
+        addressLabel.text = place.roadAddressName
     }
     
     private func setAutolayout() {
@@ -198,7 +197,7 @@ class ResultMapViewController: UIViewController {
         view.addSubview(footerContainerView)
         footerContainerView.anchor(left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor, height: 160)
         
-        placeNameLabel.anchor(top: footerContainerView.topAnchor, left: footerContainerView.leftAnchor, paddingTop: 16, paddingLeft: 14)
+        placeNameLabel.anchor(top: footerContainerView.topAnchor, left: footerContainerView.leftAnchor, paddingTop: 16, paddingLeft: 16)
         placeCategoryLabel.anchor(left: placeNameLabel.rightAnchor, bottom: placeNameLabel.bottomAnchor, paddingLeft: 5)
         
         reviewView.anchor(top: placeNameLabel.bottomAnchor, left: placeNameLabel.leftAnchor, paddingTop: 5, width: 100)
@@ -220,6 +219,8 @@ class ResultMapViewController: UIViewController {
     
     private func setMapView() {
         mapView.delegate = self
+        mapView.currentLocationTrackingMode = .off
+        
         makeMarker()
         
         guard let firstItem = viewModel.getResults.first,
@@ -243,7 +244,9 @@ extension ResultMapViewController: MTMapViewDelegate {
             guard let stringLon = item.x,
                   let stringLat = item.y,
                   let lat = Double(stringLat),
-                  let lon = Double(stringLon) else {
+                  let lon = Double(stringLon),
+                  let stringID = item.id,
+                  let placeID = Int(stringID) else {
                 print("마커 좌표값 옵셔널 벗기기 실패")
                 return
             }
@@ -255,7 +258,7 @@ extension ResultMapViewController: MTMapViewDelegate {
             poiItem?.mapPoint = mapPoint
             
             poiItem?.itemName = item.placeName
-            poiItem?.tag = count
+            poiItem?.tag = placeID
             mapView.add(poiItem)
             
             count += 1
@@ -264,7 +267,7 @@ extension ResultMapViewController: MTMapViewDelegate {
     
     func mapView(_ mapView: MTMapView!, touchedCalloutBalloonOf poiItem: MTMapPOIItem!) {
         // 태그를 활용하여 장소 구분짓기
-        let index = poiItem.tag
-        
+        let targetPlace = viewModel.getResults.filter { $0.id == String(poiItem.tag) }[0]
+        configureUIwithData(place: targetPlace)
     }
 }

@@ -47,7 +47,7 @@ class MainViewController: UIViewController {
         print("현재 위치로 이동")
         if locationManager.authorizationStatus == .authorizedAlways || locationManager.authorizationStatus == .authorizedWhenInUse {
             DispatchQueue.global(qos: .background).async { [weak self] in
-                self?.mapView.currentLocationTrackingMode = .onWithHeading
+                self?.mapView.currentLocationTrackingMode = .onWithoutHeading
             }
         }
     }
@@ -101,7 +101,7 @@ class MainViewController: UIViewController {
         }
         
         DispatchQueue.global(qos: .background).async { [weak self] in
-            self?.mapView.currentLocationTrackingMode = .onWithHeading
+            self?.mapView.currentLocationTrackingMode = .onWithoutHeading
             guard let coordinate = self?.locationManager.location?.coordinate else {
                 print("location update 아직 안된 상태")
                 return
@@ -143,7 +143,7 @@ extension MainViewController: CLLocationManagerDelegate {
             locationManager.startUpdatingLocation()
             DispatchQueue.global(qos: .background).async { [weak self] in
                 self?.mapView.showCurrentLocationMarker = true
-                self?.mapView.currentLocationTrackingMode = .onWithHeading
+                self?.mapView.currentLocationTrackingMode = .onWithoutHeading
                 self?.mapView.showCurrentLocationMarker = true
                 DispatchQueue.main.async {
                     self?.mapView.setMapCenter(MTMapPoint(geoCoord: MTMapPointGeo(latitude: self?.locationManager.location?.coordinate.latitude ?? 37.576568, longitude: self?.locationManager.location?.coordinate.longitude ?? 127.029148)), animated: true)

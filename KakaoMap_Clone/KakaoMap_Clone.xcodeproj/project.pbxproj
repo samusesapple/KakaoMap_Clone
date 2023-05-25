@@ -299,11 +299,11 @@
 		F1F212E72A19F74C000443AB /* Controller */ = {
 			isa = PBXGroup;
 			children = (
-				F1B8F7672A1E109A00D3B45E /* CustomAlignmentAlertViewController.swift */,
 				F1F211312A19CC76000443AB /* MainViewController.swift */,
 				F10BA3492A1C762A00CCBE9D /* SearchViewController.swift */,
 				F1B8F75B2A1D9F0000D3B45E /* SearchResultViewController.swift */,
 				F1A92BA72A1F1CD800A3AA8F /* ResultMapViewController.swift */,
+				F1B8F7672A1E109A00D3B45E /* CustomAlignmentAlertViewController.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
