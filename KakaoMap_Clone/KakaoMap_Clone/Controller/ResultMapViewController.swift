@@ -28,7 +28,7 @@ class ResultMapViewController: UIViewController {
     private lazy var headerContainerView: UIView = {
         let view = UIView()
         view.backgroundColor = .white
-        view.setupShadow(opacity: 0.8, radius: 0.8, offset: CGSize(width: 1.3, height: 0.5), color: .darkGray)
+        view.setupShadow(opacity: 0.3, radius: 1.5, offset: CGSize(width: 0, height: 2.0), color: .black)
         [searchBarView, buttonsView].forEach { view.addSubview($0) }
         return view
     }()
@@ -65,6 +65,43 @@ class ResultMapViewController: UIViewController {
         return view
     }()
     
+    private lazy var footerContainerView: UIView = {
+       let view = UIView()
+        view.backgroundColor = .white
+        view.setupShadow(opacity: 0.3, radius: 1.5, offset: CGSize(width: 0, height: -2.0), color: .black)
+        [placeNameLabel, placeCategoryLabel, reviewView, addressLabel].forEach { view.addSubview($0) }
+        return view
+    }()
+    
+    private let placeNameLabel: UILabel = {
+        let label = UILabel()
+        label.textColor = .black.withAlphaComponent(0.8)
+        label.text = "카페 건"
+        label.font = UIFont.systemFont(ofSize: 17, weight: .medium)
+        label.textAlignment = .left
+        return label
+    }()
+    
+    private let placeCategoryLabel: UILabel = {
+        let label = UILabel()
+        label.textColor = .gray.withAlphaComponent(0.8)
+        label.text = "카테고리"
+        label.font = UIFont.systemFont(ofSize: 13)
+        label.textAlignment = .left
+        return label
+    }()
+    
+    private let reviewView = ReviewStarView()
+
+    private let addressLabel: UILabel = {
+        let label = UILabel()
+        label.font = UIFont.systemFont(ofSize: 13)
+        label.textColor = .darkGray
+        label.text = "인천 중구 하늘달빛로2번길 8 씨사이드파크"
+        label.numberOfLines = 1
+        return label
+    }()
+    
     // MARK: - Lifecycle
     
     init(title: String, results: [KeywordDocument]) {
@@ -94,7 +131,6 @@ class ResultMapViewController: UIViewController {
     // MARK: - Actions
     
     @objc private func listButtonTapped() {
-        // self.dismiss, SearchRsultVC 띄우기
         self.navigationController?.popViewController(animated: false)
     }
     
@@ -135,6 +171,15 @@ class ResultMapViewController: UIViewController {
         searchBarView.anchor(top: headerContainerView.topAnchor, left: view.leftAnchor, right: view.rightAnchor, paddingTop: 60, paddingLeft: 15, paddingRight: 15, height: 46)
         
         buttonsView.anchor(top: searchBarView.bottomAnchor, left: headerContainerView.leftAnchor, right: headerContainerView.rightAnchor, paddingBottom: 10, height: 46)
+        
+        view.addSubview(footerContainerView)
+        footerContainerView.anchor(left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor, height: 160)
+        
+        placeNameLabel.anchor(top: footerContainerView.topAnchor, left: footerContainerView.leftAnchor, paddingTop: 16, paddingLeft: 14)
+        placeCategoryLabel.anchor(left: placeNameLabel.rightAnchor, bottom: placeNameLabel.bottomAnchor, paddingLeft: 5)
+        
+        reviewView.anchor(top: placeNameLabel.bottomAnchor, left: placeNameLabel.leftAnchor, paddingTop: 5, width: 100)
+        addressLabel.anchor(top: reviewView.bottomAnchor, left: placeNameLabel.leftAnchor, paddingTop: 7)
     }
     
     private func setActions() {
