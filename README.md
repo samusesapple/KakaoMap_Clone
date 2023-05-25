@@ -14,6 +14,7 @@
 * KakaoMap API SDK (DaumMap)
 * MVVM
 * Alamofire
+* JGProgressHUD
 <br>
 <br>
 <br>
