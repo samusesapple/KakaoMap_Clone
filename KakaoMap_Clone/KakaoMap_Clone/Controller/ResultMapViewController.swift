@@ -252,11 +252,12 @@ extension ResultMapViewController: MTMapViewDelegate {
             }
             self.mapPoint = MTMapPoint(geoCoord: MTMapPointGeo(latitude: lat, longitude: lon))
             
+            let customPoiImage = UIImage(named: "bluePoint")?.scalePreservingAspectRatio(targetSize: CGSize(width: 20, height: 20))
+            
             poiItem = MTMapPOIItem()
-            
-            poiItem?.markerType = MTMapPOIItemMarkerType.bluePin
+            poiItem?.markerType = .customImage
+            poiItem?.customImage = customPoiImage
             poiItem?.mapPoint = mapPoint
-            
             poiItem?.itemName = item.placeName
             poiItem?.tag = placeID
             mapView.add(poiItem)
@@ -270,4 +271,5 @@ extension ResultMapViewController: MTMapViewDelegate {
         let targetPlace = viewModel.getResults.filter { $0.id == String(poiItem.tag) }[0]
         configureUIwithData(place: targetPlace)
     }
+    
 }
