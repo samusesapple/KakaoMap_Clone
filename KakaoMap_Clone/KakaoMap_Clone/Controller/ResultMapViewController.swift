@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import CoreLocation
 
 protocol ResultMapViewControllerDelegate: AnyObject {
     func needToShowSearchVC()
@@ -15,6 +16,11 @@ protocol ResultMapViewControllerDelegate: AnyObject {
 class ResultMapViewController: UIViewController {
     // MARK: - Properties
     
+    private var locationManager = CLLocationManager()
+    
+    private var mapPoint: MTMapPoint?
+    private var poiItem: MTMapPOIItem?
+
     private var viewModel = SearchResultViewModel()
     
     weak var delegate: ResultMapViewControllerDelegate?
@@ -66,7 +72,7 @@ class ResultMapViewController: UIViewController {
     }()
     
     private lazy var footerContainerView: UIView = {
-       let view = UIView()
+        let view = UIView()
         view.backgroundColor = .white
         view.setupShadow(opacity: 0.3, radius: 1.5, offset: CGSize(width: 0, height: -2.0), color: .black)
         [placeNameLabel, placeCategoryLabel, reviewView, addressLabel].forEach { view.addSubview($0) }
@@ -92,7 +98,7 @@ class ResultMapViewController: UIViewController {
     }()
     
     private let reviewView = ReviewStarView()
-
+    
     private let addressLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 13)
@@ -126,6 +132,16 @@ class ResultMapViewController: UIViewController {
         setAutolayout()
         setActions()
         setSearchBar()
+        
+        configureUIwithData()
+        
+        setMapView()
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        for item in mapView.poiItems {
+            mapView.remove(item as! MTMapPOIItem)
+        }
     }
     
     // MARK: - Actions
@@ -164,6 +180,13 @@ class ResultMapViewController: UIViewController {
     
     // MARK: - Helpers
     
+    private func configureUIwithData() {
+        guard let firstItem = viewModel.getResults.first else { return }
+        placeNameLabel.text = firstItem.placeName
+        placeCategoryLabel.text = firstItem.categoryGroupName
+        addressLabel.text = firstItem.roadAddressName
+    }
+    
     private func setAutolayout() {
         view.addSubview(headerContainerView)
         headerContainerView.anchor(top: view.topAnchor, left: view.leftAnchor, right: view.rightAnchor, height: 46 + 46 + 60)
@@ -193,5 +216,55 @@ class ResultMapViewController: UIViewController {
     
     private func setSearchBar() {
         searchBarView.getSearchBar().showsCancelButton = false
+    }
+    
+    private func setMapView() {
+        mapView.delegate = self
+        makeMarker()
+        
+        guard let firstItem = viewModel.getResults.first,
+              let stringLon = firstItem.x,
+              let stringLat = firstItem.y,
+              let lon = Double(stringLon),
+              let lat = Double(stringLat) else { return }
+        mapView.setMapCenter(MTMapPoint(geoCoord: MTMapPointGeo(latitude: lat, longitude: lon)), zoomLevel: .min, animated: true)
+        print("맵뷰 중심 세팅 - \(firstItem.placeName)")
+    }
+}
+
+// MARK: - MTMapViewDelegate
+
+extension ResultMapViewController: MTMapViewDelegate {
+    
+    private func makeMarker() {
+        var count = 0
+        
+        for item in viewModel.getResults {
+            guard let stringLon = item.x,
+                  let stringLat = item.y,
+                  let lat = Double(stringLat),
+                  let lon = Double(stringLon) else {
+                print("마커 좌표값 옵셔널 벗기기 실패")
+                return
+            }
+            self.mapPoint = MTMapPoint(geoCoord: MTMapPointGeo(latitude: lat, longitude: lon))
+            
+            poiItem = MTMapPOIItem()
+            
+            poiItem?.markerType = MTMapPOIItemMarkerType.bluePin
+            poiItem?.mapPoint = mapPoint
+            
+            poiItem?.itemName = item.placeName
+            poiItem?.tag = count
+            mapView.add(poiItem)
+            
+            count += 1
+        }
+    }
+    
+    func mapView(_ mapView: MTMapView!, touchedCalloutBalloonOf poiItem: MTMapPOIItem!) {
+        // 태그를 활용하여 장소 구분짓기
+        let index = poiItem.tag
+        
     }
 }
