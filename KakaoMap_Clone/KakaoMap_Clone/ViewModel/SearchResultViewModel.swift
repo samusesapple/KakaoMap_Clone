@@ -10,12 +10,15 @@ import Foundation
 class SearchResultViewModel {
     
     // MARK: - Stored Properties
-
+    
     private var keyword: String?
     
     private var results: [KeywordDocument]?
     
     private var tappedHistory: [SearchHistory] = []
+    
+    var isMapBasedData: Bool = true
+    var isAccurancyAlignment: Bool = true
     
     // MARK: - Computed Properties
     
@@ -29,7 +32,7 @@ class SearchResultViewModel {
     }
     
     var getTappedHistory: [SearchHistory] {
-            return tappedHistory
+        return tappedHistory
     }
     
     // MARK: - Initializer
@@ -47,6 +50,22 @@ class SearchResultViewModel {
         let newTappedHistory = SearchHistory(type: UIImage(systemName: "building.2")!,
                                              searchText: location)
         self.tappedHistory.insert(newTappedHistory, at: 0)
+    }
+    
+    func filterResults(with id: Int) -> KeywordDocument {
+        let result = results?.filter({ $0.id == String(id) }).first
+        return result!
+    }
+    
+    func sortByDistance(){
+        let sortedResult = results?.sorted(by: { firstData, secondData in
+            guard let stringDistance1 = firstData.distance,
+                  let stringDistance2 = firstData.distance,
+                  let distance1 = Int(stringDistance1),
+                  let distance2 = Int(stringDistance2) else { return false }
+            return distance1 > distance2
+        })
+        self.results = sortedResult
     }
     
 }

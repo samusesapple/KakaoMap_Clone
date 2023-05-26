@@ -64,12 +64,12 @@ class CustomAlignmentAlertView: UIView {
     
     // MARK: - Lifecycle
     
-    init(isCenterAlignment: Bool) {
+    init(isCenterAlignment: Bool, firstButtonTapped: Bool) {
         super.init(frame: .zero)
         backgroundColor = UIColor(red: 33/255, green: 33/255, blue: 33/255, alpha: 0.3)
         
         setAutolayout()
-        configureUI(isCenterAlignment: isCenterAlignment)
+        configureUI(isCenterAlignment: isCenterAlignment, firstButtonTapped: firstButtonTapped)
     }
     
     required init?(coder: NSCoder) {
@@ -92,19 +92,21 @@ class CustomAlignmentAlertView: UIView {
         buttonStackView.centerY(inView: containerView)
     }
     
-    func configureUI(isCenterAlignment: Bool) {
+    func configureUI(isCenterAlignment: Bool, firstButtonTapped: Bool) {
         if isCenterAlignment {
             mainLabel.text = "중심점"
             firstButton.setTitle("내위치중심", for: .normal)
             secondButton.setTitle("지도중심", for: .normal)
-            
-            secondButton.layer.borderColor = #colorLiteral(red: 0.03529411765, green: 0.5176470588, blue: 0.8901960784, alpha: 1)
-            secondButton.tintColor = #colorLiteral(red: 0.03529411765, green: 0.5176470588, blue: 0.8901960784, alpha: 1)
         } else {
             mainLabel.text = "정렬 옵션"
             firstButton.setTitle("정확도순", for: .normal)
             secondButton.setTitle("거리순", for: .normal)
-            
+        }
+        
+        if !firstButtonTapped {
+            secondButton.layer.borderColor = #colorLiteral(red: 0.03529411765, green: 0.5176470588, blue: 0.8901960784, alpha: 1)
+            secondButton.tintColor = #colorLiteral(red: 0.03529411765, green: 0.5176470588, blue: 0.8901960784, alpha: 1)
+        } else {
             firstButton.layer.borderColor = #colorLiteral(red: 0.03529411765, green: 0.5176470588, blue: 0.8901960784, alpha: 1)
             firstButton.tintColor = #colorLiteral(red: 0.03529411765, green: 0.5176470588, blue: 0.8901960784, alpha: 1)
         }

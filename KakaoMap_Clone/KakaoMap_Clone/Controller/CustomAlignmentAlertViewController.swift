@@ -7,15 +7,29 @@
 
 import UIKit
 
+protocol CustomAlignmentAlertViewControllerDelegate: AnyObject {
+    /// 현재 위치 기준 중심점으로 검색
+    func getCurrentLocationBaseData()
+    /// 지도 위치 기준 중심점으로 검색
+    func getMapBoundaryBaseData()
+    
+    /// 정확도 순 정렬
+    func correctInfoBaseAlignment()
+    /// 가까운 거리순 정렬
+    func shortDistanceFirstAlignment()
+}
+
 class CustomAlignmentAlertViewController: UIViewController {
     
     private var alertView: CustomAlignmentAlertView?
     
+    weak var delegate: CustomAlignmentAlertViewControllerDelegate?
+    
     // MARK: - Lifecycle
     
-    init(isCenterAlignment: Bool) {
+    init(isCenterAlignment: Bool, firstButtonTapped: Bool) {
         super.init(nibName: nil, bundle: nil)
-        alertView = CustomAlignmentAlertView(isCenterAlignment: isCenterAlignment)
+        alertView = CustomAlignmentAlertView(isCenterAlignment: isCenterAlignment, firstButtonTapped: firstButtonTapped)
     }
     
     override func loadView() {
@@ -40,6 +54,13 @@ class CustomAlignmentAlertViewController: UIViewController {
         alertView?.getSecondButton().tintColor = .gray
         alertView?.getSecondButton().layer.borderColor = UIColor.gray.cgColor
         // 위치기준 변경 혹은 정렬 변경에 따라 SearchResultVC 업데이트 + self.dismiss
+        
+        if alertView?.getFirstButton().titleLabel?.text == "내위치중심" {
+            delegate?.getCurrentLocationBaseData()
+        } else {
+            delegate?.correctInfoBaseAlignment()
+        }
+        self.dismiss(animated: true)
     }
 
     @objc private func secondButtonTapped() {
@@ -49,6 +70,14 @@ class CustomAlignmentAlertViewController: UIViewController {
         alertView?.getFirstButton().tintColor = .gray
         alertView?.getFirstButton().layer.borderColor = UIColor.gray.cgColor
         // 위치기준 변경 혹은 정렬 변경에 따라 SearchResultVC 업데이트 + self.dismiss
+        
+        if alertView?.getSecondButton().titleLabel?.text == "지도중심" {
+            delegate?.getMapBoundaryBaseData()
+        }
+        if alertView?.getSecondButton().titleLabel?.text == "거리순" {
+            delegate?.shortDistanceFirstAlignment()
+        }
+        self.dismiss(animated: true)
     }
     
     @objc private func cancelButtonTapped() {

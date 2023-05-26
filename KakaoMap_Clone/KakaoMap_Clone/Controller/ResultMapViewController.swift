@@ -28,6 +28,7 @@ class ResultMapViewController: UIViewController {
     private let mapView: MTMapView = {
         let mapView = MTMapView()
         mapView.baseMapType = .standard
+        mapView.backgroundColor = .black
         return mapView
     }()
     
@@ -46,7 +47,6 @@ class ResultMapViewController: UIViewController {
     
     private let centerAlignmentButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle("지도중심 ▾", for: .normal)
         button.tintColor = .darkGray
         button.titleLabel?.font = UIFont.systemFont(ofSize: 13)
         return button
@@ -54,7 +54,6 @@ class ResultMapViewController: UIViewController {
     
     private let accuracyAlignmentButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle("정확도순 ▾", for: .normal)
         button.tintColor = .darkGray
         button.titleLabel?.font = UIFont.systemFont(ofSize: 13)
         return button
@@ -110,9 +109,8 @@ class ResultMapViewController: UIViewController {
     
     // MARK: - Lifecycle
     
-    init(title: String, results: [KeywordDocument]) {
+    init(title: String, viewModel: SearchResultViewModel) {
         super.init(nibName: nil, bundle: nil)
-        let viewModel = SearchResultViewModel(keyword: title, results: results)
         self.viewModel = viewModel
         searchBarView.getSearchBar().text = title
     }
@@ -131,7 +129,7 @@ class ResultMapViewController: UIViewController {
         
         setAutolayout()
         setActions()
-        setSearchBar()
+        setSearchBarAndAlignmentButtons()
         
         configureUIwithData(place: viewModel.getResults[0])
         
@@ -140,7 +138,7 @@ class ResultMapViewController: UIViewController {
     
     override func viewWillDisappear(_ animated: Bool) {
         for item in mapView.poiItems {
-            mapView.remove(item as! MTMapPOIItem)
+            mapView.remove(item as? MTMapPOIItem)
         }
     }
     
@@ -164,18 +162,26 @@ class ResultMapViewController: UIViewController {
     
     @objc private func centerAlignmentButtonTapped() {
         // 정렬 옵션 선택할 view push 하기  >  정렬 옵션 변경 된 경우 버튼 글자 변경 및 테이블뷰 정렬 변경
-        let alertVC = CustomAlignmentAlertViewController(isCenterAlignment: true)
+        let firstButtonTapped = centerAlignmentButton.titleLabel?.text != "지도중심 ▾" ? true : false
+        let alertVC = CustomAlignmentAlertViewController(isCenterAlignment: true,
+                                                         firstButtonTapped: firstButtonTapped)
+//        alertVC.delegate = self
         alertVC.modalPresentationStyle = UIModalPresentationStyle.overCurrentContext
         alertVC.modalTransitionStyle = UIModalTransitionStyle.crossDissolve
         present(alertVC, animated: true)
+        print(#function)
     }
     
     @objc private func accuracyAlignmentButtonTapped() {
         // 정렬 옵션 선택할 view push 하기  >  정렬 옵션 변경 된 경우 버튼 글자 변경 및 테이블뷰 정렬 변경
-        let alertVC = CustomAlignmentAlertViewController(isCenterAlignment: false)
+        let firstButtonTapped = accuracyAlignmentButton.titleLabel?.text == "정확도순 ▾" ? true : false
+        let alertVC = CustomAlignmentAlertViewController(isCenterAlignment: false,
+                                                         firstButtonTapped: firstButtonTapped)
+//        alertVC.delegate = self
         alertVC.modalPresentationStyle = UIModalPresentationStyle.overCurrentContext
         alertVC.modalTransitionStyle = UIModalTransitionStyle.crossDissolve
         present(alertVC, animated: true)
+        print(#function)
     }
     
     // MARK: - Helpers
@@ -213,8 +219,20 @@ class ResultMapViewController: UIViewController {
         accuracyAlignmentButton.addTarget(self, action: #selector(accuracyAlignmentButtonTapped), for: .touchUpInside)
     }
     
-    private func setSearchBar() {
+    private func setSearchBarAndAlignmentButtons() {
         searchBarView.getSearchBar().showsCancelButton = false
+        
+        if viewModel.isMapBasedData {
+            centerAlignmentButton.setTitle("지도중심 ▾", for: .normal)
+        } else {
+            centerAlignmentButton.setTitle("내위치중심 ▾", for: .normal)
+        }
+        
+        if viewModel.isAccurancyAlignment {
+            accuracyAlignmentButton.setTitle("정확도순 ▾", for: .normal)
+        } else {
+            accuracyAlignmentButton.setTitle("거리순 ▾", for: .normal)
+        }
     }
     
     private func setMapView() {
@@ -229,6 +247,9 @@ class ResultMapViewController: UIViewController {
               let lon = Double(stringLon),
               let lat = Double(stringLat) else { return }
         mapView.setMapCenter(MTMapPoint(geoCoord: MTMapPointGeo(latitude: lat, longitude: lon)), zoomLevel: .min, animated: true)
+        
+        let firstPoi = mapView.poiItems.first as! MTMapPOIItem
+        mapView.select(firstPoi, animated: true)
         print("맵뷰 중심 세팅 - \(firstItem.placeName)")
     }
 }
@@ -252,11 +273,16 @@ extension ResultMapViewController: MTMapViewDelegate {
             }
             self.mapPoint = MTMapPoint(geoCoord: MTMapPointGeo(latitude: lat, longitude: lon))
             
-            let customPoiImage = UIImage(named: "bluePoint")?.scalePreservingAspectRatio(targetSize: CGSize(width: 20, height: 20))
+            let customPoiImage = UIImage(named: "bluePoint")?.scalePreservingAspectRatio(targetSize: CGSize(width: 25, height: 25))
+            let selectedPoiImage = UIImage(named: "selectedBluePoint")?.scalePreservingAspectRatio(targetSize: CGSize(width: 35, height: 35))
             
             poiItem = MTMapPOIItem()
             poiItem?.markerType = .customImage
             poiItem?.customImage = customPoiImage
+
+            poiItem?.markerSelectedType = .customImage
+            poiItem?.customSelectedImage = selectedPoiImage
+            
             poiItem?.mapPoint = mapPoint
             poiItem?.itemName = item.placeName
             poiItem?.tag = placeID
@@ -266,10 +292,10 @@ extension ResultMapViewController: MTMapViewDelegate {
         }
     }
     
-    func mapView(_ mapView: MTMapView!, touchedCalloutBalloonOf poiItem: MTMapPOIItem!) {
-        // 태그를 활용하여 장소 구분짓기
-        let targetPlace = viewModel.getResults.filter { $0.id == String(poiItem.tag) }[0]
+    func mapView(_ mapView: MTMapView!, selectedPOIItem poiItem: MTMapPOIItem!) -> Bool {
+        let targetPlace = viewModel.filterResults(with: poiItem.tag)
         configureUIwithData(place: targetPlace)
+        return false
     }
-    
+
 }

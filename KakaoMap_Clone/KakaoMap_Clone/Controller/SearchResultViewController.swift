@@ -86,13 +86,14 @@ class SearchResultViewController: UIViewController {
         setActions()
         setSearchBar()
     }
-
+    
     // MARK: - Actions
     
     @objc private func mapButtonTapped() {
         // ResultMapView에 정보 전달 및 띄우기
         guard let title = searchBarView.getSearchBar().text else { return }
-        let resultMapVC = ResultMapViewController(title: title, results: viewModel.getResults)
+        let resultMapVC = ResultMapViewController(title: title,
+                                                  viewModel: viewModel)
         resultMapVC.delegate = self
         navigationController?.pushViewController(resultMapVC, animated: false)
     }
@@ -112,7 +113,10 @@ class SearchResultViewController: UIViewController {
     
     @objc private func centerAlignmentButtonTapped() {
         // 정렬 옵션 선택할 view push 하기  >  정렬 옵션 변경 된 경우 버튼 글자 변경 및 테이블뷰 정렬 변경
-        let alertVC = CustomAlignmentAlertViewController(isCenterAlignment: true)
+        let firstButtonTapped = centerAlignmentButton.titleLabel?.text != "지도중심 ▾" ? true : false
+        let alertVC = CustomAlignmentAlertViewController(isCenterAlignment: true,
+                                                         firstButtonTapped: firstButtonTapped)
+        alertVC.delegate = self
         alertVC.modalPresentationStyle = UIModalPresentationStyle.overCurrentContext
         alertVC.modalTransitionStyle = UIModalTransitionStyle.crossDissolve
         present(alertVC, animated: true)
@@ -121,7 +125,10 @@ class SearchResultViewController: UIViewController {
     
     @objc private func accuracyAlignmentButtonTapped() {
         // 정렬 옵션 선택할 view push 하기  >  정렬 옵션 변경 된 경우 버튼 글자 변경 및 테이블뷰 정렬 변경
-        let alertVC = CustomAlignmentAlertViewController(isCenterAlignment: false)
+        let firstButtonTapped = accuracyAlignmentButton.titleLabel?.text == "정확도순 ▾" ? true : false
+        let alertVC = CustomAlignmentAlertViewController(isCenterAlignment: false,
+                                                         firstButtonTapped: firstButtonTapped)
+        alertVC.delegate = self
         alertVC.modalPresentationStyle = UIModalPresentationStyle.overCurrentContext
         alertVC.modalTransitionStyle = UIModalTransitionStyle.crossDissolve
         present(alertVC, animated: true)
@@ -201,4 +208,32 @@ extension SearchResultViewController: ResultMapViewControllerDelegate {
         cancelButtonTapped()
     }
     
+}
+
+// MARK: - CustomAlignmentAlertViewControllerDelegate
+
+extension SearchResultViewController: CustomAlignmentAlertViewControllerDelegate {
+    func getCurrentLocationBaseData() {
+        print("현재 위치 기준으로 정보 받기")
+        centerAlignmentButton.setTitle("내위치중심 ▾", for: .normal)
+        viewModel.isMapBasedData = false
+    }
+    
+    func getMapBoundaryBaseData() {
+        print("지도상 위치 기준으로 정보 받기")
+        centerAlignmentButton.setTitle("지도중심 ▾", for: .normal)
+        viewModel.isMapBasedData = true
+    }
+    
+    func correctInfoBaseAlignment() {
+        print("정확도 순으로 정렬")
+        accuracyAlignmentButton.setTitle("정확도순 ▾", for: .normal)
+        viewModel.isAccurancyAlignment = true
+    }
+    
+    func shortDistanceFirstAlignment() {
+        print("거리순으로 정렬")
+        accuracyAlignmentButton.setTitle("거리순 ▾", for: .normal)
+        viewModel.isAccurancyAlignment = false
+    }
 }
