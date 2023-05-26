@@ -109,10 +109,16 @@ class ResultMapViewController: UIViewController {
     
     // MARK: - Lifecycle
     
-    init(title: String, viewModel: SearchResultViewModel) {
+    init(title: String, viewModel: SearchResultViewModel, place: KeywordDocument? = nil) {
         super.init(nibName: nil, bundle: nil)
         self.viewModel = viewModel
         searchBarView.getSearchBar().text = title
+        guard let targetPlace = place else {
+            configureUIwithData(place: viewModel.getResults[0])
+            return
+        }
+        configureUIwithData(place: targetPlace)
+        setMapView(with: place)
     }
     
     required init?(coder: NSCoder) {
@@ -130,10 +136,6 @@ class ResultMapViewController: UIViewController {
         setAutolayout()
         setActions()
         setSearchBarAndAlignmentButtons()
-        
-        configureUIwithData(place: viewModel.getResults[0])
-        
-        setMapView()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -165,7 +167,7 @@ class ResultMapViewController: UIViewController {
         let firstButtonTapped = centerAlignmentButton.titleLabel?.text != "지도중심 ▾" ? true : false
         let alertVC = CustomAlignmentAlertViewController(isCenterAlignment: true,
                                                          firstButtonTapped: firstButtonTapped)
-//        alertVC.delegate = self
+        //        alertVC.delegate = self
         alertVC.modalPresentationStyle = UIModalPresentationStyle.overCurrentContext
         alertVC.modalTransitionStyle = UIModalTransitionStyle.crossDissolve
         present(alertVC, animated: true)
@@ -177,7 +179,7 @@ class ResultMapViewController: UIViewController {
         let firstButtonTapped = accuracyAlignmentButton.titleLabel?.text == "정확도순 ▾" ? true : false
         let alertVC = CustomAlignmentAlertViewController(isCenterAlignment: false,
                                                          firstButtonTapped: firstButtonTapped)
-//        alertVC.delegate = self
+        //        alertVC.delegate = self
         alertVC.modalPresentationStyle = UIModalPresentationStyle.overCurrentContext
         alertVC.modalTransitionStyle = UIModalTransitionStyle.crossDissolve
         present(alertVC, animated: true)
@@ -186,7 +188,13 @@ class ResultMapViewController: UIViewController {
     
     // MARK: - Helpers
     
-    private func configureUIwithData(place: KeywordDocument) {
+    private func configureUIwithData(place: KeywordDocument?) {
+        guard let place = place else {
+            placeNameLabel.text = viewModel.getResults.first?.placeName
+            placeCategoryLabel.text = viewModel.getResults.first?.categoryGroupName
+            addressLabel.text = viewModel.getResults.first?.roadAddressName
+            return
+        }
         placeNameLabel.text = place.placeName
         placeCategoryLabel.text = place.categoryGroupName
         addressLabel.text = place.roadAddressName
@@ -235,22 +243,36 @@ class ResultMapViewController: UIViewController {
         }
     }
     
-    private func setMapView() {
+    private func setMapView(with place: KeywordDocument?) {
         mapView.delegate = self
         mapView.currentLocationTrackingMode = .off
         
         makeMarker()
         
-        guard let firstItem = viewModel.getResults.first,
-              let stringLon = firstItem.x,
-              let stringLat = firstItem.y,
+        guard let place = place,
+              let stringLon = place.x,
+              let stringLat = place.y,
               let lon = Double(stringLon),
-              let lat = Double(stringLat) else { return }
+              let lat = Double(stringLat),
+              let placeId = place.id,
+              let poiItems = mapView.poiItems as? [MTMapPOIItem]
+        else {
+            guard let firstItem = viewModel.getResults.first,
+                  let stringLon = firstItem.x,
+                  let stringLat = firstItem.y,
+                  let lon = Double(stringLon),
+                  let lat = Double(stringLat) else { return }
+            mapView.setMapCenter(MTMapPoint(geoCoord: MTMapPointGeo(latitude: lat, longitude: lon)), zoomLevel: .min, animated: true)
+            
+            let firstPoi = mapView.poiItems.first as! MTMapPOIItem
+            mapView.select(firstPoi, animated: true)
+            print("맵뷰 중심 세팅 - \(firstItem.placeName)")
+            return
+        }
         mapView.setMapCenter(MTMapPoint(geoCoord: MTMapPointGeo(latitude: lat, longitude: lon)), zoomLevel: .min, animated: true)
         
-        let firstPoi = mapView.poiItems.first as! MTMapPOIItem
-        mapView.select(firstPoi, animated: true)
-        print("맵뷰 중심 세팅 - \(firstItem.placeName)")
+        let targetPoi = poiItems.filter({ $0.tag == Int(placeId) })[0]
+        mapView.select(targetPoi, animated: true)
     }
 }
 
@@ -279,7 +301,7 @@ extension ResultMapViewController: MTMapViewDelegate {
             poiItem = MTMapPOIItem()
             poiItem?.markerType = .customImage
             poiItem?.customImage = customPoiImage
-
+            
             poiItem?.markerSelectedType = .customImage
             poiItem?.customSelectedImage = selectedPoiImage
             
@@ -297,5 +319,5 @@ extension ResultMapViewController: MTMapViewDelegate {
         configureUIwithData(place: targetPlace)
         return false
     }
-
+    
 }

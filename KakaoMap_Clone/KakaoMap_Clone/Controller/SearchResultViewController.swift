@@ -185,7 +185,6 @@ extension SearchResultViewController: UITableViewDelegate, UITableViewDataSource
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        print("선택된 장소의 상세 페이지 보여주기")
         tableView.deselectRow(at: indexPath, animated: true)
         let result = viewModel.getResults[indexPath.row]
         guard let placeName = result.placeName else {
@@ -193,6 +192,10 @@ extension SearchResultViewController: UITableViewDelegate, UITableViewDataSource
             return
         }
         viewModel.updateNewTappedHistory(location: placeName)
+        let mapResultView = ResultMapViewController(title: searchBarView.getSearchBar().text!,
+                                                    viewModel: viewModel,
+                                                    place: result)
+        self.navigationController?.pushViewController(mapResultView, animated: false)
     }
     
 }

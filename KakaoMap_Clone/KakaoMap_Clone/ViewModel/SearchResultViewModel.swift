@@ -11,6 +11,14 @@ class SearchResultViewModel {
     
     // MARK: - Stored Properties
     
+    static let measureFormatter: MeasurementFormatter = {
+        let formatter = MeasurementFormatter()
+        formatter.unitOptions = .providedUnit
+        formatter.unitStyle = .medium
+        formatter.numberFormatter.maximumFractionDigits = 1
+        return formatter
+    }()
+    
     private var keyword: String?
     
     private var results: [KeywordDocument]?
@@ -67,5 +75,5 @@ class SearchResultViewModel {
         })
         self.results = sortedResult
     }
-    
+
 }

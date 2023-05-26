@@ -11,6 +11,8 @@ class SearchResultTableViewCell: UITableViewCell {
     
     // MARK: - Properties
     
+    private let viewModel = SearchResultViewModel()
+    
     private let placeNameLabel: UILabel = {
         let label = UILabel()
         label.textColor = .black.withAlphaComponent(0.8)
@@ -112,11 +114,7 @@ class SearchResultTableViewCell: UITableViewCell {
             let doubleDistance = Double(distance)!
             let measurement = Measurement(value: doubleDistance, unit: UnitLength.meters).converted(to: .kilometers)
             
-            let measureFormatter = MeasurementFormatter()
-            measureFormatter.unitOptions = .providedUnit
-            measureFormatter.unitStyle = .medium
-            measureFormatter.numberFormatter.maximumFractionDigits = 1
-            distanceLabel.text = measureFormatter.string(from: measurement)
+            distanceLabel.text = SearchResultViewModel.measureFormatter.string(from: measurement)
         } else {
             distanceLabel.text = distance + "m"
         }
