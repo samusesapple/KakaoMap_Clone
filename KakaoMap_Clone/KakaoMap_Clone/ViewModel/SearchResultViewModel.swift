@@ -25,6 +25,8 @@ class SearchResultViewModel {
     
     private var tappedHistory: [SearchHistory] = []
     
+    private var selectedPlace: KeywordDocument?
+    
     var isMapBasedData: Bool = true
     var isAccurancyAlignment: Bool = true
     
@@ -41,6 +43,15 @@ class SearchResultViewModel {
     
     var getTappedHistory: [SearchHistory] {
         return tappedHistory
+    }
+    
+    var targetPlace: KeywordDocument? {
+        get {
+            return selectedPlace
+        }
+        set {
+            selectedPlace = newValue
+        }
     }
     
     // MARK: - Initializer

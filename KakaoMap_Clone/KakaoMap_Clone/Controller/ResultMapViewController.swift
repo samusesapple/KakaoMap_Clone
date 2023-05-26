@@ -113,12 +113,7 @@ class ResultMapViewController: UIViewController {
         super.init(nibName: nil, bundle: nil)
         self.viewModel = viewModel
         searchBarView.getSearchBar().text = title
-        guard let targetPlace = place else {
-            configureUIwithData(place: viewModel.getResults[0])
-            return
-        }
-        configureUIwithData(place: targetPlace)
-        setMapView(with: place)
+        viewModel.targetPlace = place
     }
     
     required init?(coder: NSCoder) {
@@ -136,6 +131,14 @@ class ResultMapViewController: UIViewController {
         setAutolayout()
         setActions()
         setSearchBarAndAlignmentButtons()
+        
+        guard let targetPlace = viewModel.targetPlace else {
+            configureUIwithData(place: viewModel.getResults[0])
+            setMapView(with: viewModel.getResults[0])
+            return
+        }
+        configureUIwithData(place: targetPlace)
+        setMapView(with: targetPlace)
     }
     
     override func viewWillDisappear(_ animated: Bool) {
