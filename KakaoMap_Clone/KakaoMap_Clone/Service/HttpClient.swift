@@ -26,12 +26,13 @@ class HttpClient {
         ]
     }
     
-    private func keywordParameters(query: String, lon: String, lat: String, page: Int) -> [String: Any] {
+    private func keywordParameters(query: String, lon: String, lat: String, page: Int, isAccurancy: Bool) -> [String: Any] {
         [
             "query": query,
             "x": lon,
             "y": lat,
-            "page": page
+            "page": page,
+            "sort": isAccurancy ? "accuracy": "distance"
         ]
     }
     
@@ -56,7 +57,7 @@ class HttpClient {
     }
     
     /// 키워드로 검색하기 (상호명 등을 검색)
-    func searchKeyword(with keyword: String, lon: String, lat: String, page: Int, completion: @escaping (KeywordResult) -> Void) {
+    func searchKeyword(with keyword: String, lon: String, lat: String, page: Int, isAccuracy: Bool = true, completion: @escaping (KeywordResult?) -> Void) {
         let url = "https://dapi.kakao.com/v2/local/search/keyword.json"
         
         AF.request(url,
@@ -64,7 +65,8 @@ class HttpClient {
                    parameters: keywordParameters(query: keyword,
                                                  lon: lon,
                                                  lat: lat,
-                                                 page: page),
+                                                 page: page,
+                                                 isAccurancy: isAccuracy),
                    encoding: URLEncoding.default,
                    headers: headers)
         .validate(statusCode: 200..<600)
@@ -78,6 +80,7 @@ class HttpClient {
                 guard let totalPage = searchResult.meta?.pageableCount,
                       totalPage >= page else {
                     print("HTTP Client - searchKeyword 총 데이터 페이지수 : \(String(describing: searchResult.meta?.pageableCount))")
+                    completion(nil)
                     return
                 }
                 completion(searchResult)

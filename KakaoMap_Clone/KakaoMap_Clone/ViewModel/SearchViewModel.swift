@@ -99,8 +99,8 @@ class SearchViewModel {
                                         lon: lon,
                                         lat: lat,
                                         page: 1) { [weak self] result in
-            guard let keywordResultArray = result.documents,
-                  let totalPage = result.meta?.pageableCount,
+            guard let keywordResultArray = result?.documents,
+                  let totalPage = result?.meta?.pageableCount,
                       totalPage > 1 else {
                 print("SearchVM - 결과 없음")
                 self?.dismissProgressHUD()

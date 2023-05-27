@@ -209,10 +209,11 @@ extension SearchResultViewController: UITableViewDelegate, UITableViewDataSource
         }
         // 검색 기록 추가 + 해당되는 셀의 장소 보여주는 mapResultVC push 하기
         viewModel.updateNewTappedHistory(location: placeName)
-        let mapResultView = ResultMapViewController(title: searchBarView.getSearchBar().text!,
+        let resultMapVC = ResultMapViewController(title: searchBarView.getSearchBar().text!,
                                                     viewModel: viewModel,
                                                     place: result)
-        self.navigationController?.pushViewController(mapResultView, animated: false)
+        resultMapVC.delegate = self
+        self.navigationController?.pushViewController(resultMapVC, animated: false)
     }
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
@@ -256,12 +257,14 @@ extension SearchResultViewController: CustomAlignmentAlertViewControllerDelegate
     func correctInfoBaseAlignment() {
         print("정확도 순으로 정렬")
         accuracyAlignmentButton.setTitle("정확도순 ▾", for: .normal)
-        viewModel.isAccurancyAlignment = true
+        viewModel.isAccuracyAlignment = true
+        viewModel.sortAccuracyAlignment()
     }
     
     func shortDistanceFirstAlignment() {
         print("거리순으로 정렬")
         accuracyAlignmentButton.setTitle("거리순 ▾", for: .normal)
-        viewModel.isAccurancyAlignment = false
+        viewModel.isAccuracyAlignment = false
+        viewModel.sortAccuracyAlignment()
     }
 }

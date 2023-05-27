@@ -247,7 +247,7 @@ class ResultMapViewController: UIViewController {
             centerAlignmentButton.setTitle("내위치중심 ▾", for: .normal)
         }
         
-        if viewModel.isAccurancyAlignment {
+        if viewModel.isAccuracyAlignment {
             accuracyAlignmentButton.setTitle("정확도순 ▾", for: .normal)
         } else {
             accuracyAlignmentButton.setTitle("거리순 ▾", for: .normal)

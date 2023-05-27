@@ -32,7 +32,7 @@ class SearchResultViewModel {
     private var loading: Bool = false
     
     var isMapBasedData: Bool = true
-    var isAccurancyAlignment: Bool = true
+    var isAccuracyAlignment: Bool = true
     
     // MARK: - Computed Properties
     
@@ -106,42 +106,57 @@ class SearchResultViewModel {
         return result!
     }
     
-    func sortByDistance(){
-        let sortedResult = results?.sorted(by: { firstData, secondData in
-            guard let stringDistance1 = firstData.distance,
-                  let stringDistance2 = firstData.distance,
-                  let distance1 = Int(stringDistance1),
-                  let distance2 = Int(stringDistance2) else { return false }
-            return distance1 > distance2
-        })
-        self.results = sortedResult
-    }
-
-    func getNextPageResult() {
-        if loading { return }
-        loading = true
-        loadingStarted()
-        page += 1
+    func sortAccuracyAlignment(){
         guard let lon = longtitude,
               let lat = latitude,
-              let keyword = keyword else { return }
+              let keyword = keyword,
+              !loading else { return }
+        
+        loading = true
+        loadingStarted()
+        
         HttpClient.shared.searchKeyword(with: keyword,
                                         lon: lon,
                                         lat: lat,
-                                        page: page) { [weak self] result in
-            guard let newResults = result.documents else { return }
+                                        page: 1,
+                                        isAccuracy: isAccuracyAlignment) { [weak self] result in
+            guard let newResults = result?.documents else {
+                self?.finishLoading()
+                return
+            }
+            self?.results = newResults
+            self?.finishLoading()
+            self?.loading = false
+            print("거리순 정렬 완료")
+        }
+    }
+    
+    func getNextPageResult() {
+        guard let lon = longtitude,
+              let lat = latitude,
+              let keyword = keyword,
+              let currentResultCount = results?.count,
+              currentResultCount >= 15,
+              !loading else { return }
+        
+        loading = true
+        loadingStarted()
+        page += 1
+        
+        HttpClient.shared.searchKeyword(with: keyword,
+                                        lon: lon,
+                                        lat: lat,
+                                        page: page,
+                                        isAccuracy: isAccuracyAlignment) { [weak self] result in
+            guard let newResults = result?.documents else {
+                self?.finishLoading()
+                return
+            }
+            
             newResults.forEach({ self?.results?.append($0)})
             self?.finishLoading()
             self?.loading = false
             print("\(String(describing: self?.page))번째 item list 가져옴")
         }
-//        repository.next(currentPage: lectureList) {
-//            var lectureList = $0
-//            lectureList.lectures.insert(contentsOf: self.lectureList.lectures, at: 0)
-//            self.lectureList = lectureList
-//            self.lectureListUpdated()
-//            self.loadingEnded()
-//            self.loading = false
-//        }
     }
 }
