@@ -32,8 +32,6 @@ class SearchViewModel {
     
     private var searchHistories: [SearchHistory]?
     
-    private var searchPage: Int = 1
-    
     private var longitude: String?
     private var latitude: String?
     
@@ -45,6 +43,14 @@ class SearchViewModel {
     /// [get] searchHistory 배열 받기
     var getSetSearchHistories: [SearchHistory] {
         return searchHistories ?? []
+    }
+    
+    var lon: String? {
+        return longitude
+    }
+    
+    var lat: String? {
+        return latitude
     }
     
     var showProgressHUD = { }
@@ -92,7 +98,7 @@ class SearchViewModel {
         HttpClient.shared.searchKeyword(with: keyword,
                                         lon: lon,
                                         lat: lat,
-                                        page: searchPage) { [weak self] result in
+                                        page: 1) { [weak self] result in
             guard let keywordResultArray = result.documents,
                   let totalPage = result.meta?.pageableCount,
                       totalPage > 1 else {

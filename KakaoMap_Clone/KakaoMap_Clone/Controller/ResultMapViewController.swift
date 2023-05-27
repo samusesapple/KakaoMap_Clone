@@ -7,6 +7,7 @@
 
 import UIKit
 import CoreLocation
+import JGProgressHUD
 
 protocol ResultMapViewControllerDelegate: AnyObject {
     func needToShowSearchVC()
@@ -22,6 +23,8 @@ class ResultMapViewController: UIViewController {
     private var poiItem: MTMapPOIItem?
     
     private var viewModel = SearchResultViewModel()
+    
+    private let progressHud = JGProgressHUD(style: .dark)
     
     weak var delegate: ResultMapViewControllerDelegate?
     
@@ -132,13 +135,7 @@ class ResultMapViewController: UIViewController {
         setActions()
         setSearchBarAndAlignmentButtons()
         
-        guard let targetPlace = viewModel.targetPlace else {
-            configureUIwithData(place: viewModel.getResults[0])
-            setMapView(with: viewModel.getResults[0])
-            return
-        }
-        configureUIwithData(place: targetPlace)
-        setMapView(with: targetPlace)
+        checkIfTargetPlaceExists()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -190,7 +187,18 @@ class ResultMapViewController: UIViewController {
     }
     
     // MARK: - Helpers
+    /// 장소 선택 유무에 따라 다른 UI를 띄우기
+    private func checkIfTargetPlaceExists() {
+        guard let targetPlace = viewModel.targetPlace else {
+            configureUIwithData(place: viewModel.getResults[0])
+            setMapView(with: viewModel.getResults[0])
+            return
+        }
+        configureUIwithData(place: targetPlace)
+        setMapView(with: targetPlace)
+    }
     
+    /// FooterView의 UI를 선택된 장소 유무에 따라 다르게 띄우기
     private func configureUIwithData(place: KeywordDocument?) {
         guard let place = place else {
             placeNameLabel.text = viewModel.getResults.first?.placeName
@@ -245,7 +253,7 @@ class ResultMapViewController: UIViewController {
             accuracyAlignmentButton.setTitle("거리순 ▾", for: .normal)
         }
     }
-    
+    /// mapView 세팅 - 선택된 장소 유무에 따라 맵뷰의 중심점 세팅하기
     private func setMapView(with place: KeywordDocument?) {
         mapView.delegate = self
         mapView.currentLocationTrackingMode = .off

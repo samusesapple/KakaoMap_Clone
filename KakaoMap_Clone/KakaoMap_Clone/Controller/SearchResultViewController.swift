@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import JGProgressHUD
 
 protocol SearchResultViewControllerDelegate: AnyObject {
     func needToPresentMainView()
@@ -18,6 +19,8 @@ class SearchResultViewController: UIViewController {
     private var viewModel = SearchResultViewModel()
     weak var delegate: SearchResultViewControllerDelegate?
     
+    private let progressHud = JGProgressHUD(style: .dark)
+
     private let searchBarView = CustomSearchBarView(placeholder: "장소 및 주소 검색",
                                                     needBorderLine: true,
                                                     needCancelButton: true)
@@ -67,9 +70,12 @@ class SearchResultViewController: UIViewController {
     
     // MARK: - Lifecycle
     
-    init(keyword: String, results: [KeywordDocument]) {
+    init(keyword: String, results: [KeywordDocument], lon: String, lat: String) {
         super.init(nibName: nil, bundle: nil)
-        let viewModel = SearchResultViewModel(keyword: keyword, results: results)
+        let viewModel = SearchResultViewModel(lon: lon,
+                                              lat: lat,
+                                              keyword: keyword,
+                                              results: results)
         self.viewModel = viewModel
         searchBarView.getSearchBar().searchTextField.text = keyword
     }
@@ -85,6 +91,16 @@ class SearchResultViewController: UIViewController {
         setAutolayout()
         setActions()
         setSearchBar()
+        
+        viewModel.loadingStarted = { [weak self] in
+            guard let view = self?.view else { return }
+            self?.progressHud.show(in: view)
+        }
+        
+        viewModel.finishLoading = { [weak self] in
+            self?.tableView.reloadData()
+            self?.progressHud.dismiss()
+        }
     }
     
     // MARK: - Actions
@@ -191,6 +207,7 @@ extension SearchResultViewController: UITableViewDelegate, UITableViewDataSource
             print("SearchResultVC - placeName error")
             return
         }
+        // 검색 기록 추가 + 해당되는 셀의 장소 보여주는 mapResultVC push 하기
         viewModel.updateNewTappedHistory(location: placeName)
         let mapResultView = ResultMapViewController(title: searchBarView.getSearchBar().text!,
                                                     viewModel: viewModel,
@@ -198,6 +215,14 @@ extension SearchResultViewController: UITableViewDelegate, UITableViewDataSource
         self.navigationController?.pushViewController(mapResultView, animated: false)
     }
     
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        let offsetY = scrollView.contentOffset.y
+        let contentHeight = scrollView.contentSize.height
+
+        if offsetY > contentHeight - scrollView.frame.height {
+            viewModel.getNextPageResult()
+        }
+    }
 }
 
 // MARK: - ResultMapViewControllerDelegate

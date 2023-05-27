@@ -181,8 +181,13 @@ extension SearchViewController: UITableViewDelegate, UITableViewDataSource {
         // 1. 장소 정보 없는 검색의 경우 - 현재 위치 기준으로 해당 키워드로 검색 -> SearchResultVC에 결과 띄우기
         if image == UIImage(systemName: "magnifyingglass") {
             viewModel.getKeywordSearchResult(with: keyword) { [weak self] results in
+                guard let lon = self?.viewModel.lon,
+                      let lat = self?.viewModel.lat else { return }
                 self?.tableView.reloadData()
-                let searchVC = SearchResultViewController(keyword: keyword, results: results)
+                let searchVC = SearchResultViewController(keyword: keyword,
+                                                          results: results,
+                                                          lon: lon,
+                                                          lat: lat)
                 searchVC.delegate = self
                 self?.navigationController?.pushViewController(searchVC, animated: false)
             }
@@ -204,7 +209,13 @@ extension SearchViewController: UISearchBarDelegate, UISearchResultsUpdating {
         searchBar.resignFirstResponder()
         if text != " " {
             viewModel.getKeywordSearchResult(with: text) { [weak self] results in
-                let searchVC = SearchResultViewController(keyword: text, results: results)
+                guard let lon = self?.viewModel.lon,
+                      let lat = self?.viewModel.lat else { return }
+                
+                let searchVC = SearchResultViewController(keyword: text,
+                                                          results: results,
+                                                          lon: lon,
+                                                          lat: lat)
                 searchVC.delegate = self
                 self?.navigationController?.pushViewController(searchVC, animated: false)
             }

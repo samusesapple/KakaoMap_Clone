@@ -58,7 +58,7 @@ class HttpClient {
     /// 키워드로 검색하기 (상호명 등을 검색)
     func searchKeyword(with keyword: String, lon: String, lat: String, page: Int, completion: @escaping (KeywordResult) -> Void) {
         let url = "https://dapi.kakao.com/v2/local/search/keyword.json"
-
+        
         AF.request(url,
                    method: .get,
                    parameters: keywordParameters(query: keyword,
@@ -75,6 +75,11 @@ class HttpClient {
                 print("keyword : \(keyword)")
                 print("lon : \(lon)")
                 print("lat: \(lat)")
+                guard let totalPage = searchResult.meta?.pageableCount,
+                      totalPage >= page else {
+                    print("HTTP Client - searchKeyword 총 데이터 페이지수 : \(String(describing: searchResult.meta?.pageableCount))")
+                    return
+                }
                 completion(searchResult)
             case .failure(let error):
                 print(error)
@@ -82,9 +87,4 @@ class HttpClient {
         }
     }
     
-    /// url로부터 이미지 받아오기
-    func getImage(from url: String, completion: @escaping (UIImage) -> Void) {
-        let url = URL(string: url)!
-        
-    }
 }
