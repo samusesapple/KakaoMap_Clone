@@ -70,7 +70,9 @@ class CustomAlignmentAlertViewController: UIViewController {
         alertView?.getFirstButton().tintColor = .gray
         alertView?.getFirstButton().layer.borderColor = UIColor.gray.cgColor
         // 위치기준 변경 혹은 정렬 변경에 따라 SearchResultVC 업데이트 + self.dismiss
-        
+                
+//        alertView?.getFirstButton().titleLabel?.text == "지도중심" ? delegate?.getMapBoundaryBaseData() : delegate?.shortDistanceFirstAlignment()
+//
         if alertView?.getSecondButton().titleLabel?.text == "지도중심" {
             delegate?.getMapBoundaryBaseData()
         }

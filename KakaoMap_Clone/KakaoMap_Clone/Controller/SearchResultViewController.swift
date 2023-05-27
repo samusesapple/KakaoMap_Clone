@@ -18,7 +18,9 @@ class SearchResultViewController: UIViewController {
     
     private var viewModel = SearchResultViewModel()
     weak var delegate: SearchResultViewControllerDelegate?
-    
+  
+    private let activity = UIActivityIndicatorView()
+
     private let progressHud = JGProgressHUD(style: .dark)
 
     private let searchBarView = CustomSearchBarView(placeholder: "장소 및 주소 검색",
@@ -27,7 +29,7 @@ class SearchResultViewController: UIViewController {
     
     private let centerAlignmentButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle("지도중심 ▾", for: .normal)
+        button.setTitle("내위치중심 ▾", for: .normal)
         button.tintColor = .darkGray
         button.titleLabel?.font = UIFont.systemFont(ofSize: 13)
         return button
@@ -91,15 +93,25 @@ class SearchResultViewController: UIViewController {
         setAutolayout()
         setActions()
         setSearchBar()
-        
+
         viewModel.loadingStarted = { [weak self] in
+            self?.activity.isHidden = false
+            self?.activity.startAnimating()
+        }
+        
+        viewModel.finishLoading = { [weak self] in
+            self?.activity.stopAnimating()
+            self?.tableView.reloadData()
+        }
+        
+        viewModel.showHud = { [weak self] in
             guard let view = self?.view else { return }
             self?.progressHud.show(in: view)
         }
         
-        viewModel.finishLoading = { [weak self] in
-            self?.tableView.reloadData()
+        viewModel.dismissHud = { [weak self] in
             self?.progressHud.dismiss()
+            self?.tableView.reloadData()
         }
     }
     
@@ -169,6 +181,10 @@ class SearchResultViewController: UIViewController {
         
         view.addSubview(tableView)
         tableView.anchor(top: borderLineView.bottomAnchor, left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor)
+        
+        view.addSubview(activity)
+        activity.anchor(bottom: view.bottomAnchor, paddingBottom: 30)
+        activity.centerX(inView: view)
     }
     
     private func setActions() {

@@ -31,7 +31,7 @@ class SearchResultViewModel {
     private var page: Int = 1
     private var loading: Bool = false
     
-    var isMapBasedData: Bool = true
+    var isMapBasedData: Bool = false
     var isAccuracyAlignment: Bool = true
     
     // MARK: - Computed Properties
@@ -61,6 +61,9 @@ class SearchResultViewModel {
     var loadingStarted = { }
     
     var finishLoading = { }
+    
+    var showHud = { }
+    var dismissHud = { }
     
     // MARK: - Initializer
     
@@ -113,7 +116,7 @@ class SearchResultViewModel {
               !loading else { return }
         
         loading = true
-        loadingStarted()
+        showHud()
         
         HttpClient.shared.searchKeyword(with: keyword,
                                         lon: lon,
@@ -125,7 +128,7 @@ class SearchResultViewModel {
                 return
             }
             self?.results = newResults
-            self?.finishLoading()
+            self?.dismissHud()
             self?.loading = false
             print("거리순 정렬 완료")
         }
