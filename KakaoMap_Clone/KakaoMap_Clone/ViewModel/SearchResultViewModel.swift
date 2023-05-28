@@ -34,7 +34,7 @@ class SearchResultViewModel {
     var isMapBasedData: Bool = false
     var isAccuracyAlignment: Bool = true
     
-    // MARK: - Computed Properties
+// MARK: - Computed Properties
     
     var getResults: [KeywordDocument] {
         get {
@@ -65,7 +65,7 @@ class SearchResultViewModel {
     var showHud = { }
     var dismissHud = { }
     
-    // MARK: - Initializer
+// MARK: - Initializer
     
     init(lon: String, lat: String, keyword: String, results: [KeywordDocument]) {
         self.longtitude = lon
@@ -76,7 +76,7 @@ class SearchResultViewModel {
     
     init() { }
     
-    // MARK: - Methods
+// MARK: - Methods
     
     func updateNewTappedHistory(location: String) {
         let newTappedHistory = SearchHistory(type: UIImage(systemName: "building.2")!,
@@ -106,6 +106,7 @@ class SearchResultViewModel {
     
     func filterResults(with id: Int) -> KeywordDocument {
         let result = results?.filter({ $0.id == String(id) }).first
+        self.targetPlace = result
         return result!
     }
     

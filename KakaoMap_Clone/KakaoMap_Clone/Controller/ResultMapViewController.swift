@@ -136,6 +136,9 @@ class ResultMapViewController: UIViewController {
         setSearchBarAndAlignmentButtons()
         
         checkIfTargetPlaceExists()
+        
+        footerContainerView.addGestureRecognizer(UITapGestureRecognizer(target: self,
+                                                                     action: #selector(footerViewTapped)))
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -184,6 +187,13 @@ class ResultMapViewController: UIViewController {
         alertVC.modalTransitionStyle = UIModalTransitionStyle.crossDissolve
         present(alertVC, animated: true)
         print(#function)
+    }
+    
+    @objc private func footerViewTapped() {
+        guard let url = viewModel.targetPlace?.placeURL else { return }
+        let webVC = DetailViewController(url: url)
+        print(url)
+        present(webVC, animated: true)
     }
     
     // MARK: - Helpers
