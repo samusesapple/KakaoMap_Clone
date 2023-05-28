@@ -210,12 +210,17 @@ class ResultMapViewController: UIViewController {
         present(webVC, animated: true)
     }
     
+    @objc private func navigationButtonTapped() {
+        guard let target = viewModel.targetPlace else { return }
+        print("\(target)으로 가는 네비게이션 view 띄워야함")
+    }
+    
     // MARK: - Helpers
     /// 장소 선택 유무에 따라 다른 UI를 띄우기
     private func checkIfTargetPlaceExists() {
         guard let targetPlace = viewModel.targetPlace else {
-            configureUIwithData(place: viewModel.getResults[0])
-            setMapView(with: viewModel.getResults[0])
+            viewModel.targetPlace = viewModel.getResults[0]
+            checkIfTargetPlaceExists()
             return
         }
         configureUIwithData(place: targetPlace)
@@ -225,13 +230,7 @@ class ResultMapViewController: UIViewController {
     /// FooterView의 UI를 선택된 장소 유무에 따라 다르게 띄우기
     private func configureUIwithData(place: KeywordDocument?) {
         guard let place = place,
-              let distance = place.distance else {
-            placeNameLabel.text = viewModel.getResults.first?.placeName
-            placeCategoryLabel.text = viewModel.getResults.first?.categoryGroupName
-            addressLabel.text = viewModel.getResults.first?.roadAddressName
-            distanceLabel.text = MeasureFormatter.measureDistance(distance: viewModel.getResults.first!.distance!)
-            return
-        }
+              let distance = place.distance else { return }
         placeNameLabel.text = place.placeName
         placeCategoryLabel.text = place.categoryGroupName
         addressLabel.text = place.roadAddressName
@@ -268,6 +267,8 @@ class ResultMapViewController: UIViewController {
         
         centerAlignmentButton.addTarget(self, action: #selector(centerAlignmentButtonTapped), for: .touchUpInside)
         accuracyAlignmentButton.addTarget(self, action: #selector(accuracyAlignmentButtonTapped), for: .touchUpInside)
+        
+        navigationButton.addTarget(self, action: #selector(navigationButtonTapped), for: .touchUpInside)
     }
     
     private func setSearchBarAndAlignmentButtons() {
@@ -299,19 +300,7 @@ class ResultMapViewController: UIViewController {
               let lat = Double(stringLat),
               let placeId = place.id,
               let poiItems = mapView.poiItems as? [MTMapPOIItem]
-        else {
-            guard let firstItem = viewModel.getResults.first,
-                  let stringLon = firstItem.x,
-                  let stringLat = firstItem.y,
-                  let lon = Double(stringLon),
-                  let lat = Double(stringLat) else { return }
-            mapView.setMapCenter(MTMapPoint(geoCoord: MTMapPointGeo(latitude: lat, longitude: lon)), zoomLevel: .min, animated: true)
-            
-            let firstPoi = mapView.poiItems.first as! MTMapPOIItem
-            mapView.select(firstPoi, animated: true)
-            print("맵뷰 중심 세팅 - \(firstItem.placeName)")
-            return
-        }
+        else { return }
         mapView.setMapCenter(MTMapPoint(geoCoord: MTMapPointGeo(latitude: lat, longitude: lon)), zoomLevel: .min, animated: true)
         
         let targetPoi = poiItems.filter({ $0.tag == Int(placeId) })[0]
