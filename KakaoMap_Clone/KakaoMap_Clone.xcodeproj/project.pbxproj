@@ -25,6 +25,7 @@
 		F1B8F7662A1E097F00D3B45E /* CustomAlignmentAlertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1B8F7652A1E097F00D3B45E /* CustomAlignmentAlertView.swift */; };
 		F1B8F7682A1E109A00D3B45E /* CustomAlignmentAlertViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1B8F7672A1E109A00D3B45E /* CustomAlignmentAlertViewController.swift */; };
 		F1EBC3182A22FAA10043CC46 /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1EBC3172A22FAA10043CC46 /* DetailViewController.swift */; };
+		F1EBC31C2A2311870043CC46 /* MeasureFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1EBC31B2A2311870043CC46 /* MeasureFormatter.swift */; };
 		F1F2112E2A19CC76000443AB /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1F2112D2A19CC76000443AB /* AppDelegate.swift */; };
 		F1F211302A19CC76000443AB /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1F2112F2A19CC76000443AB /* SceneDelegate.swift */; };
 		F1F211322A19CC76000443AB /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1F211312A19CC76000443AB /* MainViewController.swift */; };
@@ -92,6 +93,7 @@
 		F1B8F7652A1E097F00D3B45E /* CustomAlignmentAlertView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomAlignmentAlertView.swift; sourceTree = "<group>"; };
 		F1B8F7672A1E109A00D3B45E /* CustomAlignmentAlertViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomAlignmentAlertViewController.swift; sourceTree = "<group>"; };
 		F1EBC3172A22FAA10043CC46 /* DetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewController.swift; sourceTree = "<group>"; };
+		F1EBC31B2A2311870043CC46 /* MeasureFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeasureFormatter.swift; sourceTree = "<group>"; };
 		F1F2112A2A19CC76000443AB /* KakaoMap_Clone.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = KakaoMap_Clone.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F1F2112D2A19CC76000443AB /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		F1F2112F2A19CC76000443AB /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -297,6 +299,7 @@
 				F1F212E32A19DDA8000443AB /* UIView+Extensions.swift */,
 				F1F212E52A19DDC2000443AB /* UIViewController+Extensions.swift */,
 				F19BA78F2A1F7B1F003F348C /* UIImage+Extension.swift */,
+				F1EBC31B2A2311870043CC46 /* MeasureFormatter.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -511,6 +514,7 @@
 				F1F212E62A19DDC2000443AB /* UIViewController+Extensions.swift in Sources */,
 				F1B8F7622A1DD87500D3B45E /* ReviewStarView.swift in Sources */,
 				F10BA34E2A1C9D0C00CCBE9D /* SearchViewModel.swift in Sources */,
+				F1EBC31C2A2311870043CC46 /* MeasureFormatter.swift in Sources */,
 				F19BA7902A1F7B1F003F348C /* UIImage+Extension.swift in Sources */,
 				F1B8F7662A1E097F00D3B45E /* CustomAlignmentAlertView.swift in Sources */,
 				F1F212E42A19DDA8000443AB /* UIView+Extensions.swift in Sources */,

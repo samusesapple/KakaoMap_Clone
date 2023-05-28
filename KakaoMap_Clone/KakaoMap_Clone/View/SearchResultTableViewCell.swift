@@ -110,13 +110,6 @@ class SearchResultTableViewCell: UITableViewCell {
         placeCategoryLabel.text = data.categoryGroupName
         
         guard let distance = data.distance else { return }
-        if distance.count > 3 {
-            let doubleDistance = Double(distance)!
-            let measurement = Measurement(value: doubleDistance, unit: UnitLength.meters).converted(to: .kilometers)
-            
-            distanceLabel.text = SearchResultViewModel.measureFormatter.string(from: measurement)
-        } else {
-            distanceLabel.text = distance + "m"
-        }
+        distanceLabel.text = MeasureFormatter.measureDistance(distance: distance)
     }
 }

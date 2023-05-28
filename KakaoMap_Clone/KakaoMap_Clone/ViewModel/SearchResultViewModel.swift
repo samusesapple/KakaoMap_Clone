@@ -11,14 +11,6 @@ class SearchResultViewModel {
     
     // MARK: - Stored Properties
     
-    static let measureFormatter: MeasurementFormatter = {
-        let formatter = MeasurementFormatter()
-        formatter.unitOptions = .providedUnit
-        formatter.unitStyle = .medium
-        formatter.numberFormatter.maximumFractionDigits = 1
-        return formatter
-    }()
-    
     private var longtitude: String?
     private var latitude: String?
     private var keyword: String?

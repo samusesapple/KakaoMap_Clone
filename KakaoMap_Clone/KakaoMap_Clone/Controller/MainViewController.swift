@@ -174,5 +174,7 @@ extension MainViewController: CLLocationManagerDelegate {
 // MARK: - MTMapViewDelegate
 
 extension MainViewController: MTMapViewDelegate {
-    
+    func mapView(_ mapView: MTMapView!, finishedMapMoveAnimation mapCenterPoint: MTMapPoint!) {
+        // 맵 이동되면, 이동된 위치 전달하기
+    }
 }

@@ -77,7 +77,7 @@ class ResultMapViewController: UIViewController {
         let view = UIView()
         view.backgroundColor = .white
         view.setupShadow(opacity: 0.3, radius: 1.5, offset: CGSize(width: 0, height: -2.0), color: .black)
-        [placeNameLabel, placeCategoryLabel, reviewView, addressLabel].forEach { view.addSubview($0) }
+        [placeNameLabel, placeCategoryLabel, reviewView, addressLabel, navigationButton, distanceLabel].forEach { view.addSubview($0) }
         return view
     }()
     
@@ -107,6 +107,20 @@ class ResultMapViewController: UIViewController {
         label.textColor = .darkGray
         label.text = "인천 중구 하늘달빛로2번길 8 씨사이드파크"
         label.numberOfLines = 1
+        return label
+    }()
+    
+    private let navigationButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setImage(UIImage(named: "uTernIcon")?.withRenderingMode(.alwaysOriginal), for: .normal)
+        return button
+    }()
+    
+    private let distanceLabel: UILabel = {
+        let label = UILabel()
+        label.font = UIFont.systemFont(ofSize: 13, weight: .medium)
+        label.textColor = #colorLiteral(red: 0.03529411765, green: 0.5176470588, blue: 0.8901960784, alpha: 1)
+        label.text = "1123m"
         return label
     }()
     
@@ -210,15 +224,18 @@ class ResultMapViewController: UIViewController {
     
     /// FooterView의 UI를 선택된 장소 유무에 따라 다르게 띄우기
     private func configureUIwithData(place: KeywordDocument?) {
-        guard let place = place else {
+        guard let place = place,
+              let distance = place.distance else {
             placeNameLabel.text = viewModel.getResults.first?.placeName
             placeCategoryLabel.text = viewModel.getResults.first?.categoryGroupName
             addressLabel.text = viewModel.getResults.first?.roadAddressName
+            distanceLabel.text = MeasureFormatter.measureDistance(distance: viewModel.getResults.first!.distance!)
             return
         }
         placeNameLabel.text = place.placeName
         placeCategoryLabel.text = place.categoryGroupName
         addressLabel.text = place.roadAddressName
+        distanceLabel.text = MeasureFormatter.measureDistance(distance: distance)
     }
     
     private func setAutolayout() {
@@ -237,6 +254,11 @@ class ResultMapViewController: UIViewController {
         
         reviewView.anchor(top: placeNameLabel.bottomAnchor, left: placeNameLabel.leftAnchor, paddingTop: 5, width: 100)
         addressLabel.anchor(top: reviewView.bottomAnchor, left: placeNameLabel.leftAnchor, paddingTop: 7)
+        
+        navigationButton.anchor(top: footerContainerView.topAnchor, right: footerContainerView.rightAnchor, paddingTop: 12, paddingRight: 16, width: 50, height: 50)
+        
+        distanceLabel.anchor(top: navigationButton.bottomAnchor, paddingTop: 4)
+        distanceLabel.centerX(inView: navigationButton)
     }
     
     private func setActions() {
