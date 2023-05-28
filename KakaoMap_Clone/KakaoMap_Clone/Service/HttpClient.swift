@@ -12,10 +12,13 @@ class HttpClient {
     
     static let shared = HttpClient()
     
-    private init() { }
+    private let host = "https://dapi.kakao.com/v2/local/"
+    
     private let headers : HTTPHeaders = [
         "Authorization": "KakaoAK 7191f8213395eb70804dc67e8f329611"
     ]
+    
+    private init() { }
     
     // MARK: - Functions
     
@@ -36,9 +39,16 @@ class HttpClient {
         ]
     }
     
+    private func directionParameters(startLon: String, startLat: String, destinationLon: String, destinationLat: String) -> [String: Any] {
+        [
+            "origin": "\(startLon),\(startLat)",
+            "destination": "\(destinationLon),\(destinationLat)"
+        ]
+    }
+    
     /// 주소로 검색하기 (건물명, 도로명, 지번, 우편번호 및 좌표)
     func getCurrentAddress(lon: String, lat: String, completion: @escaping (CurrentAddressResult) -> Void) {
-        let url = "https://dapi.kakao.com/v2/local/geo/coord2regioncode.json"
+        let url = host + "geo/coord2regioncode.json"
         AF.request(url,
                    method: .get,
                    parameters: currentAddressParameters(lon: lon, lat: lat),
@@ -58,7 +68,7 @@ class HttpClient {
     
     /// 키워드로 검색하기 (상호명 등을 검색)
     func searchKeyword(with keyword: String, lon: String, lat: String, page: Int, isAccuracy: Bool = true, completion: @escaping (KeywordResult?) -> Void) {
-        let url = "https://dapi.kakao.com/v2/local/search/keyword.json"
+        let url = host + "search/keyword.json"
         
         AF.request(url,
                    method: .get,
@@ -90,4 +100,25 @@ class HttpClient {
         }
     }
     
+    func getDirection(startLon: String, startLat: String, destinationLon: String, destinationLat: String, completion: @escaping(DestinationResult) -> Void) {
+        let url = "https://apis-navi.kakaomobility.com/v1/directions"
+        
+        AF.request(url,
+                   method: .get,
+                   parameters: directionParameters(startLon: startLon,
+                                                   startLat: startLat,
+                                                   destinationLon: destinationLon,
+                                                   destinationLat: destinationLat),
+                   encoding: URLEncoding.default,
+                   headers: headers)
+        .validate(statusCode: 200..<600).responseDecodable(of: DestinationResult.self) { response in
+            let result = response.result
+            switch result {
+            case.success(let direction):
+                completion(direction)
+            case .failure(let error):
+                print(error)
+            }
+        }
+    }
 }

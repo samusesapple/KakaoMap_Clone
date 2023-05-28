@@ -29,7 +29,7 @@ class SearchResultViewController: UIViewController {
     
     private let centerAlignmentButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle("내위치중심 ▾", for: .normal)
+        button.setTitle("지도중심 ▾", for: .normal)
         button.tintColor = .darkGray
         button.titleLabel?.font = UIFont.systemFont(ofSize: 13)
         return button
@@ -72,12 +72,14 @@ class SearchResultViewController: UIViewController {
     
     // MARK: - Lifecycle
     
-    init(keyword: String, results: [KeywordDocument], lon: String, lat: String) {
+    init(keyword: String, results: [KeywordDocument], lon: String, lat: String, currentLon: Double, currentLat: Double) {
         super.init(nibName: nil, bundle: nil)
         let viewModel = SearchResultViewModel(lon: lon,
                                               lat: lat,
                                               keyword: keyword,
-                                              results: results)
+                                              results: results,
+                                              currentLon: currentLon,
+                                              currentLat: currentLat)
         self.viewModel = viewModel
         searchBarView.getSearchBar().searchTextField.text = keyword
     }
@@ -262,12 +264,14 @@ extension SearchResultViewController: CustomAlignmentAlertViewControllerDelegate
         print("현재 위치 기준으로 정보 받기")
         centerAlignmentButton.setTitle("내위치중심 ▾", for: .normal)
         viewModel.isMapBasedData = false
+        viewModel.sortAccuracyAlignment()
     }
     
     func getMapBoundaryBaseData() {
         print("지도상 위치 기준으로 정보 받기")
         centerAlignmentButton.setTitle("지도중심 ▾", for: .normal)
         viewModel.isMapBasedData = true
+        viewModel.sortAccuracyAlignment()
     }
     
     func correctInfoBaseAlignment() {

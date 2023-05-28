@@ -57,12 +57,17 @@ class MainViewController: UIViewController {
     }
     
     @objc private func searchBarTapped() {
-        guard let location = locationManager.location else {
+        guard let location = locationManager.location,
+        let lon = viewModel.longtitude,
+        let lat = viewModel.latitude else {
             print("위치 정보 없음")
             return
         }
         searchBarView.getSearchBar().resignFirstResponder()
-        navigationController?.pushViewController(SearchViewController(lon: String(describing: location.coordinate.longitude),lat: String(describing: location.coordinate.latitude)), animated: false)
+        navigationController?.pushViewController(SearchViewController(lon: String(lon),
+                                                                      lat: String(lat),
+                                                                      currentLon: location.coordinate.longitude,
+                                                                      currentLat: location.coordinate.latitude), animated: false)
     }
     
     // MARK: - Helpers
@@ -102,13 +107,16 @@ class MainViewController: UIViewController {
         
         DispatchQueue.global(qos: .background).async { [weak self] in
             self?.mapView.currentLocationTrackingMode = .onWithoutHeading
-            guard let coordinate = self?.locationManager.location?.coordinate else {
+            guard let coordinate = self?.locationManager.location?.coordinate
+                else {
                 print("location update 아직 안된 상태")
                 return
             }
             self?.viewModel.getAddressSearchResult(lon: coordinate.longitude,
-                                             lat: coordinate.latitude) { currentAddress in
-                self?.searchBarView.getSearchBar().placeholder = currentAddress
+                                                   lat: coordinate.latitude) { currentAddress in
+                DispatchQueue.main.async {
+                    self?.searchBarView.getSearchBar().placeholder = currentAddress
+                }
             }
         }
         
@@ -175,6 +183,15 @@ extension MainViewController: CLLocationManagerDelegate {
 
 extension MainViewController: MTMapViewDelegate {
     func mapView(_ mapView: MTMapView!, finishedMapMoveAnimation mapCenterPoint: MTMapPoint!) {
-        // 맵 이동되면, 이동된 위치 전달하기
+        // 맵 이동되면 이동된 위치 세팅 필요
+        print("VM - 위도 경도 설정됨")
+        viewModel.longtitude = mapCenterPoint.mapPointGeo().longitude
+        viewModel.latitude = mapCenterPoint.mapPointGeo().latitude
+        viewModel.getAddressSearchResult(lon: viewModel.longtitude!,
+                                         lat: viewModel.latitude!) { [weak self] currentAddress in
+            DispatchQueue.main.async {
+                self?.searchBarView.getSearchBar().placeholder = currentAddress
+            }
+        }
     }
 }

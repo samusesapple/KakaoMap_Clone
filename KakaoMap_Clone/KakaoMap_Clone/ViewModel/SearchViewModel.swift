@@ -35,6 +35,9 @@ class SearchViewModel {
     private var longitude: String?
     private var latitude: String?
     
+    private var currentLongtitude: Double?
+    private var currentLatitude: Double?
+    
     // MARK: - Computed Properties
     /// [get] searchOption 배열 받기
     var getSearchOptions: [SearchOption] {
@@ -53,14 +56,24 @@ class SearchViewModel {
         return latitude
     }
     
+    var currentLon: Double? {
+        return currentLongtitude
+    }
+    
+    var currentLat: Double? {
+        return currentLatitude
+    }
+    
     var showProgressHUD = { }
     var dismissProgressHUD = { }
     
     // MARK: - Lifecycle
     
-    init(lon: String, lat: String) {
+    init(lon: String, lat: String, currentLon: Double, currentLat: Double) {
         self.longitude = lon
         self.latitude = lat
+        self.currentLongtitude = currentLon
+        self.currentLatitude = currentLat
     }
     
     init() { }
@@ -87,7 +100,7 @@ class SearchViewModel {
         }
     }
     
-    /// 현재 위치 기준 - 키워드로 검색하기
+    /// 키워드로 검색하기
     func getKeywordSearchResult(with keyword: String, completion: @escaping([KeywordDocument]) -> Void) {
         guard let lon = longitude,
               let lat = latitude else {

@@ -13,6 +13,10 @@ class SearchResultViewModel {
     
     private var longtitude: String?
     private var latitude: String?
+    
+    private var currentLongtitude: String?
+    private var currentLatitude: String?
+    
     private var keyword: String?
     private var results: [KeywordDocument]?
     
@@ -23,7 +27,7 @@ class SearchResultViewModel {
     private var page: Int = 1
     private var loading: Bool = false
     
-    var isMapBasedData: Bool = false
+    var isMapBasedData: Bool = true
     var isAccuracyAlignment: Bool = true
     
 // MARK: - Computed Properties
@@ -59,11 +63,13 @@ class SearchResultViewModel {
     
 // MARK: - Initializer
     
-    init(lon: String, lat: String, keyword: String, results: [KeywordDocument]) {
+    init(lon: String, lat: String, keyword: String, results: [KeywordDocument], currentLon: Double, currentLat: Double) {
         self.longtitude = lon
         self.latitude = lat
         self.keyword = keyword
         self.results = results
+        self.currentLongtitude = String(currentLon)
+        self.currentLatitude = String(currentLat)
     }
     
     init() { }
@@ -103,8 +109,13 @@ class SearchResultViewModel {
     }
     
     func sortAccuracyAlignment(){
-        guard let lon = longtitude,
-              let lat = latitude,
+        let lon = !isMapBasedData ? currentLongtitude : longtitude
+        let lat = !isMapBasedData ? currentLatitude : latitude
+        
+        print(isMapBasedData)
+        
+        guard let lon = lon,
+              let lat = lat,
               let keyword = keyword,
               !loading else { return }
         
@@ -153,6 +164,24 @@ class SearchResultViewModel {
             self?.finishLoading()
             self?.loading = false
             print("\(String(describing: self?.page))번째 item list 가져옴")
+        }
+    }
+    
+    func getDirection(destinationLon: String, destinationLat: String, completion: @escaping () -> Void) {
+        guard let startLon = currentLongtitude,
+              let startLat = currentLatitude else {
+                  print("SearchResultVC ERROR - 현재 위치 세팅 안되어있음")
+                  return
+              }
+        HttpClient.shared.getDirection(startLon: startLon,
+                                       startLat: startLat,
+                                       destinationLon: destinationLon,
+                                       destinationLat: destinationLat) { result in
+            guard let routes = result.routes else {
+                print("자동차 경로 없음")
+                return
+            }
+            completion()
         }
     }
 }

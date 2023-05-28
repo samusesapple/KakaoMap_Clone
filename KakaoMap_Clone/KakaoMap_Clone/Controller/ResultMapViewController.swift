@@ -17,7 +17,7 @@ protocol ResultMapViewControllerDelegate: AnyObject {
 class ResultMapViewController: UIViewController {
     // MARK: - Properties
     
-    private var locationManager = CLLocationManager()
+    private var locationManager = LocationManager.locationManager
     
     private var mapPoint: MTMapPoint?
     private var poiItem: MTMapPOIItem?
@@ -84,7 +84,6 @@ class ResultMapViewController: UIViewController {
     private let placeNameLabel: UILabel = {
         let label = UILabel()
         label.textColor = .black.withAlphaComponent(0.8)
-        label.text = "카페 건"
         label.font = UIFont.systemFont(ofSize: 17.5, weight: .medium)
         label.textAlignment = .left
         return label
@@ -93,7 +92,6 @@ class ResultMapViewController: UIViewController {
     private let placeCategoryLabel: UILabel = {
         let label = UILabel()
         label.textColor = .gray.withAlphaComponent(0.8)
-        label.text = "카테고리"
         label.font = UIFont.systemFont(ofSize: 13)
         label.textAlignment = .left
         return label
@@ -105,7 +103,6 @@ class ResultMapViewController: UIViewController {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 13)
         label.textColor = .darkGray
-        label.text = "인천 중구 하늘달빛로2번길 8 씨사이드파크"
         label.numberOfLines = 1
         return label
     }()
@@ -120,7 +117,6 @@ class ResultMapViewController: UIViewController {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 13, weight: .medium)
         label.textColor = #colorLiteral(red: 0.03529411765, green: 0.5176470588, blue: 0.8901960784, alpha: 1)
-        label.text = "1123m"
         return label
     }()
     
@@ -211,8 +207,14 @@ class ResultMapViewController: UIViewController {
     }
     
     @objc private func navigationButtonTapped() {
-        guard let target = viewModel.targetPlace else { return }
-        print("\(target)으로 가는 네비게이션 view 띄워야함")
+        guard let target = viewModel.targetPlace,
+              let targetLon = target.x,
+              let targetLat = target.y else { return }
+
+        viewModel.getDirection(destinationLon: targetLon,
+                               destinationLat: targetLat) {
+            print("\(target)으로 가는 네비게이션 view 띄워야함")
+        }
     }
     
     // MARK: - Helpers

@@ -11,6 +11,8 @@ class MainViewModel {
     
     // MARK: - Stored Properties
 
+    var longtitude: Double?
+    var latitude: Double?
     
     // MARK: - Computed Properties
 

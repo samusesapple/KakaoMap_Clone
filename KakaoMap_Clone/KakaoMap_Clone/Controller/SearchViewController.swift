@@ -64,9 +64,12 @@ class SearchViewController: UIViewController {
     
     // MARK: - Lifecycle
     
-    init(lon: String, lat: String) {
+    init(lon: String, lat: String, currentLon: Double, currentLat: Double) {
         super.init(nibName: nil, bundle: nil)
-        let viewModel = SearchViewModel(lon: lon, lat: lat)
+        let viewModel = SearchViewModel(lon: lon,
+                                        lat: lat,
+                                        currentLon: currentLon,
+                                        currentLat: currentLat)
         self.viewModel = viewModel
     }
     
@@ -182,12 +185,15 @@ extension SearchViewController: UITableViewDelegate, UITableViewDataSource {
         if image == UIImage(systemName: "magnifyingglass") {
             viewModel.getKeywordSearchResult(with: keyword) { [weak self] results in
                 guard let lon = self?.viewModel.lon,
-                      let lat = self?.viewModel.lat else { return }
+                      let lat = self?.viewModel.lat,
+                      let currentLon = self?.viewModel.currentLon,
+                      let currentLat = self?.viewModel.currentLat
+                else { return }
                 self?.tableView.reloadData()
                 let searchVC = SearchResultViewController(keyword: keyword,
                                                           results: results,
                                                           lon: lon,
-                                                          lat: lat)
+                                                          lat: lat, currentLon: currentLon, currentLat: currentLat)
                 searchVC.delegate = self
                 self?.navigationController?.pushViewController(searchVC, animated: false)
             }
@@ -210,12 +216,17 @@ extension SearchViewController: UISearchBarDelegate, UISearchResultsUpdating {
         if text != " " {
             viewModel.getKeywordSearchResult(with: text) { [weak self] results in
                 guard let lon = self?.viewModel.lon,
-                      let lat = self?.viewModel.lat else { return }
+                      let lat = self?.viewModel.lat,
+                      let currentLon = self?.viewModel.currentLon,
+                      let currentLat = self?.viewModel.currentLat
+                else { return }
                 
                 let searchVC = SearchResultViewController(keyword: text,
                                                           results: results,
                                                           lon: lon,
-                                                          lat: lat)
+                                                          lat: lat,
+                                                          currentLon: currentLon,
+                                                          currentLat: currentLat)
                 searchVC.delegate = self
                 self?.navigationController?.pushViewController(searchVC, animated: false)
             }
