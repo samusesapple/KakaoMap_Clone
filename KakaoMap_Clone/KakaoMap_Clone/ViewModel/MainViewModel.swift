@@ -24,7 +24,7 @@ class MainViewModel {
     func getAddressSearchResult(lon: Double, lat: Double, completion: @escaping (String) -> Void) {
         let stringLon = String(lon)
         let stringLat = String(lat)
-        HttpClient.shared.getCurrentAddress(lon: stringLon, lat: stringLat) { result in
+        HttpClient.shared.getLocationAddress(lon: stringLon, lat: stringLat) { result in
             guard let document = result.documents?.first,
                   let currentAddress = document.addressName else {
                 print("SearchVM - document 없음")

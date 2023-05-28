@@ -187,13 +187,17 @@ extension SearchViewController: UITableViewDelegate, UITableViewDataSource {
                 guard let lon = self?.viewModel.lon,
                       let lat = self?.viewModel.lat,
                       let currentLon = self?.viewModel.currentLon,
-                      let currentLat = self?.viewModel.currentLat
+                      let currentLat = self?.viewModel.currentLat,
+                      let mapAddress = self?.viewModel.searchTargetMapAddress
                 else { return }
                 self?.tableView.reloadData()
                 let searchVC = SearchResultViewController(keyword: keyword,
                                                           results: results,
                                                           lon: lon,
-                                                          lat: lat, currentLon: currentLon, currentLat: currentLat)
+                                                          lat: lat,
+                                                          currentLon: currentLon,
+                                                          currentLat: currentLat,
+                                                          mapAddress: mapAddress)
                 searchVC.delegate = self
                 self?.navigationController?.pushViewController(searchVC, animated: false)
             }
@@ -218,7 +222,8 @@ extension SearchViewController: UISearchBarDelegate, UISearchResultsUpdating {
                 guard let lon = self?.viewModel.lon,
                       let lat = self?.viewModel.lat,
                       let currentLon = self?.viewModel.currentLon,
-                      let currentLat = self?.viewModel.currentLat
+                      let currentLat = self?.viewModel.currentLat,
+                      let mapAddress = self?.viewModel.searchTargetMapAddress
                 else { return }
                 
                 let searchVC = SearchResultViewController(keyword: text,
@@ -226,7 +231,8 @@ extension SearchViewController: UISearchBarDelegate, UISearchResultsUpdating {
                                                           lon: lon,
                                                           lat: lat,
                                                           currentLon: currentLon,
-                                                          currentLat: currentLat)
+                                                          currentLat: currentLat,
+                                                          mapAddress: mapAddress)
                 searchVC.delegate = self
                 self?.navigationController?.pushViewController(searchVC, animated: false)
             }

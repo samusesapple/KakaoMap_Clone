@@ -72,14 +72,15 @@ class SearchResultViewController: UIViewController {
     
     // MARK: - Lifecycle
     
-    init(keyword: String, results: [KeywordDocument], lon: String, lat: String, currentLon: Double, currentLat: Double) {
+    init(keyword: String, results: [KeywordDocument], lon: String, lat: String, currentLon: Double, currentLat: Double, mapAddress: String) {
         super.init(nibName: nil, bundle: nil)
         let viewModel = SearchResultViewModel(lon: lon,
                                               lat: lat,
                                               keyword: keyword,
                                               results: results,
                                               currentLon: currentLon,
-                                              currentLat: currentLat)
+                                              currentLat: currentLat,
+                                              mapAddress: mapAddress)
         self.viewModel = viewModel
         searchBarView.getSearchBar().searchTextField.text = keyword
     }

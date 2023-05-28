@@ -47,7 +47,7 @@ class HttpClient {
     }
     
     /// 주소로 검색하기 (건물명, 도로명, 지번, 우편번호 및 좌표)
-    func getCurrentAddress(lon: String, lat: String, completion: @escaping (CurrentAddressResult) -> Void) {
+    func getLocationAddress(lon: String, lat: String, completion: @escaping (CurrentAddressResult) -> Void) {
         let url = host + "geo/coord2regioncode.json"
         AF.request(url,
                    method: .get,

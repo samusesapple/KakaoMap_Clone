@@ -38,6 +38,8 @@ class SearchViewModel {
     private var currentLongtitude: Double?
     private var currentLatitude: Double?
     
+    private var mapAddress: String?
+    
     // MARK: - Computed Properties
     /// [get] searchOption 배열 받기
     var getSearchOptions: [SearchOption] {
@@ -62,6 +64,10 @@ class SearchViewModel {
     
     var currentLat: Double? {
         return currentLatitude
+    }
+    
+    var searchTargetMapAddress: String? {
+        return mapAddress
     }
     
     var showProgressHUD = { }
@@ -102,15 +108,41 @@ class SearchViewModel {
     
     /// 키워드로 검색하기
     func getKeywordSearchResult(with keyword: String, completion: @escaping([KeywordDocument]) -> Void) {
-        guard let lon = longitude,
-              let lat = latitude else {
+        guard let lon = currentLon,
+              let lat = currentLat,
+              let mapLon = longitude,
+              let mapLat = latitude
+        else {
             print(#function)
             return
         }
         showProgressHUD()
-        HttpClient.shared.searchKeyword(with: keyword,
-                                        lon: lon,
-                                        lat: lat,
+        if "\(lon)+\(lat)" != "\(longitude!) + \(latitude!)" {
+            HttpClient.shared.getLocationAddress(lon: mapLon, lat: mapLat) { [weak self] result in
+                guard let address = result.documents?[0].addressName else { return }
+                
+                self?.search(keyword: keyword,
+                       lon: String(lon),
+                       lat: String(lat),
+                             address: address, completion: { keywordResultArray in
+                    completion(keywordResultArray)
+                })
+            }
+        } else {
+            search(keyword: keyword,
+                   lon: String(lon),
+                   lat: String(lat)) { keywordResultArray in
+                completion(keywordResultArray)
+            }
+        }
+    }
+    
+    private func search(keyword: String, lon: String, lat: String, address: String = "", completion: @escaping ([KeywordDocument]) -> Void) {
+        self.mapAddress = address
+        
+        HttpClient.shared.searchKeyword(with: address == "" ? keyword : "\(address) \(keyword)",
+                                        lon: String(lon),
+                                        lat: String(lat),
                                         page: 1) { [weak self] result in
             guard let keywordResultArray = result?.documents,
                   let totalPage = result?.meta?.pageableCount,
@@ -136,5 +168,4 @@ class SearchViewModel {
             }
         }
     }
-    
 }

@@ -13,6 +13,7 @@ class SearchResultViewModel {
     
     private var longtitude: String?
     private var latitude: String?
+    private var mapAddress: String?
     
     private var currentLongtitude: String?
     private var currentLatitude: String?
@@ -63,19 +64,21 @@ class SearchResultViewModel {
     
 // MARK: - Initializer
     
-    init(lon: String, lat: String, keyword: String, results: [KeywordDocument], currentLon: Double, currentLat: Double) {
+    init(lon: String, lat: String, keyword: String, results: [KeywordDocument], currentLon: Double, currentLat: Double, mapAddress: String) {
         self.longtitude = lon
         self.latitude = lat
         self.keyword = keyword
         self.results = results
         self.currentLongtitude = String(currentLon)
         self.currentLatitude = String(currentLat)
+        self.mapAddress = mapAddress
     }
     
     init() { }
     
 // MARK: - Methods
     
+    /// 검색 히스토리 추가
     func updateNewTappedHistory(location: String) {
         let newTappedHistory = SearchHistory(type: UIImage(systemName: "building.2")!,
                                              searchText: location)
@@ -102,27 +105,45 @@ class SearchResultViewModel {
         }
     }
     
+    /// id에 해당되는 장소를 return
     func filterResults(with id: Int) -> KeywordDocument {
         let result = results?.filter({ $0.id == String(id) }).first
         self.targetPlace = result
         return result!
     }
     
+    /// 정렬 검색
     func sortAccuracyAlignment(){
-        let lon = !isMapBasedData ? currentLongtitude : longtitude
-        let lat = !isMapBasedData ? currentLatitude : latitude
-        
-        print(isMapBasedData)
-        
-        guard let lon = lon,
-              let lat = lat,
+        guard let lon = currentLongtitude,
+              let lat = currentLatitude,
+              let mapLon = longtitude,
+              let mapLat = latitude,
               let keyword = keyword,
               !loading else { return }
         
         loading = true
         showHud()
         
-        HttpClient.shared.searchKeyword(with: keyword,
+        if isMapBasedData {
+            HttpClient.shared.getLocationAddress(lon: mapLon,
+                                                 lat: mapLat) { [weak self] document in
+                guard let address = document.documents?[0].addressName else { return }
+                self?.searchPlaces(keyword: keyword,
+                                   lon: lon,
+                                   lat: lat,
+                                   place: address)
+                print("지도 중심 근처에 있는 장소 검색")
+            }
+        } else {
+            searchPlaces(keyword: keyword,
+                         lon: lon,
+                         lat: lat)
+            print("현재 위치 근처에 있는 장소 검색")
+        }
+    }
+    
+    private func searchPlaces(keyword: String, lon: String, lat: String, place: String = "") {
+        HttpClient.shared.searchKeyword(with: "\(place)  \(keyword)",
                                         lon: lon,
                                         lat: lat,
                                         page: 1,
@@ -138,11 +159,13 @@ class SearchResultViewModel {
         }
     }
     
+    /// 다음 페이지의 결과 띄우기
     func getNextPageResult() {
-        guard let lon = longtitude,
-              let lat = latitude,
+        guard let lon = currentLongtitude,
+              let lat = currentLatitude,
               let keyword = keyword,
               let currentResultCount = results?.count,
+              let mapAddress = mapAddress,
               currentResultCount >= 15,
               !loading else { return }
         
@@ -150,7 +173,7 @@ class SearchResultViewModel {
         loadingStarted()
         page += 1
         
-        HttpClient.shared.searchKeyword(with: keyword,
+        HttpClient.shared.searchKeyword(with: "\(mapAddress) \(keyword)",
                                         lon: lon,
                                         lat: lat,
                                         page: page,
@@ -167,6 +190,7 @@ class SearchResultViewModel {
         }
     }
     
+    /// 현재 위치에서 해당 장소로 이동하는 경로 알려주기
     func getDirection(destinationLon: String, destinationLat: String, completion: @escaping () -> Void) {
         guard let startLon = currentLongtitude,
               let startLat = currentLatitude else {
