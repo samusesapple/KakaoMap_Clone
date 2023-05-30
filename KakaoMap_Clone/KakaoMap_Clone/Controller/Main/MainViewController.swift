@@ -39,6 +39,7 @@ class MainViewController: UIViewController {
         setLocationManager()
         setAutolayout()
         setActions()
+        
     }
     
     // MARK: - Actions
@@ -46,14 +47,16 @@ class MainViewController: UIViewController {
     @objc private func showCurrentLocation() {
         print("현재 위치로 이동")
         if locationManager.authorizationStatus == .authorizedAlways || locationManager.authorizationStatus == .authorizedWhenInUse {
-            DispatchQueue.global(qos: .background).async { [weak self] in
-                self?.mapView.currentLocationTrackingMode = .onWithoutHeading
-            }
+            guard let currentCoordinate = locationManager.location?.coordinate else { return }
+            let currentLongtitude = currentCoordinate.longitude
+            let currentLatitude = currentCoordinate.latitude
+            mapView.setMapCenter(MTMapPoint(geoCoord: MTMapPointGeo(latitude: currentLatitude,
+                                                                    longitude: currentLongtitude)), animated: true)
         }
     }
     
     @objc private func menuButtonTapped() {
-        print("메뉴 버튼 눌림")
+        print("메뉴 열기")
     }
     
     @objc private func searchBarTapped() {
@@ -151,7 +154,7 @@ extension MainViewController: CLLocationManagerDelegate {
             locationManager.startUpdatingLocation()
             DispatchQueue.global(qos: .background).async { [weak self] in
                 self?.mapView.showCurrentLocationMarker = true
-                self?.mapView.currentLocationTrackingMode = .onWithoutHeading
+                self?.mapView.currentLocationTrackingMode = .onWithHeading
                 self?.mapView.showCurrentLocationMarker = true
                 DispatchQueue.main.async {
                     self?.mapView.setMapCenter(MTMapPoint(geoCoord: MTMapPointGeo(latitude: self?.locationManager.location?.coordinate.latitude ?? 37.576568, longitude: self?.locationManager.location?.coordinate.longitude ?? 127.029148)), animated: true)
@@ -193,5 +196,9 @@ extension MainViewController: MTMapViewDelegate {
                 self?.searchBarView.getSearchBar().placeholder = currentAddress
             }
         }
+    }
+    // 메모리 차지가 많을 경우, 캐시 정리
+    override func didReceiveMemoryWarning() {
+        mapView.didReceiveMemoryWarning()
     }
 }

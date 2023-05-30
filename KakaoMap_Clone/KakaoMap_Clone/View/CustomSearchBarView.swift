@@ -14,7 +14,7 @@ class CustomSearchBarView: UIView {
     private let menuButton: UIButton = {
         let button = UIButton(type: .system)
         button.tintColor = .black
-        button.setImage(UIImage(systemName: "line.3.horizontal"), for: .normal)
+        button.setImage(UIImage(systemName: "list.bullet"), for: .normal)
         return button
     }()
     

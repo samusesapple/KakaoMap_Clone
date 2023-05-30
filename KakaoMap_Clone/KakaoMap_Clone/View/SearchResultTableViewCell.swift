@@ -62,13 +62,13 @@ class SearchResultTableViewCell: UITableViewCell {
         return stack
     }()
     
-    private let placeImageView: UIImageView = {
-       let iv = UIImageView()
-        iv.layer.cornerRadius = 5
-        iv.clipsToBounds = true
-        iv.backgroundColor = .blue
-        return iv
-    }()
+//    private let placeImageView: UIImageView = {
+//       let iv = UIImageView()
+//        iv.layer.cornerRadius = 5
+//        iv.clipsToBounds = true
+//        iv.backgroundColor = .blue
+//        return iv
+//    }()
     
     // MARK: - Lifecycle
     
@@ -96,9 +96,9 @@ class SearchResultTableViewCell: UITableViewCell {
         reviewView.setDimensions(height: 13, width: contentView.frame.width / 2)
         reviewView.anchor(top: placeNameLabel.bottomAnchor, left: contentView.leftAnchor, paddingTop: 10, paddingLeft: 17)
         
-        contentView.addSubview(placeImageView)
-        placeImageView.setDimensions(height: 85, width: 85)
-        placeImageView.anchor(bottom: contentView.bottomAnchor, right: contentView.rightAnchor, paddingBottom: 18, paddingRight: 17)
+//        contentView.addSubview(placeImageView)
+//        placeImageView.setDimensions(height: 85, width: 85)
+//        placeImageView.anchor(bottom: contentView.bottomAnchor, right: contentView.rightAnchor, paddingBottom: 18, paddingRight: 17)
         
         contentView.addSubview(hStackView)
         hStackView.anchor(top: reviewView.bottomAnchor, left: contentView.leftAnchor, paddingTop: 8, paddingLeft: 17)

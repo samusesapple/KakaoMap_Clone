@@ -62,8 +62,9 @@ class SearchResultViewController: UIViewController {
     
     private lazy var tableView: UITableView = {
         let tv = UITableView()
-        tv.backgroundColor = .white
-        tv.rowHeight = (view.frame.height / 5) - 10
+        tv.backgroundColor = .white 
+//        tv.rowHeight = (view.frame.height / 5) - 10
+        tv.rowHeight = view.frame.height / 7
         tv.register(SearchResultTableViewCell.self, forCellReuseIdentifier: "resultCell")
         tv.dataSource = self
         tv.delegate = self

@@ -222,11 +222,12 @@ class ResultMapViewController: UIViewController {
     private func checkIfTargetPlaceExists() {
         guard let targetPlace = viewModel.targetPlace else {
             viewModel.targetPlace = viewModel.getResults[0]
-            checkIfTargetPlaceExists()
+            configureUIwithData(place: viewModel.targetPlace!)
+            setTargetMapView(with: nil)
             return
         }
         configureUIwithData(place: targetPlace)
-        setMapView(with: targetPlace)
+        setTargetMapView(with: targetPlace)
     }
     
     /// FooterView의 UI를 선택된 장소 유무에 따라 다르게 띄우기
@@ -289,7 +290,7 @@ class ResultMapViewController: UIViewController {
         }
     }
     /// mapView 세팅 - 선택된 장소 유무에 따라 맵뷰의 중심점 세팅하기
-    private func setMapView(with place: KeywordDocument?) {
+    private func setTargetMapView(with place: KeywordDocument?) {
         mapView.delegate = self
         mapView.currentLocationTrackingMode = .off
         
@@ -302,7 +303,11 @@ class ResultMapViewController: UIViewController {
               let lat = Double(stringLat),
               let placeId = place.id,
               let poiItems = mapView.poiItems as? [MTMapPOIItem]
-        else { return }
+        else {
+            mapView.fitAreaToShowAllPOIItems()
+            mapView.zoomOut(animated: true)
+            return
+        }
         mapView.setMapCenter(MTMapPoint(geoCoord: MTMapPointGeo(latitude: lat, longitude: lon)), zoomLevel: .min, animated: true)
         
         let targetPoi = poiItems.filter({ $0.tag == Int(placeId) })[0]
@@ -354,4 +359,8 @@ extension ResultMapViewController: MTMapViewDelegate {
         return false
     }
     
+    // 메모리 차지가 많을 경우, 캐시 정리
+    override func didReceiveMemoryWarning() {
+        mapView.didReceiveMemoryWarning()
+    }
 }

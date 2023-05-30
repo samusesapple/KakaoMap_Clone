@@ -16,7 +16,9 @@ class MainViewModel {
     
     // MARK: - Computed Properties
 
+    var openMenu = { }
     
+    var closeMenu = { }
     
     // MARK: - Methods
     
