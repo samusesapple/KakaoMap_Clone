@@ -5,22 +5,44 @@
 //  Created by Sam Sung on 2023/05/23.
 //
 
-import Foundation
+import UIKit
 
-struct SearchOption {
-    var icon: UIImage
-    var title: String
+protocol MapDataType {
+    var keyword: String? { get set }
+    var mapLongitude: String { get set }
+    var mapLatitude: String { get set }
+    
+    var currentLongtitude: Double { get set }
+    var currentLatitude: Double { get set }
+    
+    var mapAddress: String { get set }
+    
+    var searchResults: [KeywordDocument] { get set }
+
+    var searchHistories: [SearchHistory]? { get set }
 }
 
-struct SearchHistory {
-    var type: UIImage
-    var searchText: String
-}
+class SearchViewModel: MapDataType {
+// MARK: - Stored Properties
+    
+    var keyword: String?
+    
+    var mapLongitude: String
+    var mapLatitude: String
+    
+    var currentLongtitude: Double
+    var currentLatitude: Double
+    
+    var mapAddress: String
+    
+    var searchResults: [KeywordDocument] = [] {
+        didSet {
+            presentResultVC()
+        }
+    }
+    
+    var searchHistories: [SearchHistory]?
 
-class SearchViewModel {
-    
-    // MARK: - Stored Properties
-    
     private let searchOptions: [SearchOption] = {[
         SearchOption(icon: UIImage(systemName: "fork.knife")!, title: "맛집"),
         SearchOption(icon: UIImage(systemName: "cup.and.saucer.fill")!, title: "카페"),
@@ -30,71 +52,39 @@ class SearchViewModel {
         SearchOption(icon: UIImage(systemName: "train.side.rear.car")!, title: "지하철")
     ]}()
     
-    private var searchHistories: [SearchHistory]?
-    
-    private var longitude: String?
-    private var latitude: String?
-    
-    private var currentLongtitude: Double?
-    private var currentLatitude: Double?
-    
-    private var mapAddress: String?
-    
-    // MARK: - Computed Properties
+// MARK: - Computed Properties
     /// [get] searchOption 배열 받기
     var getSearchOptions: [SearchOption] {
         return searchOptions
-    }
-    /// [get] searchHistory 배열 받기
-    var getSetSearchHistories: [SearchHistory] {
-        return searchHistories ?? []
-    }
-    
-    var lon: String? {
-        return longitude
-    }
-    
-    var lat: String? {
-        return latitude
-    }
-    
-    var currentLon: Double? {
-        return currentLongtitude
-    }
-    
-    var currentLat: Double? {
-        return currentLatitude
-    }
-    
-    var searchTargetMapAddress: String? {
-        return mapAddress
     }
     
     var showProgressHUD = { }
     var dismissProgressHUD = { }
     
-    // MARK: - Lifecycle
+    var presentResultVC = { }
     
-    init(lon: String, lat: String, currentLon: Double, currentLat: Double) {
-        self.longitude = lon
-        self.latitude = lat
+// MARK: - Initializer
+    
+    init(mapLon: String, mapLat: String, currentLon: Double, currentLat: Double, mapAddress: String) {
+        self.mapLongitude = mapLon
+        self.mapLatitude = mapLat
         self.currentLongtitude = currentLon
         self.currentLatitude = currentLat
+        self.mapAddress = mapAddress
     }
+        
     
-    init() { }
-    
-    
-    // MARK: - Functions
+// MARK: - Functions
     
     func updateNewSearchHistory(_ newHistories: [SearchHistory]) {
-        guard self.searchHistories != nil else {
-            self.searchHistories = newHistories
-            return
-        }
-        newHistories.forEach { newHistory in
-            self.searchHistories?.insert(newHistory, at: 0)
-        }
+        self.searchHistories = newHistories
+    }
+    
+    func getSearchResultVC() -> SearchResultViewController {
+        let resultVM = SearchResultViewModel(mapData: self)
+        let searchReesultVC = SearchResultViewController()
+        searchReesultVC.viewModel = resultVM
+        return searchReesultVC
     }
     
     /// 글자수에 따라 collectionView Cell의 넓이 측정하여 Double 형태로 return
@@ -107,32 +97,26 @@ class SearchViewModel {
     }
     
     /// 키워드로 검색하기
-    func getKeywordSearchResult(with keyword: String, completion: @escaping([KeywordDocument]) -> Void) {
-        guard let lon = currentLon,
-              let lat = currentLat,
-              let mapLon = longitude,
-              let mapLat = latitude
-        else {
-            print(#function)
-            return
-        }
+    func getKeywordSearchResult(with keyword: String) {
         showProgressHUD()
-        if "\(lon)+\(lat)" != "\(longitude!) + \(latitude!)" {
-            HttpClient.shared.getLocationAddress(lon: mapLon, lat: mapLat) { [weak self] result in
-                guard let address = result.documents?[0].addressName else { return }
+        if "\(currentLongtitude)+\(currentLatitude)" != "\(mapLongitude) + \(mapLatitude)" {
+            HttpClient.shared.getLocationAddress(lon: mapLongitude, lat: mapLatitude) { [weak self] result in
+                guard let address = result.documents?[0].addressName,
+                      let lon = self?.currentLongtitude,
+                      let lat = self?.currentLatitude else { return }
                 
                 self?.search(keyword: keyword,
-                       lon: String(lon),
-                       lat: String(lat),
+                             lon: String(lon),
+                             lat: String(lat),
                              address: address, completion: { keywordResultArray in
-                    completion(keywordResultArray)
+                    self?.searchResults = keywordResultArray
                 })
             }
         } else {
             search(keyword: keyword,
-                   lon: String(lon),
-                   lat: String(lat)) { keywordResultArray in
-                completion(keywordResultArray)
+                   lon: String(currentLongtitude),
+                   lat: String(currentLatitude)) { [weak self] keywordResultArray in
+                self?.searchResults = keywordResultArray
             }
         }
     }
@@ -157,7 +141,8 @@ class SearchViewModel {
             
             if (self?.searchHistories) != nil {
                 print("SearchVM - newHistory KEYWORD : \(keyword)")
-                self?.searchHistories?.insert(newHistory, at: 0)
+                // 이미 해당 키워드로 검색한 이력이 있는지 확인 후, 있으면 삭제 필요함
+                self?.checkIfDuplicatedHistoryExists(newHistory: newHistory)
                 self?.dismissProgressHUD()
                 completion(keywordResultArray)
             } else {
@@ -168,4 +153,21 @@ class SearchViewModel {
             }
         }
     }
+    
+    private func checkIfDuplicatedHistoryExists(newHistory: SearchHistory) {
+        guard var history = searchHistories else { return }
+        let duplicatedHistoryArray = history.filter({ $0 == newHistory })
+        
+        guard duplicatedHistoryArray.count > 0 else { return }
+                
+        for (index, item) in history.enumerated() {
+            if item == duplicatedHistoryArray[0] {
+                history.remove(at: index)
+                continue
+            }
+        }
+        history.insert(newHistory, at: 0)
+        searchHistories = history
+    }
+    
 }

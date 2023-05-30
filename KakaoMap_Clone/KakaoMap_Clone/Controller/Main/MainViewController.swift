@@ -40,6 +40,11 @@ class MainViewController: UIViewController {
         setAutolayout()
         setActions()
         
+        viewModel.setAddress = { [weak self] address in
+            DispatchQueue.main.async {
+                self?.searchBarView.getSearchBar().placeholder = address
+            }
+        }
     }
     
     // MARK: - Actions
@@ -60,17 +65,13 @@ class MainViewController: UIViewController {
     }
     
     @objc private func searchBarTapped() {
-        guard let location = locationManager.location,
-        let lon = viewModel.longtitude,
-        let lat = viewModel.latitude else {
+        guard let location = locationManager.location  else {
             print("위치 정보 없음")
             return
         }
         searchBarView.getSearchBar().resignFirstResponder()
-        navigationController?.pushViewController(SearchViewController(lon: String(lon),
-                                                                      lat: String(lat),
-                                                                      currentLon: location.coordinate.longitude,
-                                                                      currentLat: location.coordinate.latitude), animated: false)
+        navigationController?.pushViewController(viewModel.getSearchVC(currentLon: location.coordinate.longitude,
+                                                                       currentLat: location.coordinate.latitude)!, animated: false)
     }
     
     // MARK: - Helpers
@@ -116,11 +117,7 @@ class MainViewController: UIViewController {
                 return
             }
             self?.viewModel.getAddressSearchResult(lon: coordinate.longitude,
-                                                   lat: coordinate.latitude) { currentAddress in
-                DispatchQueue.main.async {
-                    self?.searchBarView.getSearchBar().placeholder = currentAddress
-                }
-            }
+                                                   lat: coordinate.latitude)
         }
         
         
@@ -188,14 +185,8 @@ extension MainViewController: MTMapViewDelegate {
     func mapView(_ mapView: MTMapView!, finishedMapMoveAnimation mapCenterPoint: MTMapPoint!) {
         // 맵 이동되면 이동된 위치 세팅 필요
         print("VM - 위도 경도 설정됨")
-        viewModel.longtitude = mapCenterPoint.mapPointGeo().longitude
-        viewModel.latitude = mapCenterPoint.mapPointGeo().latitude
-        viewModel.getAddressSearchResult(lon: viewModel.longtitude!,
-                                         lat: viewModel.latitude!) { [weak self] currentAddress in
-            DispatchQueue.main.async {
-                self?.searchBarView.getSearchBar().placeholder = currentAddress
-            }
-        }
+        viewModel.getAddressSearchResult(lon: mapCenterPoint.mapPointGeo().longitude,
+                                         lat: mapCenterPoint.mapPointGeo().latitude)
     }
     // 메모리 차지가 많을 경우, 캐시 정리
     override func didReceiveMemoryWarning() {

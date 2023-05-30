@@ -11,8 +11,6 @@ class SearchResultTableViewCell: UITableViewCell {
     
     // MARK: - Properties
     
-    private let viewModel = SearchResultViewModel()
-    
     private let placeNameLabel: UILabel = {
         let label = UILabel()
         label.textColor = .black.withAlphaComponent(0.8)

@@ -22,7 +22,7 @@ class ResultMapViewController: UIViewController {
     private var mapPoint: MTMapPoint?
     private var poiItem: MTMapPOIItem?
     
-    private var viewModel = SearchResultViewModel()
+    var viewModel: SearchResultViewModel!
     
     private let progressHud = JGProgressHUD(style: .dark)
     
@@ -122,13 +122,10 @@ class ResultMapViewController: UIViewController {
     
     // MARK: - Lifecycle
     
-    init(title: String, viewModel: SearchResultViewModel, place: KeywordDocument? = nil) {
+    init() {
         super.init(nibName: nil, bundle: nil)
-        self.viewModel = viewModel
-        searchBarView.getSearchBar().text = title
-        viewModel.targetPlace = place
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -221,7 +218,7 @@ class ResultMapViewController: UIViewController {
     /// 장소 선택 유무에 따라 다른 UI를 띄우기
     private func checkIfTargetPlaceExists() {
         guard let targetPlace = viewModel.targetPlace else {
-            viewModel.targetPlace = viewModel.getResults[0]
+            viewModel.targetPlace = viewModel.searchResults[0]
             configureUIwithData(place: viewModel.targetPlace!)
             setTargetMapView(with: nil)
             return
@@ -276,6 +273,7 @@ class ResultMapViewController: UIViewController {
     
     private func setSearchBarAndAlignmentButtons() {
         searchBarView.getSearchBar().showsCancelButton = false
+        searchBarView.getSearchBar().text = viewModel.keyword
         
         if viewModel.isMapBasedData {
             centerAlignmentButton.setTitle("지도중심 ▾", for: .normal)
@@ -322,7 +320,7 @@ extension ResultMapViewController: MTMapViewDelegate {
     private func makeMarker() {
         var count = 0
         
-        for item in viewModel.getResults {
+        for item in viewModel.searchResults {
             guard let stringLon = item.x,
                   let stringLat = item.y,
                   let lat = Double(stringLat),

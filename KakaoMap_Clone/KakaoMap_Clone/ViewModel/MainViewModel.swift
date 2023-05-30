@@ -10,29 +10,51 @@ import Foundation
 class MainViewModel {
     
     // MARK: - Stored Properties
-
-    var longtitude: Double?
-    var latitude: Double?
+    
+    private var longtitude: Double?
+    private var latitude: Double?
+    
+    private var mapAddress: String?
     
     // MARK: - Computed Properties
-
+    
     var openMenu = { }
     
     var closeMenu = { }
     
+    var setAddress: (String) -> Void = { _ in }
+    
     // MARK: - Methods
     
-    /// 현재 위치로 주소 정보 받기
-    func getAddressSearchResult(lon: Double, lat: Double, completion: @escaping (String) -> Void) {
+    /// 지도 위치로 주소 정보 받기
+    func getAddressSearchResult(lon: Double, lat: Double) {
+        longtitude = lon
+        latitude = lat
+        
         let stringLon = String(lon)
         let stringLat = String(lat)
-        HttpClient.shared.getLocationAddress(lon: stringLon, lat: stringLat) { result in
+        HttpClient.shared.getLocationAddress(lon: stringLon, lat: stringLat) { [weak self] result in
             guard let document = result.documents?.first,
-                  let currentAddress = document.addressName else {
+                  let address = document.addressName else {
                 print("SearchVM - document 없음")
                 return
             }
-            completion(currentAddress)
+            self?.setAddress(address)
+            self?.mapAddress = address
         }
+    }
+    
+    func getSearchVC(currentLon: Double, currentLat: Double) -> SearchViewController? {
+        guard let mapLon = longtitude,
+              let mapLat = latitude,
+              let mapAddress = mapAddress else { return nil }
+        let searchVM = SearchViewModel(mapLon: String(mapLon),
+                                       mapLat: String(mapLat),
+                                       currentLon: currentLon,
+                                       currentLat: currentLat,
+                                       mapAddress: mapAddress)
+        let searchVC = SearchViewController()
+        searchVC.viewModel = searchVM
+        return searchVC
     }
 }

@@ -16,7 +16,7 @@ protocol SearchResultViewControllerDelegate: AnyObject {
 class SearchResultViewController: UIViewController {
     // MARK: - Properties
     
-    private var viewModel = SearchResultViewModel()
+    var viewModel: SearchResultViewModel!
     weak var delegate: SearchResultViewControllerDelegate?
   
     private let activity = UIActivityIndicatorView()
@@ -72,20 +72,11 @@ class SearchResultViewController: UIViewController {
     }()
     
     // MARK: - Lifecycle
-    
-    init(keyword: String, results: [KeywordDocument], lon: String, lat: String, currentLon: Double, currentLat: Double, mapAddress: String) {
+  
+    init() {
         super.init(nibName: nil, bundle: nil)
-        let viewModel = SearchResultViewModel(lon: lon,
-                                              lat: lat,
-                                              keyword: keyword,
-                                              results: results,
-                                              currentLon: currentLon,
-                                              currentLat: currentLat,
-                                              mapAddress: mapAddress)
-        self.viewModel = viewModel
-        searchBarView.getSearchBar().searchTextField.text = keyword
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -124,21 +115,20 @@ class SearchResultViewController: UIViewController {
     @objc private func mapButtonTapped() {
         // ResultMapView에 정보 전달 및 띄우기
         guard let title = searchBarView.getSearchBar().text else { return }
-        let resultMapVC = ResultMapViewController(title: title,
-                                                  viewModel: viewModel)
+        let resultMapVC = viewModel.getResultMapVC(targetPlace: nil)
         resultMapVC.delegate = self
         navigationController?.pushViewController(resultMapVC, animated: false)
     }
     
     @objc private func searchBarTapped() {
         // 선택했던 cell에 해당되는 장소의 정보를 SearchVC에 전달 필요
-        delegate?.passTappedHistory(newHistories: viewModel.getTappedHistory)
+        delegate?.passTappedHistory(newHistories: viewModel.searchHistories ?? [])
         navigationController?.popViewController(animated: false)
     }
     
     @objc private func cancelButtonTapped() {
         // 선택했던 cell에 해당되는 장소의 정보를 SearchVC에 전달 필요
-        delegate?.passTappedHistory(newHistories: viewModel.getTappedHistory)
+        delegate?.passTappedHistory(newHistories: viewModel.searchHistories ?? [])
         navigationController?.popViewController(animated: false)
         delegate?.needToPresentMainView()
     }
@@ -201,6 +191,7 @@ class SearchResultViewController: UIViewController {
     }
     
     private func setSearchBar() {
+        searchBarView.getSearchBar().searchTextField.text = viewModel.keyword
         searchBarView.getSearchBar().showsCancelButton = false
     }
 }
@@ -211,27 +202,25 @@ class SearchResultViewController: UIViewController {
 extension SearchResultViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return viewModel.getResults.count
+        return viewModel.searchResults.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "resultCell", for: indexPath) as! SearchResultTableViewCell
-        cell.configureUIwithData(data: viewModel.getResults[indexPath.row])
+        cell.configureUIwithData(data: viewModel.searchResults[indexPath.row])
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        let result = viewModel.getResults[indexPath.row]
-        guard let placeName = result.placeName else {
+        let targetPlace = viewModel.searchResults[indexPath.row]
+        guard let placeName = targetPlace.placeName else {
             print("SearchResultVC - placeName error")
             return
         }
         // 검색 기록 추가 + 해당되는 셀의 장소 보여주는 mapResultVC push 하기
         viewModel.updateNewTappedHistory(location: placeName)
-        let resultMapVC = ResultMapViewController(title: searchBarView.getSearchBar().text!,
-                                                    viewModel: viewModel,
-                                                    place: result)
+        let resultMapVC = viewModel.getResultMapVC(targetPlace: targetPlace)
         resultMapVC.delegate = self
         self.navigationController?.pushViewController(resultMapVC, animated: false)
     }

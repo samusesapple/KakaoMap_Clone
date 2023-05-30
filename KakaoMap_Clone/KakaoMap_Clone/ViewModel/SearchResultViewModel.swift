@@ -7,21 +7,23 @@
 
 import Foundation
 
-class SearchResultViewModel {
+class SearchResultViewModel: MapDataType {
     
-    // MARK: - Stored Properties
+// MARK: - Stored Properties
+
+    var keyword: String?
     
-    private var longtitude: String?
-    private var latitude: String?
-    private var mapAddress: String?
+    var mapLongitude: String
+    var mapLatitude: String
     
-    private var currentLongtitude: String?
-    private var currentLatitude: String?
+    var currentLongtitude: Double
+    var currentLatitude: Double
     
-    private var keyword: String?
-    private var results: [KeywordDocument]?
+    var mapAddress: String
     
-    private var tappedHistory: [SearchHistory] = []
+    var searchResults: [KeywordDocument]
+    
+    var searchHistories: [SearchHistory]? = []
     
     private var selectedPlace: KeywordDocument?
     
@@ -32,20 +34,7 @@ class SearchResultViewModel {
     var isAccuracyAlignment: Bool = true
     
 // MARK: - Computed Properties
-    
-    var getResults: [KeywordDocument] {
-        get {
-            return results ?? []
-        }
-        set {
-            results = newValue
-        }
-    }
-    
-    var getTappedHistory: [SearchHistory] {
-        return tappedHistory
-    }
-    
+
     var targetPlace: KeywordDocument? {
         get {
             return selectedPlace
@@ -64,95 +53,95 @@ class SearchResultViewModel {
     
 // MARK: - Initializer
     
-    init(lon: String, lat: String, keyword: String, results: [KeywordDocument], currentLon: Double, currentLat: Double, mapAddress: String) {
-        self.longtitude = lon
-        self.latitude = lat
-        self.keyword = keyword
-        self.results = results
-        self.currentLongtitude = String(currentLon)
-        self.currentLatitude = String(currentLat)
-        self.mapAddress = mapAddress
+    init(mapData: MapDataType) {
+        self.mapLongitude = mapData.mapLongitude
+        self.mapLatitude = mapData.mapLatitude
+        self.keyword = mapData.keyword
+        self.currentLongtitude = mapData.currentLongtitude
+        self.currentLatitude = mapData.currentLatitude
+        self.mapAddress = mapData.mapAddress
+        self.searchHistories = mapData.searchHistories
+        self.searchResults = mapData.searchResults
     }
-    
-    init() { }
-    
+        
 // MARK: - Methods
     
     /// 검색 히스토리 추가
     func updateNewTappedHistory(location: String) {
         let newTappedHistory = SearchHistory(type: UIImage(systemName: "building.2")!,
                                              searchText: location)
-        guard let lastHistory = tappedHistory.last else {
-            self.tappedHistory.insert(newTappedHistory, at: 0)
+        guard let lastHistory = searchHistories?.last else {
+            self.searchHistories?.insert(newTappedHistory, at: 0)
             return
         }
         if lastHistory.searchText == newTappedHistory.searchText  {
-            tappedHistory[tappedHistory.count-1] = newTappedHistory
+            searchHistories![searchHistories!.count-1] = newTappedHistory
         } else {
-            let duplicatedHistory = tappedHistory.filter({ $0.searchText == newTappedHistory.searchText })
+            let duplicatedHistory = searchHistories?.filter({ $0 == newTappedHistory })
             // 똑같은 이전 검색 기록 있는 경우, 해당 이전 검색기록 삭제하기
-            if duplicatedHistory.count > 0 {
-                for (index, item) in tappedHistory.enumerated() {
-                    if item.searchText == duplicatedHistory[0].searchText && item.type == duplicatedHistory[0].type {
-                        tappedHistory.remove(at: index)
-                        print("중복되서 지워짐 - \(index)번째 아이템")
-                        return
+            if duplicatedHistory!.count > 0 {
+                var biggestIndex = 0
+                for (index, item) in searchHistories!.enumerated() {
+                    if item.searchText == duplicatedHistory![0].searchText && item.type == duplicatedHistory![0].type {
+                        print("중복검색 - \(index)번째 아이템")
+                        biggestIndex = index
+                        continue
                     }
-                    return
                 }
+                searchHistories?.remove(at: biggestIndex)
             }
-            self.tappedHistory.insert(newTappedHistory, at: 0)
+            self.searchHistories?.insert(newTappedHistory, at: 0)
         }
     }
     
     /// id에 해당되는 장소를 return
     func filterResults(with id: Int) -> KeywordDocument {
-        let result = results?.filter({ $0.id == String(id) }).first
-        self.targetPlace = result
-        return result!
+        let targetPlace = searchResults.filter({ $0.id == String(id) }).first
+        self.targetPlace = targetPlace
+        return targetPlace!
     }
     
     /// 정렬 검색
     func sortAccuracyAlignment(){
-        guard let lon = currentLongtitude,
-              let lat = currentLatitude,
-              let mapLon = longtitude,
-              let mapLat = latitude,
-              let keyword = keyword,
+        
+        guard let keyword = keyword,
               !loading else { return }
         
         loading = true
         showHud()
         
         if isMapBasedData {
-            HttpClient.shared.getLocationAddress(lon: mapLon,
-                                                 lat: mapLat) { [weak self] document in
-                guard let address = document.documents?[0].addressName else { return }
+            HttpClient.shared.getLocationAddress(lon: mapLongitude,
+                                                 lat: mapLatitude) { [weak self] document in
+                guard let address = document.documents?[0].addressName,
+                      let currentLon = self?.currentLongtitude,
+                      let currentLat = self?.currentLatitude
+                else { return }
                 self?.searchPlaces(keyword: keyword,
-                                   lon: lon,
-                                   lat: lat,
+                                   lon: currentLon,
+                                   lat: currentLat,
                                    place: address)
                 print("지도 중심 근처에 있는 장소 검색")
             }
         } else {
             searchPlaces(keyword: keyword,
-                         lon: lon,
-                         lat: lat)
+                         lon: currentLongtitude,
+                         lat: currentLatitude)
             print("현재 위치 근처에 있는 장소 검색")
         }
     }
     
-    private func searchPlaces(keyword: String, lon: String, lat: String, place: String = "") {
+    private func searchPlaces(keyword: String, lon: Double, lat: Double, place: String = "") {
         HttpClient.shared.searchKeyword(with: "\(place)  \(keyword)",
-                                        lon: lon,
-                                        lat: lat,
+                                        lon: String(lon),
+                                        lat: String(lat),
                                         page: 1,
                                         isAccuracy: isAccuracyAlignment) { [weak self] result in
             guard let newResults = result?.documents else {
                 self?.finishLoading()
                 return
             }
-            self?.results = newResults
+            self?.searchResults = newResults
             self?.dismissHud()
             self?.loading = false
             print("거리순 정렬 완료")
@@ -161,12 +150,8 @@ class SearchResultViewModel {
     
     /// 다음 페이지의 결과 띄우기
     func getNextPageResult() {
-        guard let lon = currentLongtitude,
-              let lat = currentLatitude,
-              let keyword = keyword,
-              let currentResultCount = results?.count,
-              let mapAddress = mapAddress,
-              currentResultCount >= 15,
+        guard let keyword = keyword,
+              searchResults.count >= 15,
               !loading else { return }
         
         loading = true
@@ -174,8 +159,8 @@ class SearchResultViewModel {
         page += 1
         
         HttpClient.shared.searchKeyword(with: "\(mapAddress) \(keyword)",
-                                        lon: lon,
-                                        lat: lat,
+                                        lon: String(currentLongtitude),
+                                        lat: String(currentLatitude),
                                         page: page,
                                         isAccuracy: isAccuracyAlignment) { [weak self] result in
             guard let newResults = result?.documents else {
@@ -183,7 +168,7 @@ class SearchResultViewModel {
                 return
             }
             
-            newResults.forEach({ self?.results?.append($0)})
+            newResults.forEach({ self?.searchResults.append($0)})
             self?.finishLoading()
             self?.loading = false
             print("\(String(describing: self?.page))번째 item list 가져옴")
@@ -192,13 +177,8 @@ class SearchResultViewModel {
     
     /// 현재 위치에서 해당 장소로 이동하는 경로 알려주기
     func getDirection(destinationLon: String, destinationLat: String, completion: @escaping () -> Void) {
-        guard let startLon = currentLongtitude,
-              let startLat = currentLatitude else {
-                  print("SearchResultVC ERROR - 현재 위치 세팅 안되어있음")
-                  return
-              }
-        HttpClient.shared.getDirection(startLon: startLon,
-                                       startLat: startLat,
+        HttpClient.shared.getDirection(startLon: String(currentLongtitude),
+                                       startLat: String(currentLatitude),
                                        destinationLon: destinationLon,
                                        destinationLat: destinationLat) { result in
             guard let routes = result.routes else {
@@ -207,5 +187,12 @@ class SearchResultViewModel {
             }
             completion()
         }
+    }
+    
+    func getResultMapVC(targetPlace: KeywordDocument?) -> ResultMapViewController {
+        let resultMapVC = ResultMapViewController()
+        resultMapVC.viewModel = self
+        resultMapVC.viewModel.targetPlace = targetPlace
+        return resultMapVC
     }
 }
