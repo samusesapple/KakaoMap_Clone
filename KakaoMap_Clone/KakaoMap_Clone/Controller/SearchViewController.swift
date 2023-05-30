@@ -91,8 +91,6 @@ class SearchViewController: UIViewController {
         }
         
         viewModel.presentResultVC = { [weak self] in
-            self?.tableView.reloadData()
-
             guard let resultVC = self?.viewModel.getSearchResultVC() else { return }
             resultVC.delegate = self
             self?.navigationController?.pushViewController(resultVC, animated: false)

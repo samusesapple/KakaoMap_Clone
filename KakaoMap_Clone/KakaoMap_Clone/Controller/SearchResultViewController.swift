@@ -114,7 +114,6 @@ class SearchResultViewController: UIViewController {
     
     @objc private func mapButtonTapped() {
         // ResultMapView에 정보 전달 및 띄우기
-        guard let title = searchBarView.getSearchBar().text else { return }
         let resultMapVC = viewModel.getResultMapVC(targetPlace: nil)
         resultMapVC.delegate = self
         navigationController?.pushViewController(resultMapVC, animated: false)

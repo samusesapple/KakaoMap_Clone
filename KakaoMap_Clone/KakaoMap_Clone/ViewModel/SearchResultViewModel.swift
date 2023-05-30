@@ -103,7 +103,6 @@ class SearchResultViewModel: MapDataType {
     
     /// 정렬 검색
     func sortAccuracyAlignment(){
-        
         guard let keyword = keyword,
               !loading else { return }
         
@@ -175,23 +174,9 @@ class SearchResultViewModel: MapDataType {
         }
     }
     
-    /// 현재 위치에서 해당 장소로 이동하는 경로 알려주기
-    func getDirection(destinationLon: String, destinationLat: String, completion: @escaping () -> Void) {
-        HttpClient.shared.getDirection(startLon: String(currentLongtitude),
-                                       startLat: String(currentLatitude),
-                                       destinationLon: destinationLon,
-                                       destinationLat: destinationLat) { result in
-            guard let routes = result.routes else {
-                print("자동차 경로 없음")
-                return
-            }
-            completion()
-        }
-    }
-    
     func getResultMapVC(targetPlace: KeywordDocument?) -> ResultMapViewController {
         let resultMapVC = ResultMapViewController()
-        resultMapVC.viewModel = self
+        resultMapVC.viewModel = ResultMapViewModel(mapData: self)
         resultMapVC.viewModel.targetPlace = targetPlace
         return resultMapVC
     }

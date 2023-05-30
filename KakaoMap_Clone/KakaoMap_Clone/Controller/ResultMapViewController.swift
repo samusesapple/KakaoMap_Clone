@@ -22,7 +22,7 @@ class ResultMapViewController: UIViewController {
     private var mapPoint: MTMapPoint?
     private var poiItem: MTMapPOIItem?
     
-    var viewModel: SearchResultViewModel!
+    var viewModel: ResultMapViewModel!
     
     private let progressHud = JGProgressHUD(style: .dark)
     
@@ -199,7 +199,6 @@ class ResultMapViewController: UIViewController {
     @objc private func footerViewTapped() {
         guard let url = viewModel.targetPlace?.placeURL else { return }
         let webVC = DetailViewController(url: url)
-        print(url)
         present(webVC, animated: true)
     }
     
