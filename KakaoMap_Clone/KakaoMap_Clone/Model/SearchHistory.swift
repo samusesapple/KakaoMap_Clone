@@ -10,4 +10,5 @@ import Foundation
 struct SearchHistory: Equatable {
     var type: UIImage
     var searchText: String
+    var address: String?
 }

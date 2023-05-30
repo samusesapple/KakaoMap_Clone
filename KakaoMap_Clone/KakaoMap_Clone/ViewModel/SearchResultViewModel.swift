@@ -67,9 +67,10 @@ class SearchResultViewModel: MapDataType {
 // MARK: - Methods
     
     /// 검색 히스토리 추가
-    func updateNewTappedHistory(location: String) {
+    func updateNewTappedHistory(location: KeywordDocument) {
         let newTappedHistory = SearchHistory(type: UIImage(systemName: "building.2")!,
-                                             searchText: location)
+                                             searchText: location.placeName!,
+                                             address: location.addressName)
         guard let lastHistory = searchHistories?.last else {
             self.searchHistories?.insert(newTappedHistory, at: 0)
             return

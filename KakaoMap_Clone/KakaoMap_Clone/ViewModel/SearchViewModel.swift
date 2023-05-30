@@ -20,12 +20,37 @@ protocol MapDataType {
     var searchResults: [KeywordDocument] { get set }
 
     var searchHistories: [SearchHistory]? { get set }
+    
+    func checkIfDuplicatedHistoryExists(newHistory: SearchHistory) -> [SearchHistory]?
+}
+
+extension MapDataType {
+    func checkIfDuplicatedHistoryExists(newHistory: SearchHistory) -> [SearchHistory]? {
+        guard var history = searchHistories else { return nil }
+        let duplicatedHistoryArray = history.filter({ $0 == newHistory })
+        
+        guard duplicatedHistoryArray.count > 0 else { return nil }
+                
+        for (index, item) in history.enumerated() {
+            if item == duplicatedHistoryArray[0] {
+                history.remove(at: index)
+                continue
+            }
+        }
+        history.insert(newHistory, at: 0)
+        return searchHistories
+    }
+    
 }
 
 class SearchViewModel: MapDataType {
 // MARK: - Stored Properties
     
-    var keyword: String?
+    var keyword: String? {
+        didSet {
+            setSearchBar(keyword)
+        }
+    }
     
     var mapLongitude: String
     var mapLatitude: String
@@ -62,6 +87,9 @@ class SearchViewModel: MapDataType {
     var dismissProgressHUD = { }
     
     var presentResultVC = { }
+    var presentResultMapVC: (KeywordDocument) -> Void = { _ in }
+    
+    var setSearchBar: (String?) -> Void = { _ in }
     
 // MARK: - Initializer
     
@@ -87,6 +115,15 @@ class SearchViewModel: MapDataType {
         return searchReesultVC
     }
     
+    func getResultMapVC(targetPlace: KeywordDocument) -> ResultMapViewController {
+        let resultVM = ResultMapViewModel(mapData: self)
+        let searchReesultVC = ResultMapViewController()
+        searchReesultVC.viewModel = resultVM
+        searchReesultVC.viewModel.targetPlace = targetPlace
+        searchReesultVC.viewModel.keyword = targetPlace.placeName
+        return searchReesultVC
+    }
+    
     /// 글자수에 따라 collectionView Cell의 넓이 측정하여 Double 형태로 return
     func getCellWidth(with option: SearchOption) -> Double {
         if option.title.count <= 2 {
@@ -99,6 +136,8 @@ class SearchViewModel: MapDataType {
     /// 키워드로 검색하기
     func getKeywordSearchResult(with keyword: String) {
         showProgressHUD()
+        self.keyword = keyword
+        
         if "\(currentLongtitude)+\(currentLatitude)" != "\(mapLongitude) + \(mapLatitude)" {
             HttpClient.shared.getLocationAddress(lon: mapLongitude, lat: mapLatitude) { [weak self] result in
                 guard let address = result.documents?[0].addressName,
@@ -121,6 +160,29 @@ class SearchViewModel: MapDataType {
         }
     }
     
+    /// Search History에 해당되는 장소 보여주기
+    func getTargetPlace(with searchText: String) {
+        guard let history = self.searchHistories else { return }
+        showProgressHUD()
+        
+        self.keyword = searchText
+
+        let target = history.filter({ $0.searchText == searchText})[0]
+        HttpClient.shared.searchKeyword(with: target.searchText,
+                                        lon: String(currentLongtitude),
+                                        lat: String(currentLatitude),
+                                        page: 1) { [weak self] result in
+            guard let documents = result?.documents else {
+                self?.dismissProgressHUD()
+                return
+            }
+            let targetPlace = documents.filter( { $0.addressName == target.address })[0]
+            // 맵 VC 띄우도록 하기
+            self?.dismissProgressHUD()
+            self?.presentResultMapVC(targetPlace)
+        }
+    }
+    
     private func search(keyword: String, lon: String, lat: String, address: String = "", completion: @escaping ([KeywordDocument]) -> Void) {
         self.mapAddress = address
         
@@ -137,12 +199,13 @@ class SearchViewModel: MapDataType {
             }
             
             // 검색 히스토리 배열에 추가하기
-            let newHistory = SearchHistory(type: UIImage(systemName: "magnifyingglass")!, searchText: keyword)
+            let newHistory = SearchHistory(type: UIImage(systemName: "magnifyingglass")!, searchText: keyword, address: nil)
             
             if (self?.searchHistories) != nil {
                 print("SearchVM - newHistory KEYWORD : \(keyword)")
                 // 이미 해당 키워드로 검색한 이력이 있는지 확인 후, 있으면 삭제 필요함
-                self?.checkIfDuplicatedHistoryExists(newHistory: newHistory)
+                guard let historyArray = self?.checkIfDuplicatedHistoryExists(newHistory: newHistory) else { return }
+                self?.searchHistories = historyArray
                 self?.dismissProgressHUD()
                 completion(keywordResultArray)
             } else {
@@ -154,20 +217,20 @@ class SearchViewModel: MapDataType {
         }
     }
     
-    private func checkIfDuplicatedHistoryExists(newHistory: SearchHistory) {
-        guard var history = searchHistories else { return }
-        let duplicatedHistoryArray = history.filter({ $0 == newHistory })
-        
-        guard duplicatedHistoryArray.count > 0 else { return }
-                
-        for (index, item) in history.enumerated() {
-            if item == duplicatedHistoryArray[0] {
-                history.remove(at: index)
-                continue
-            }
-        }
-        history.insert(newHistory, at: 0)
-        searchHistories = history
-    }
-    
+//    private func checkIfDuplicatedHistoryExists(newHistory: SearchHistory) {
+//        guard var history = searchHistories else { return }
+//        let duplicatedHistoryArray = history.filter({ $0 == newHistory })
+//
+//        guard duplicatedHistoryArray.count > 0 else { return }
+//
+//        for (index, item) in history.enumerated() {
+//            if item == duplicatedHistoryArray[0] {
+//                history.remove(at: index)
+//                continue
+//            }
+//        }
+//        history.insert(newHistory, at: 0)
+//        searchHistories = history
+//    }
+//
 }

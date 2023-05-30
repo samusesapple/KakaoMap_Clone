@@ -63,7 +63,6 @@ class SearchResultViewController: UIViewController {
     private lazy var tableView: UITableView = {
         let tv = UITableView()
         tv.backgroundColor = .white 
-//        tv.rowHeight = (view.frame.height / 5) - 10
         tv.rowHeight = view.frame.height / 7
         tv.register(SearchResultTableViewCell.self, forCellReuseIdentifier: "resultCell")
         tv.dataSource = self
@@ -218,7 +217,7 @@ extension SearchResultViewController: UITableViewDelegate, UITableViewDataSource
             return
         }
         // 검색 기록 추가 + 해당되는 셀의 장소 보여주는 mapResultVC push 하기
-        viewModel.updateNewTappedHistory(location: placeName)
+        viewModel.updateNewTappedHistory(location: targetPlace)
         let resultMapVC = viewModel.getResultMapVC(targetPlace: targetPlace)
         resultMapVC.delegate = self
         self.navigationController?.pushViewController(resultMapVC, animated: false)

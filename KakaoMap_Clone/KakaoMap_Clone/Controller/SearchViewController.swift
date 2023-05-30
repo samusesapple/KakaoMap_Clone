@@ -95,6 +95,16 @@ class SearchViewController: UIViewController {
             resultVC.delegate = self
             self?.navigationController?.pushViewController(resultVC, animated: false)
         }
+        
+        viewModel.presentResultMapVC = { [weak self] targetPlace in
+            guard let mapVC = self?.viewModel.getResultMapVC(targetPlace: targetPlace) else { return }
+            mapVC.delegate = self
+            self?.navigationController?.pushViewController(mapVC, animated: false)
+        }
+        
+        viewModel.setSearchBar = { [weak self] keyword in
+            self?.searchBarView.getSearchBar().text = keyword
+        }
     }
     
     // MARK: - Actions
@@ -187,6 +197,9 @@ extension SearchViewController: UITableViewDelegate, UITableViewDataSource {
             viewModel.getKeywordSearchResult(with: keyword)
         }
         // 2. 장소 정보 있는 경우 - 장소의 상세 페이지 보여주기
+        if image == UIImage(systemName: "building.2") {
+            viewModel.getTargetPlace(with: keyword)
+        }
     }
     
 }
@@ -202,11 +215,13 @@ extension SearchViewController: UISearchBarDelegate, UISearchResultsUpdating {
         guard let text = searchBar.text else { return }
         searchBar.resignFirstResponder()
         if text != " " {
-            viewModel.keyword = text
+//            viewModel.keyword = text
             viewModel.getKeywordSearchResult(with: text)
         }
     }
 }
+
+// MARK: - SearchResultViewControllerDelegate
 
 extension SearchViewController: SearchResultViewControllerDelegate {
     
@@ -220,4 +235,18 @@ extension SearchViewController: SearchResultViewControllerDelegate {
         tableView.reloadData()
     }
     
+}
+
+// MARK: - M
+
+extension SearchViewController: ResultMapViewControllerDelegate {
+    
+    func needToShowSearchVC() {
+        print("ReusltMapVC Delegate - SearchVC - 띄우기")
+    }
+    
+    func needToShowMainVC() {
+        navigationController?.popViewController(animated: false)
+    }
+        
 }
