@@ -31,14 +31,17 @@ extension MapDataType {
         
         guard duplicatedHistoryArray.count > 0 else { return nil }
                 
+        var biggestIndex = 0
+        
         for (index, item) in history.enumerated() {
             if item == duplicatedHistoryArray[0] {
-                history.remove(at: index)
+                biggestIndex = index
                 continue
             }
         }
+        history.remove(at: biggestIndex)
         history.insert(newHistory, at: 0)
-        return searchHistories
+        return history
     }
     
 }
@@ -142,7 +145,11 @@ class SearchViewModel: MapDataType {
             HttpClient.shared.getLocationAddress(lon: mapLongitude, lat: mapLatitude) { [weak self] result in
                 guard let address = result.documents?[0].addressName,
                       let lon = self?.currentLongtitude,
-                      let lat = self?.currentLatitude else { return }
+                      let lat = self?.currentLatitude else {
+                    print(#function)
+                    self?.dismissProgressHUD()
+                    return
+                }
                 
                 self?.search(keyword: keyword,
                              lon: String(lon),
@@ -204,15 +211,25 @@ class SearchViewModel: MapDataType {
             if (self?.searchHistories) != nil {
                 print("SearchVM - newHistory KEYWORD : \(keyword)")
                 // 이미 해당 키워드로 검색한 이력이 있는지 확인 후, 있으면 삭제 필요함
-                guard let historyArray = self?.checkIfDuplicatedHistoryExists(newHistory: newHistory) else { return }
+                guard let historyArray = self?.checkIfDuplicatedHistoryExists(newHistory: newHistory) else {
+                    print("겹치는 검색어 없음")
+                    self?.searchHistories?.insert(newHistory, at: 0)
+                    self?.dismissProgressHUD()
+                    completion(keywordResultArray)
+                    return
+                }
+                print("겹치는 검색어 있음")
                 self?.searchHistories = historyArray
                 self?.dismissProgressHUD()
                 completion(keywordResultArray)
-            } else {
+                return
+            }
+            else {
                 print("SearchVM - newHistory KEYWORD 로 배열 초기화")
                 self?.searchHistories = [newHistory]
                 self?.dismissProgressHUD()
                 completion(keywordResultArray)
+                return
             }
         }
     }
