@@ -10,7 +10,7 @@ import CoreLocation
 
 struct LocationManager {
     
-    static let locationManager = CLLocationManager()
+    static let shared = CLLocationManager()
     
     private init() { }
 }

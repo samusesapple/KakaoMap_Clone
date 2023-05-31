@@ -51,6 +51,7 @@ class SearchViewModel: MapDataType {
     
     var keyword: String? {
         didSet {
+            // 키워드 변경 될 때마다 searchBar text를 키워드로 세팅하기
             setSearchBar(keyword)
         }
     }
@@ -65,6 +66,7 @@ class SearchViewModel: MapDataType {
     
     var searchResults: [KeywordDocument] = [] {
         didSet {
+            // 네트워킹으로 검색 결과가 나오면, 검색 결과를 보여주는 SearchResultVC 띄우기
             presentResultVC()
         }
     }
@@ -89,9 +91,13 @@ class SearchViewModel: MapDataType {
     var showProgressHUD = { }
     var dismissProgressHUD = { }
     
+    /// 결과 보여주는 ResultVC 띄우기
     var presentResultVC = { }
+    
+    /// 지정된 장소의 결과를 보여주는 지도, MapVC 띄우기
     var presentResultMapVC: (KeywordDocument) -> Void = { _ in }
     
+    /// 검색 키워드로 SearchBar UI 세팅하기
     var setSearchBar: (String?) -> Void = { _ in }
     
 // MARK: - Initializer
@@ -107,10 +113,12 @@ class SearchViewModel: MapDataType {
     
 // MARK: - Functions
     
+    /// 새로운 검색 결과 초기화하기
     func updateNewSearchHistory(_ newHistories: [SearchHistory]) {
         self.searchHistories = newHistories
     }
     
+    /// 검색 결과 보여주기
     func getSearchResultVC() -> SearchResultViewController {
         let resultVM = SearchResultViewModel(mapData: self)
         let searchReesultVC = SearchResultViewController()
@@ -118,6 +126,7 @@ class SearchViewModel: MapDataType {
         return searchReesultVC
     }
     
+    /// 검색 기록 장소 누른 경우 - 지도로 결과 보여주기
     func getResultMapVC(targetPlace: KeywordDocument) -> ResultMapViewController {
         let resultVM = ResultMapViewModel(mapData: self)
         let searchReesultVC = ResultMapViewController()

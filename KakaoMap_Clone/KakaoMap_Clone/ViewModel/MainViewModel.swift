@@ -22,6 +22,7 @@ class MainViewModel {
     
     var closeMenu = { }
     
+    /// 지도 위치 주소 데이터로 UI 세팅하기
     var setAddress: (String) -> Void = { _ in }
     
     // MARK: - Methods
@@ -44,6 +45,7 @@ class MainViewModel {
         }
     }
     
+    /// 검색 탭 누르면 실행 - SearchVC를 띄워서 검색 시작할 수 있도록 하기
     func getSearchVC(currentLon: Double, currentLat: Double) -> SearchViewController? {
         guard let mapLon = longtitude,
               let mapLat = latitude,

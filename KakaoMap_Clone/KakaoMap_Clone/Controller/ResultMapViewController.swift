@@ -14,11 +14,9 @@ protocol ResultMapViewControllerDelegate: AnyObject {
     func needToShowMainVC()
 }
 
-class ResultMapViewController: UIViewController {
+class ResultMapViewController: UIViewController, CLLocationManagerDelegate {
     // MARK: - Properties
-    
-    private var locationManager = LocationManager.locationManager
-    
+        
     private var mapPoint: MTMapPoint?
     private var poiItem: MTMapPOIItem?
     
@@ -143,6 +141,8 @@ class ResultMapViewController: UIViewController {
         setSearchBarAndAlignmentButtons()
         
         checkIfTargetPlaceExists()
+        
+        LocationManager.shared.delegate = self
         
         footerContainerView.addGestureRecognizer(UITapGestureRecognizer(target: self,
                                                                      action: #selector(footerViewTapped)))

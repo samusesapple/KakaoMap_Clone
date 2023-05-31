@@ -10,8 +10,6 @@ import CoreLocation
 
 class MainViewController: UIViewController {
     
-    private let locationManager = CLLocationManager()
-    
     private let viewModel = MainViewModel()
     
     private let mapView: MTMapView = {
@@ -51,8 +49,8 @@ class MainViewController: UIViewController {
     
     @objc private func showCurrentLocation() {
         print("현재 위치로 이동")
-        if locationManager.authorizationStatus == .authorizedAlways || locationManager.authorizationStatus == .authorizedWhenInUse {
-            guard let currentCoordinate = locationManager.location?.coordinate else { return }
+        if LocationManager.shared.authorizationStatus == .authorizedAlways || LocationManager.shared.authorizationStatus == .authorizedWhenInUse {
+            guard let currentCoordinate = LocationManager.shared.location?.coordinate else { return }
             let currentLongtitude = currentCoordinate.longitude
             let currentLatitude = currentCoordinate.latitude
             mapView.setMapCenter(MTMapPoint(geoCoord: MTMapPointGeo(latitude: currentLatitude,
@@ -65,7 +63,7 @@ class MainViewController: UIViewController {
     }
     
     @objc private func searchBarTapped() {
-        guard let location = locationManager.location  else {
+        guard let location = LocationManager.shared.location  else {
             print("위치 정보 없음")
             return
         }
@@ -103,15 +101,15 @@ class MainViewController: UIViewController {
     
     // 위치 사용 권한 허용 체크 및 locationManager 세팅 및 searchBar - placeholder 현재 위치로 세팅
     private func setLocationManager() {
-        locationManager.delegate = self
-        locationManager.desiredAccuracy = kCLLocationAccuracyBest  // 배터리 최적화
-        if locationManager.authorizationStatus != .authorizedAlways || locationManager.authorizationStatus != .authorizedWhenInUse {
-            locationManager.requestWhenInUseAuthorization()
+        LocationManager.shared.delegate = self
+        LocationManager.shared.desiredAccuracy = kCLLocationAccuracyBest  // 배터리 최적화
+        if LocationManager.shared.authorizationStatus != .authorizedAlways || LocationManager.shared.authorizationStatus != .authorizedWhenInUse {
+            LocationManager.shared.requestWhenInUseAuthorization()
         }
         
         DispatchQueue.global(qos: .background).async { [weak self] in
             self?.mapView.currentLocationTrackingMode = .onWithoutHeading
-            guard let coordinate = self?.locationManager.location?.coordinate
+            guard let coordinate = LocationManager.shared.location?.coordinate
                 else {
                 print("location update 아직 안된 상태")
                 return
@@ -148,19 +146,19 @@ extension MainViewController: CLLocationManagerDelegate {
         switch status {
         case .authorizedAlways, .authorizedWhenInUse:
             print("GPS 권한설정 허용됨")
-            locationManager.startUpdatingLocation()
+            LocationManager.shared.startUpdatingLocation()
             DispatchQueue.global(qos: .background).async { [weak self] in
                 self?.mapView.showCurrentLocationMarker = true
                 self?.mapView.currentLocationTrackingMode = .onWithHeading
                 self?.mapView.showCurrentLocationMarker = true
                 DispatchQueue.main.async {
-                    self?.mapView.setMapCenter(MTMapPoint(geoCoord: MTMapPointGeo(latitude: self?.locationManager.location?.coordinate.latitude ?? 37.576568, longitude: self?.locationManager.location?.coordinate.longitude ?? 127.029148)), animated: true)
+                    self?.mapView.setMapCenter(MTMapPoint(geoCoord: MTMapPointGeo(latitude: LocationManager.shared.location?.coordinate.latitude ?? 37.576568, longitude: LocationManager.shared.location?.coordinate.longitude ?? 127.029148)), animated: true)
                 }
             }
             
         case .restricted, .notDetermined:
             print("GPS 권한설정 X")
-            locationManager.requestWhenInUseAuthorization()
+            LocationManager.shared.requestWhenInUseAuthorization()
             
         case .denied:
             print("GPS 권한설정 거부됨")
