@@ -62,7 +62,11 @@ class ResultMapViewModel: MapDataType {
     }
     
     /// 현재 위치에서 해당 장소로 이동하는 경로 알려주기
-    func getDirection(destinationLon: String, destinationLat: String, completion: @escaping () -> Void) {
+    func getDirection(completion: @escaping ([Guide]) -> Void) {
+        guard let targetPlace = targetPlace,
+              let destinationLon = targetPlace.x,
+              let destinationLat = targetPlace.y else { return }
+        
         HttpClient.shared.getDirection(startLon: String(currentLongtitude),
                                        startLat: String(currentLatitude),
                                        destinationLon: destinationLon,
@@ -71,7 +75,9 @@ class ResultMapViewModel: MapDataType {
                 print("자동차 경로 없음")
                 return
             }
-            completion()
+            guard let sections = routes[0].sections,
+                  let guides = sections[0].guides else { return }
+            completion(guides)
         }
     }
     

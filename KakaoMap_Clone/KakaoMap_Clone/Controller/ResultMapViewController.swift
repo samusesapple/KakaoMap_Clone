@@ -20,6 +20,9 @@ class ResultMapViewController: UIViewController, CLLocationManagerDelegate {
     private var mapPoint: MTMapPoint?
     private var poiItem: MTMapPOIItem?
     
+    private var polyLine: MTMapPolyline?
+    
+    
     var viewModel: ResultMapViewModel!
     
     private let progressHud = JGProgressHUD(style: .dark)
@@ -152,6 +155,10 @@ class ResultMapViewController: UIViewController, CLLocationManagerDelegate {
         for item in mapView.poiItems {
             mapView.remove(item as? MTMapPOIItem)
         }
+        
+        for line in mapView.polylines {
+            mapView.removePolyline(line as? MTMapPolyline)
+        }
     }
     
     // MARK: - Actions
@@ -203,13 +210,8 @@ class ResultMapViewController: UIViewController, CLLocationManagerDelegate {
     }
     
     @objc private func navigationButtonTapped() {
-        guard let target = viewModel.targetPlace,
-              let targetLon = target.x,
-              let targetLat = target.y else { return }
-
-        viewModel.getDirection(destinationLon: targetLon,
-                               destinationLat: targetLat) {
-            print("\(target)으로 가는 네비게이션 view 띄워야함")
+        viewModel.getDirection { [weak self] guides in            
+            self?.makePolylines(guide: guides)
         }
     }
     
@@ -317,8 +319,7 @@ class ResultMapViewController: UIViewController, CLLocationManagerDelegate {
 extension ResultMapViewController: MTMapViewDelegate {
     
     private func makeMarker() {
-        var count = 0
-        
+
         for item in viewModel.searchResults {
             guard let stringLon = item.x,
                   let stringLat = item.y,
@@ -345,9 +346,36 @@ extension ResultMapViewController: MTMapViewDelegate {
             poiItem?.itemName = item.placeName
             poiItem?.tag = placeID
             mapView.add(poiItem)
-            
-            count += 1
         }
+    }
+    
+    private func makePolylines(guide: [Guide]) {
+        for item in mapView.poiItems {
+            guard let item = item as? MTMapPOIItem,
+                  let targetId = viewModel.targetPlace?.id else { return }
+            if String(item.tag) != targetId {
+                mapView.remove(item)
+            }
+        }
+        
+        var mapPoints: [MTMapPoint] = []
+        
+        polyLine = MTMapPolyline.polyLine()
+        polyLine?.polylineColor = .blue
+        
+        for guide in guide {
+            guard let lon = guide.x,
+                  let lat = guide.y else {
+                print("폴리라인 만드는 함수 - 옵셔널 벗기기 실패")
+                return
+            }
+
+            mapPoints.append(MTMapPoint(geoCoord: MTMapPointGeo(latitude: lat,
+                                                                longitude: lon)))
+        }
+        polyLine?.addPoints(mapPoints)
+        mapView.addPolyline(polyLine)
+        mapView.fitArea(toShow: polyLine)
     }
     
     func mapView(_ mapView: MTMapView!, selectedPOIItem poiItem: MTMapPOIItem!) -> Bool {
