@@ -30,6 +30,16 @@ class ResultMapViewModel: MapDataType {
     var isMapBasedData: Bool = true
     var isAccuracyAlignment: Bool = true
     
+    var headerFooterIsHidden = false {
+        didSet {
+            if !headerFooterIsHidden {
+                needToHideHeaderAndFooterView()
+            } else {
+                needToShowHeaderAndFooterView()
+            }
+        }
+    }
+    
 // MARK: - Computed Properties
 
     var targetPlace: KeywordDocument? {
@@ -40,6 +50,11 @@ class ResultMapViewModel: MapDataType {
             selectedPlace = newValue
         }
     }
+    /// header footer view 화면에 보이도록 애니메이션 효과 주기
+    var needToShowHeaderAndFooterView = { }
+    
+    /// header footer view 화면에 보이지 않도록 애니메이션 효과 주기
+    var needToHideHeaderAndFooterView = { }
     
 // MARK: - Initializer
     
@@ -77,7 +92,7 @@ class ResultMapViewModel: MapDataType {
             }
             guard let sections = routes[0].sections,
                   let guides = sections[0].guides else { return }
-            completion(guides)
+                completion(guides)
         }
     }
     

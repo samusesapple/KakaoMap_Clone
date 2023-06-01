@@ -16,7 +16,7 @@ protocol ResultMapViewControllerDelegate: AnyObject {
 
 class ResultMapViewController: UIViewController, CLLocationManagerDelegate {
     // MARK: - Properties
-        
+    
     private var mapPoint: MTMapPoint?
     private var poiItem: MTMapPOIItem?
     
@@ -126,7 +126,7 @@ class ResultMapViewController: UIViewController, CLLocationManagerDelegate {
     init() {
         super.init(nibName: nil, bundle: nil)
     }
-
+    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -148,7 +148,29 @@ class ResultMapViewController: UIViewController, CLLocationManagerDelegate {
         LocationManager.shared.delegate = self
         
         footerContainerView.addGestureRecognizer(UITapGestureRecognizer(target: self,
-                                                                     action: #selector(footerViewTapped)))
+                                                                        action: #selector(footerViewTapped)))
+        
+        viewModel.needToHideHeaderAndFooterView = { [weak self] in
+            DispatchQueue.main.async {
+                UIView.animate(withDuration: 0.3) {
+                    self?.headerContainerView.transform = CGAffineTransform(translationX: 0,
+                                                                            y: -(self?.headerContainerView.bounds.height ?? 0))
+                    self?.footerContainerView.transform = CGAffineTransform(translationX: 0,
+                                                                            y: self?.footerContainerView.bounds.height ?? 0)
+                }
+            }
+        }
+        
+        viewModel.needToShowHeaderAndFooterView = { [weak self] in
+            DispatchQueue.main.async {
+                UIView.animate(withDuration: 0.3) {
+                    self?.headerContainerView.transform = CGAffineTransform(translationX: 0,
+                                                                            y: 0)
+                    self?.footerContainerView.transform = CGAffineTransform(translationX: 0,
+                                                                            y: 0)
+                }
+            }
+        }
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -159,6 +181,8 @@ class ResultMapViewController: UIViewController, CLLocationManagerDelegate {
         for line in mapView.polylines {
             mapView.removePolyline(line as? MTMapPolyline)
         }
+        // 화면에서 사라지면 mapView의 header와 footer 숨길 수 있는 제스처 없애기
+        mapView.removeGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(mapViewTapped)))
     }
     
     // MARK: - Actions
@@ -210,9 +234,16 @@ class ResultMapViewController: UIViewController, CLLocationManagerDelegate {
     }
     
     @objc private func navigationButtonTapped() {
-        viewModel.getDirection { [weak self] guides in            
+        viewModel.getDirection { [weak self] guides in
             self?.makePolylines(guide: guides)
+            self?.viewModel.needToHideHeaderAndFooterView()
+            self?.mapView.addGestureRecognizer(UITapGestureRecognizer(target: self,
+                                                                      action: #selector(self?.mapViewTapped)))
         }
+    }
+    
+    @objc private func mapViewTapped() {
+        viewModel.headerFooterIsHidden.toggle()
     }
     
     // MARK: - Helpers
@@ -318,8 +349,20 @@ class ResultMapViewController: UIViewController, CLLocationManagerDelegate {
 
 extension ResultMapViewController: MTMapViewDelegate {
     
+    func mapView(_ mapView: MTMapView!, selectedPOIItem poiItem: MTMapPOIItem!) -> Bool {
+        let targetPlace = viewModel.filterResults(with: poiItem.tag)
+        configureUIwithData(place: targetPlace)
+        return false
+    }
+    
+    // 메모리 차지가 많을 경우, 캐시 정리
+    override func didReceiveMemoryWarning() {
+        mapView.didReceiveMemoryWarning()
+    }
+    
+    /// 검색 결과에 해당되는 장소에 마커 생성
     private func makeMarker() {
-
+        
         for item in viewModel.searchResults {
             guard let stringLon = item.x,
                   let stringLat = item.y,
@@ -349,8 +392,12 @@ extension ResultMapViewController: MTMapViewDelegate {
         }
     }
     
+    /// 장소 선택 - 네비게이션 버튼 클릭 후 실행됨 : 현재 위치로부터 선택된 장소까지의 경로 poly line 그리기
     private func makePolylines(guide: [Guide]) {
-        for item in mapView.poiItems {
+        // 선택된 장소를 제외한 poiItem 제거
+        guard let poiItems = mapView.poiItems else { return }
+        
+        for item in poiItems {
             guard let item = item as? MTMapPOIItem,
                   let targetId = viewModel.targetPlace?.id else { return }
             if String(item.tag) != targetId {
@@ -369,23 +416,16 @@ extension ResultMapViewController: MTMapViewDelegate {
                 print("폴리라인 만드는 함수 - 옵셔널 벗기기 실패")
                 return
             }
-
+            
             mapPoints.append(MTMapPoint(geoCoord: MTMapPointGeo(latitude: lat,
                                                                 longitude: lon)))
         }
         polyLine?.addPoints(mapPoints)
-        mapView.addPolyline(polyLine)
-        mapView.fitArea(toShow: polyLine)
+        
+        DispatchQueue.main.async { [weak self] in
+            self?.mapView.addPolyline(self?.polyLine)
+            self?.mapView.fitArea(toShow: self?.polyLine)
+        }
     }
     
-    func mapView(_ mapView: MTMapView!, selectedPOIItem poiItem: MTMapPOIItem!) -> Bool {
-        let targetPlace = viewModel.filterResults(with: poiItem.tag)
-        configureUIwithData(place: targetPlace)
-        return false
-    }
-    
-    // 메모리 차지가 많을 경우, 캐시 정리
-    override func didReceiveMemoryWarning() {
-        mapView.didReceiveMemoryWarning()
-    }
 }
