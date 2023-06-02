@@ -57,7 +57,7 @@ class DetailViewController: UIViewController {
     }
 }
 
-// MARK: - WKUIDelegate
+// MARK: - WKUIDelegate & WKNavigationDelegate
 
 extension DetailViewController: WKUIDelegate, WKNavigationDelegate {
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {

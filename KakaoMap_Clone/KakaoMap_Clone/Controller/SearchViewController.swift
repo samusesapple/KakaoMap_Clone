@@ -155,7 +155,8 @@ extension SearchViewController: UICollectionViewDelegate, UICollectionViewDataSo
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        print("선택한 장소 분류해서 보여주기")
+        // 지도 위치 근처에 있는 선택된 카테고리의 장소 보여줘야함
+        print(viewModel.getSearchOptions[indexPath.row].title)
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
@@ -237,7 +238,7 @@ extension SearchViewController: SearchResultViewControllerDelegate {
     
 }
 
-// MARK: - M
+// MARK: - ResultMapViewControllerDelegate
 
 extension SearchViewController: ResultMapViewControllerDelegate {
     
@@ -248,5 +249,4 @@ extension SearchViewController: ResultMapViewControllerDelegate {
     func needToShowMainVC() {
         navigationController?.popViewController(animated: false)
     }
-        
 }

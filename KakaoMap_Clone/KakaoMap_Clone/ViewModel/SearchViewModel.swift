@@ -210,6 +210,7 @@ class SearchViewModel: MapDataType {
                   let totalPage = result?.meta?.pageableCount,
                       totalPage > 1 else {
                 print("SearchVM - 결과 없음")
+
                 self?.dismissProgressHUD()
                 return
             }

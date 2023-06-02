@@ -29,7 +29,6 @@ class CustomSearchBarView: UIView {
         sb.searchTextField.backgroundColor = .white
         sb.searchTextField.textColor = .black
         sb.searchTextField.tintColor = .systemBlue
-//        sb.searchTextField.font = UIFont.systemFont(ofSize: 16, weight: .semibold)
         return sb
     }()
     
