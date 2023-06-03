@@ -114,11 +114,7 @@ class MainViewController: UIViewController {
                 print("location update 아직 안된 상태")
                 return
             }
-            self?.viewModel.getAddressSearchResult(lon: coordinate.longitude,
-                                                   lat: coordinate.latitude)
-        }
-        
-        
+        }        
     }
     
     // 사용자의 환경설정 - 위치 허용으로 안내
@@ -183,7 +179,7 @@ extension MainViewController: MTMapViewDelegate {
     func mapView(_ mapView: MTMapView!, finishedMapMoveAnimation mapCenterPoint: MTMapPoint!) {
         // 맵 이동되면 이동된 위치 세팅 필요
         print("VM - 위도 경도 설정됨")
-        viewModel.getAddressSearchResult(lon: mapCenterPoint.mapPointGeo().longitude,
+        viewModel.getAddressDetailResult(lon: mapCenterPoint.mapPointGeo().longitude,
                                          lat: mapCenterPoint.mapPointGeo().latitude)
     }
     // 메모리 차지가 많을 경우, 캐시 정리

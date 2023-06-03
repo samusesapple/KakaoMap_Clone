@@ -7,45 +7,6 @@
 
 import UIKit
 
-protocol MapDataType {
-    var keyword: String? { get set }
-    var mapLongitude: String { get set }
-    var mapLatitude: String { get set }
-    
-    var currentLongtitude: Double { get set }
-    var currentLatitude: Double { get set }
-    
-    var mapAddress: String { get set }
-    
-    var searchResults: [KeywordDocument] { get set }
-
-    var searchHistories: [SearchHistory]? { get set }
-    
-    func checkIfDuplicatedHistoryExists(newHistory: SearchHistory) -> [SearchHistory]?
-}
-
-extension MapDataType {
-    func checkIfDuplicatedHistoryExists(newHistory: SearchHistory) -> [SearchHistory]? {
-        guard var history = searchHistories else { return nil }
-        let duplicatedHistoryArray = history.filter({ $0 == newHistory })
-        
-        guard duplicatedHistoryArray.count > 0 else { return nil }
-                
-        var biggestIndex = 0
-        
-        for (index, item) in history.enumerated() {
-            if item == duplicatedHistoryArray[0] {
-                biggestIndex = index
-                continue
-            }
-        }
-        history.remove(at: biggestIndex)
-        history.insert(newHistory, at: 0)
-        return history
-    }
-    
-}
-
 class SearchViewModel: MapDataType {
 // MARK: - Stored Properties
     
@@ -56,11 +17,8 @@ class SearchViewModel: MapDataType {
         }
     }
     
-    var mapLongitude: String
-    var mapLatitude: String
-    
-    var currentLongtitude: Double
-    var currentLatitude: Double
+    var mapCoordinate: Coordinate
+    var currentCoordinate: Coordinate
     
     var mapAddress: String
     
@@ -102,15 +60,12 @@ class SearchViewModel: MapDataType {
     
 // MARK: - Initializer
     
-    init(mapLon: String, mapLat: String, currentLon: Double, currentLat: Double, mapAddress: String) {
-        self.mapLongitude = mapLon
-        self.mapLatitude = mapLat
-        self.currentLongtitude = currentLon
-        self.currentLatitude = currentLat
+    init(mapCoordinate: Coordinate, currentCoordinate: Coordinate, mapAddress: String) {
+        self.mapCoordinate = mapCoordinate
+        self.currentCoordinate = currentCoordinate
         self.mapAddress = mapAddress
     }
         
-    
 // MARK: - Functions
     
     /// 새로운 검색 결과 초기화하기
@@ -150,27 +105,25 @@ class SearchViewModel: MapDataType {
         showProgressHUD()
         self.keyword = keyword
         
-        if "\(currentLongtitude)+\(currentLatitude)" != "\(mapLongitude) + \(mapLatitude)" {
-            HttpClient.shared.getLocationAddress(lon: mapLongitude, lat: mapLatitude) { [weak self] result in
+        if currentCoordinate.totalCoordinate != mapCoordinate.totalCoordinate {
+            HttpClient.shared.getLocationAddress(coordinate: mapCoordinate) { [weak self] result in
                 guard let address = result.documents?[0].addressName,
-                      let lon = self?.currentLongtitude,
-                      let lat = self?.currentLatitude else {
+                      let currentCoordinate = self?.currentCoordinate
+                else {
                     print(#function)
                     self?.dismissProgressHUD()
                     return
                 }
                 
                 self?.search(keyword: keyword,
-                             lon: String(lon),
-                             lat: String(lat),
+                             currentCoordinate: currentCoordinate,
                              address: address, completion: { keywordResultArray in
                     self?.searchResults = keywordResultArray
                 })
             }
         } else {
             search(keyword: keyword,
-                   lon: String(currentLongtitude),
-                   lat: String(currentLatitude)) { [weak self] keywordResultArray in
+                   currentCoordinate: currentCoordinate) { [weak self] keywordResultArray in
                 self?.searchResults = keywordResultArray
             }
         }
@@ -185,8 +138,7 @@ class SearchViewModel: MapDataType {
 
         let target = history.filter({ $0.searchText == searchText})[0]
         HttpClient.shared.searchKeyword(with: target.searchText,
-                                        lon: String(currentLongtitude),
-                                        lat: String(currentLatitude),
+                                        coordinate: currentCoordinate,
                                         page: 1) { [weak self] result in
             guard let documents = result?.documents else {
                 self?.dismissProgressHUD()
@@ -199,12 +151,11 @@ class SearchViewModel: MapDataType {
         }
     }
     
-    private func search(keyword: String, lon: String, lat: String, address: String = "", completion: @escaping ([KeywordDocument]) -> Void) {
+    private func search(keyword: String, currentCoordinate: Coordinate, address: String = "", completion: @escaping ([KeywordDocument]) -> Void) {
         self.mapAddress = address
         
         HttpClient.shared.searchKeyword(with: address == "" ? keyword : "\(address) \(keyword)",
-                                        lon: String(lon),
-                                        lat: String(lat),
+                                        coordinate: currentCoordinate,
                                         page: 1) { [weak self] result in
             guard let keywordResultArray = result?.documents,
                   let totalPage = result?.meta?.pageableCount,

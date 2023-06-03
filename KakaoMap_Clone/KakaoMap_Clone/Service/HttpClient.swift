@@ -22,36 +22,36 @@ class HttpClient {
     
     // MARK: - Functions
     
-    private func currentAddressParameters(lon: String, lat: String) -> [String: Any] {
+    private func currentAddressParameters(coordinate: Coordinate) -> [String: Any] {
         [
-            "x": lon,
-            "y": lat
+            "x": coordinate.stringLongtitude,
+            "y": coordinate.stringLatitude
         ]
     }
     
-    private func keywordParameters(query: String, lon: String, lat: String, page: Int, isAccurancy: Bool) -> [String: Any] {
+    private func keywordParameters(query: String, coordinate: Coordinate, page: Int, isAccurancy: Bool) -> [String: Any] {
         [
             "query": query,
-            "x": lon,
-            "y": lat,
+            "x": coordinate.stringLongtitude,
+            "y": coordinate.stringLatitude,
             "page": page,
             "sort": isAccurancy ? "accuracy": "distance"
         ]
     }
     
-    private func directionParameters(startLon: String, startLat: String, destinationLon: String, destinationLat: String) -> [String: Any] {
+    private func directionParameters(startPoint: Coordinate, destination: Coordinate) -> [String: Any] {
         [
-            "origin": "\(startLon),\(startLat)",
-            "destination": "\(destinationLon),\(destinationLat)"
+            "origin": startPoint.totalCoordinate,
+            "destination": destination.totalCoordinate
         ]
     }
     
     /// 주소로 검색하기 (건물명, 도로명, 지번, 우편번호 및 좌표)
-    func getLocationAddress(lon: String, lat: String, completion: @escaping (CurrentAddressResult) -> Void) {
+    func getLocationAddress(coordinate: Coordinate, completion: @escaping (CurrentAddressResult) -> Void) {
         let url = host + "geo/coord2regioncode.json"
         AF.request(url,
                    method: .get,
-                   parameters: currentAddressParameters(lon: lon, lat: lat),
+                   parameters: currentAddressParameters(coordinate: coordinate),
                    encoding: URLEncoding.default,
                    headers: headers)
         .validate(statusCode: 200..<300)
@@ -67,14 +67,13 @@ class HttpClient {
     }
     
     /// 키워드로 검색하기 (상호명 등을 검색)
-    func searchKeyword(with keyword: String, lon: String, lat: String, page: Int, isAccuracy: Bool = true, completion: @escaping (KeywordResult?) -> Void) {
+    func searchKeyword(with keyword: String, coordinate: Coordinate, page: Int, isAccuracy: Bool = true, completion: @escaping (KeywordResult?) -> Void) {
         let url = host + "search/keyword.json"
         
         AF.request(url,
                    method: .get,
                    parameters: keywordParameters(query: keyword,
-                                                 lon: lon,
-                                                 lat: lat,
+                                                 coordinate: coordinate,
                                                  page: page,
                                                  isAccurancy: isAccuracy),
                    encoding: URLEncoding.default,
@@ -84,9 +83,6 @@ class HttpClient {
             let result = response.result
             switch result {
             case .success(let searchResult):
-                print("keyword : \(keyword)")
-                print("lon : \(lon)")
-                print("lat: \(lat)")
                 guard let totalPage = searchResult.meta?.pageableCount,
                       totalPage >= page else {
                     print("HTTP Client - searchKeyword 총 데이터 페이지수 : \(String(describing: searchResult.meta?.pageableCount))")
@@ -100,15 +96,13 @@ class HttpClient {
         }
     }
     
-    func getDirection(startLon: String, startLat: String, destinationLon: String, destinationLat: String, completion: @escaping(DestinationResult) -> Void) {
+    func getDirection(startPoint: Coordinate, destination: Coordinate, completion: @escaping(DestinationResult) -> Void) {
         let url = "https://apis-navi.kakaomobility.com/v1/directions"
         
         AF.request(url,
                    method: .get,
-                   parameters: directionParameters(startLon: startLon,
-                                                   startLat: startLat,
-                                                   destinationLon: destinationLon,
-                                                   destinationLat: destinationLat),
+                   parameters: directionParameters(startPoint: startPoint,
+                                                   destination: destination),
                    encoding: URLEncoding.default,
                    headers: headers)
         .validate(statusCode: 200..<600).responseDecodable(of: DestinationResult.self) { response in

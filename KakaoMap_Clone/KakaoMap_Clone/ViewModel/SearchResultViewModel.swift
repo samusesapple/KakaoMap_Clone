@@ -13,11 +13,8 @@ class SearchResultViewModel: MapDataType {
 
     var keyword: String?
     
-    var mapLongitude: String
-    var mapLatitude: String
-    
-    var currentLongtitude: Double
-    var currentLatitude: Double
+    var mapCoordinate: Coordinate
+    var currentCoordinate: Coordinate
     
     var mapAddress: String
     
@@ -54,11 +51,10 @@ class SearchResultViewModel: MapDataType {
 // MARK: - Initializer
     
     init(mapData: MapDataType) {
-        self.mapLongitude = mapData.mapLongitude
-        self.mapLatitude = mapData.mapLatitude
+        self.mapCoordinate = mapData.mapCoordinate
+        self.currentCoordinate = mapData.currentCoordinate
+
         self.keyword = mapData.keyword
-        self.currentLongtitude = mapData.currentLongtitude
-        self.currentLatitude = mapData.currentLatitude
         self.mapAddress = mapData.mapAddress
         self.searchHistories = mapData.searchHistories
         self.searchResults = mapData.searchResults
@@ -111,30 +107,25 @@ class SearchResultViewModel: MapDataType {
         showHud()
         
         if isMapBasedData {
-            HttpClient.shared.getLocationAddress(lon: mapLongitude,
-                                                 lat: mapLatitude) { [weak self] document in
+            HttpClient.shared.getLocationAddress(coordinate: mapCoordinate) { [weak self] document in
                 guard let address = document.documents?[0].addressName,
-                      let currentLon = self?.currentLongtitude,
-                      let currentLat = self?.currentLatitude
+                      let currentCoordinate = self?.currentCoordinate
                 else { return }
                 self?.searchPlaces(keyword: keyword,
-                                   lon: currentLon,
-                                   lat: currentLat,
+                                   coordinate: currentCoordinate,
                                    place: address)
                 print("지도 중심 근처에 있는 장소 검색")
             }
         } else {
             searchPlaces(keyword: keyword,
-                         lon: currentLongtitude,
-                         lat: currentLatitude)
+                         coordinate: currentCoordinate)
             print("현재 위치 근처에 있는 장소 검색")
         }
     }
     
-    private func searchPlaces(keyword: String, lon: Double, lat: Double, place: String = "") {
+    private func searchPlaces(keyword: String, coordinate: Coordinate, place: String = "") {
         HttpClient.shared.searchKeyword(with: "\(place)  \(keyword)",
-                                        lon: String(lon),
-                                        lat: String(lat),
+                                        coordinate: coordinate,
                                         page: 1,
                                         isAccuracy: isAccuracyAlignment) { [weak self] result in
             guard let newResults = result?.documents else {
@@ -159,8 +150,7 @@ class SearchResultViewModel: MapDataType {
         page += 1
         
         HttpClient.shared.searchKeyword(with: "\(mapAddress) \(keyword)",
-                                        lon: String(currentLongtitude),
-                                        lat: String(currentLatitude),
+                                        coordinate: currentCoordinate,
                                         page: page,
                                         isAccuracy: isAccuracyAlignment) { [weak self] result in
             guard let newResults = result?.documents else {

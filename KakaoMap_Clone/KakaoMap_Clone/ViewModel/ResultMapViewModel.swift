@@ -11,11 +11,8 @@ class ResultMapViewModel: MapDataType {
     
     var keyword: String?
     
-    var mapLongitude: String
-    var mapLatitude: String
-    
-    var currentLongtitude: Double
-    var currentLatitude: Double
+    var mapCoordinate: Coordinate
+    var currentCoordinate: Coordinate
     
     var mapAddress: String
     
@@ -60,10 +57,8 @@ class ResultMapViewModel: MapDataType {
     
     init(mapData: MapDataType) {
         keyword = mapData.keyword
-        mapLongitude = mapData.mapLongitude
-        mapLatitude = mapData.mapLatitude
-        currentLongtitude = mapData.currentLongtitude
-        currentLatitude = mapData.currentLatitude
+        mapCoordinate = mapData.mapCoordinate
+        currentCoordinate = mapData.currentCoordinate
         mapAddress = mapData.mapAddress
         searchResults = mapData.searchResults
         searchHistories = mapData.searchHistories
@@ -80,12 +75,13 @@ class ResultMapViewModel: MapDataType {
     func getDirection(completion: @escaping ([Guide]) -> Void) {
         guard let targetPlace = targetPlace,
               let destinationLon = targetPlace.x,
-              let destinationLat = targetPlace.y else { return }
+              let destinationLat = targetPlace.y,
+              let lon = Double(destinationLon),
+              let lat = Double(destinationLat) else { return }
         
-        HttpClient.shared.getDirection(startLon: String(currentLongtitude),
-                                       startLat: String(currentLatitude),
-                                       destinationLon: destinationLon,
-                                       destinationLat: destinationLat) { result in
+        HttpClient.shared.getDirection(startPoint: currentCoordinate,
+                                       destination: Coordinate(longtitude: lon,
+                                                               latitude: lat)) { result in
             guard let routes = result.routes else {
                 print("자동차 경로 없음")
                 return
