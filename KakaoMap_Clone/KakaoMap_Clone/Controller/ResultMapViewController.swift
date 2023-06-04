@@ -122,15 +122,7 @@ class ResultMapViewController: UIViewController, CLLocationManagerDelegate {
     }()
     
     // MARK: - Lifecycle
-    
-    init() {
-        super.init(nibName: nil, bundle: nil)
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
+
     override func loadView() {
         self.view = mapView
     }

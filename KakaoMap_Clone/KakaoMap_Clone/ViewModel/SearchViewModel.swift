@@ -129,28 +129,7 @@ class SearchViewModel: MapDataType {
         }
     }
     
-    /// Search History에 해당되는 장소 보여주기
-    func getTargetPlace(with searchText: String) {
-        guard let history = self.searchHistories else { return }
-        showProgressHUD()
-        
-        self.keyword = searchText
-
-        let target = history.filter({ $0.searchText == searchText})[0]
-        HttpClient.shared.searchKeyword(with: target.searchText,
-                                        coordinate: currentCoordinate,
-                                        page: 1) { [weak self] result in
-            guard let documents = result?.documents else {
-                self?.dismissProgressHUD()
-                return
-            }
-            let targetPlace = documents.filter( { $0.addressName == target.address })[0]
-            // 맵 VC 띄우도록 하기
-            self?.dismissProgressHUD()
-            self?.presentResultMapVC(targetPlace)
-        }
-    }
-    
+    /// 유저 현재 좌표 기준으로 특정 키워드에 해당되는 장소 제공 / address부분에 원하는 지역 입력하면 해당 지역의 키워드 장소 제공
     private func search(keyword: String, currentCoordinate: Coordinate, address: String = "", completion: @escaping ([KeywordDocument]) -> Void) {
         self.mapAddress = address
         
@@ -192,6 +171,28 @@ class SearchViewModel: MapDataType {
                 completion(keywordResultArray)
                 return
             }
+        }
+    }
+        
+    /// Search History에 해당되는 장소 보여주기
+    func getTargetPlace(with searchText: String) {
+        guard let history = self.searchHistories else { return }
+        showProgressHUD()
+        
+        self.keyword = searchText
+
+        let target = history.filter({ $0.searchText == searchText})[0]
+        HttpClient.shared.searchKeyword(with: target.searchText,
+                                        coordinate: currentCoordinate,
+                                        page: 1) { [weak self] result in
+            guard let documents = result?.documents else {
+                self?.dismissProgressHUD()
+                return
+            }
+            let targetPlace = documents.filter( { $0.addressName == target.address })[0]
+            // 맵 VC 띄우도록 하기
+            self?.dismissProgressHUD()
+            self?.presentResultMapVC(targetPlace)
         }
     }
     

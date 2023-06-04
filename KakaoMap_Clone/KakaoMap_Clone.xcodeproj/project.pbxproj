@@ -331,6 +331,7 @@
 				F1F212E52A19DDC2000443AB /* UIViewController+Extensions.swift */,
 				F19BA78F2A1F7B1F003F348C /* UIImage+Extension.swift */,
 				F1EBC31B2A2311870043CC46 /* MeasureFormatter.swift */,
+				F1954A7D2A2B168D00E9D0C7 /* Coordinate.swift */,
 				F1954A7F2A2B190E00E9D0C7 /* Protocols */,
 			);
 			path = Utilities;
@@ -369,7 +370,6 @@
 				F1B8F7562A1CE5E900D3B45E /* KeywordResult.swift */,
 				F1EBC31D2A232BB50043CC46 /* DestinationResult.swift */,
 				F161EF172A25CC8500ED9709 /* SearchModel.swift */,
-				F1954A7D2A2B168D00E9D0C7 /* Coordinate.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";

@@ -59,15 +59,7 @@ class SearchResultTableViewCell: UITableViewCell {
         stack.distribution = .equalSpacing
         return stack
     }()
-    
-//    private let placeImageView: UIImageView = {
-//       let iv = UIImageView()
-//        iv.layer.cornerRadius = 5
-//        iv.clipsToBounds = true
-//        iv.backgroundColor = .blue
-//        return iv
-//    }()
-    
+
     // MARK: - Lifecycle
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
