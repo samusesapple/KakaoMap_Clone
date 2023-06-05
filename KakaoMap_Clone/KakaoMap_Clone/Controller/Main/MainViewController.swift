@@ -59,7 +59,9 @@ class MainViewController: UIViewController {
     }
     
     @objc private func menuButtonTapped() {
-        print("메뉴 열기")
+        print("메뉴 화면 띄워야함")
+        let vc = MenuViewController()
+        self.navigationController?.pushViewController(vc, animated: false)
     }
     
     @objc private func searchBarTapped() {
