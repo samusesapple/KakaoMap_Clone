@@ -12,19 +12,21 @@ final class MenuView: UIView {
     private let profileImage: UIImageView = {
         let iv = UIImageView()
         iv.backgroundColor = .systemBlue
+        iv.clipsToBounds = true
+        iv.layer.cornerRadius = 25
         return iv
     }()
     
     private let profileName: UILabel = {
         let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 15)
+        label.font = UIFont.systemFont(ofSize: 17, weight: .medium)
         label.text = "닉네임"
         return label
     }()
     // 프로필 관련된 부분만 담은 연한 회색의 header view
     private lazy var profileHeaderView: UIView = {
         let view = UIView()
-        view.backgroundColor = .lightGray.withAlphaComponent(0.3)
+        view.backgroundColor = .lightGray.withAlphaComponent(0.1)
         [profileImage, profileName].forEach(view.addSubview)
         return view
     }()
@@ -56,9 +58,8 @@ final class MenuView: UIView {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        configureUI()
         setAutolayout()
-        
+        configureUI()
     }
     
     required init?(coder: NSCoder) {
@@ -82,17 +83,20 @@ final class MenuView: UIView {
                                  height: frame.height / 4)
         
         buttonsStackView.anchor(top: profileHeaderView.bottomAnchor,
-                                paddingTop: 20)
-        buttonsStackView.centerX(inView: self)
+                                left: self.leftAnchor,
+                                paddingTop: 20,
+                                paddingLeft: 25)
         
-        profileImage.centerY(inView: profileHeaderView)
-        profileImage.anchor(left: profileHeaderView.leftAnchor,
-                            paddingLeft: 18,
-                            width: 30,
-                            height: 30)
+        profileImage.anchor(top: profileHeaderView.topAnchor,
+                            left: profileHeaderView.leftAnchor,
+                            paddingTop: 100,
+                            paddingLeft: 25,
+                            width: 60,
+                            height: 60)
         
         profileName.anchor(top: profileImage.topAnchor,
                            left: profileImage.rightAnchor,
+                           paddingTop: 5,
                            paddingLeft: 10)
     }
     

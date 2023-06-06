@@ -12,10 +12,10 @@ class MenuOptionsButton: UIButton {
     init(text: String) {
         super.init(frame: .zero)
         
-        self.titleLabel?.font = UIFont.systemFont(ofSize: 14)
+        self.titleLabel?.font = UIFont.systemFont(ofSize: 16)
         self.setTitle(text, for: .normal)
-        
-        self.tintColor = .darkGray
+        self.setTitleColor(.black, for: .normal)
+//        self.tintColor = .black
         self.backgroundColor = .clear
     }
     
