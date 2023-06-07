@@ -44,6 +44,8 @@ class MainViewController: UIViewController {
         setAutolayout()
         setActions()
         
+//        mapView.addGestureRecognizer(UIPanGestureRecognizer(target: self, action: #selector(swipedToOpenMenu)))
+        
         viewModel.setAddress = { [weak self] address in
             DispatchQueue.main.async {
                 self?.searchBarView.getSearchBar().placeholder = address

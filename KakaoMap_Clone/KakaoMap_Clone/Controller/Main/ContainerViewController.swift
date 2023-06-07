@@ -28,15 +28,19 @@ final class ContainerViewController: UIViewController {
     
     
     private func addChildVC() {
-        addChild(menuVC)
-        view.addSubview(menuVC.view)
-        menuVC.didMove(toParent: self)
-        
         mainVC.delegate = self
         let navVC = UINavigationController(rootViewController: mainVC)
         addChild(navVC)
         view.addSubview(navVC.view)
         navVC.didMove(toParent: self)
+        
+        // mainVC 위에 menuVC 쌓기
+        mainVC.addChild(menuVC)
+        mainVC.view.addSubview(menuVC.view)
+        menuVC.didMove(toParent: self)
+        // menuVC 숨기기
+        menuVC.view.transform = CGAffineTransform(translationX: -menuVC.view.frame.width, y: 0)
+        
         self.navVC = navVC
     }
     
@@ -45,24 +49,13 @@ final class ContainerViewController: UIViewController {
 
 extension ContainerViewController: MainViewControllerDelegate {
     func didTappedMenuButton() {
-        switch menuState {
-        case .closed:
-            UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 0, options: .curveEaseInOut) {
-                self.mainVC.view.transform = CGAffineTransform(translationX: (self.mainVC.view.frame.width / 3) * 2, y: 0)
+            UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 0, options: .curveEaseInOut) { [weak self] in
+                self?.menuVC.view.transform = CGAffineTransform(translationX: 0, y: 0)
             } completion: { [weak self] done in
                 if done {
                     self?.menuState = .opened
-                }
-            }
-            
-        case .opened:
-            UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 0, options: .curveEaseInOut) {
-                self.mainVC.view.transform = CGAffineTransform(translationX: 0, y: 0)
-            } completion: { done in
-                if done {
-                    self.menuState = .closed
+                    self?.menuVC.view.backgroundColor = UIColor(red: 33/255, green: 33/255, blue: 33/255, alpha: 0.7)
                 }
             }
         }
-    }
 }

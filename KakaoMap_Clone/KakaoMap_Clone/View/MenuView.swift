@@ -69,7 +69,7 @@ final class MenuView: UIView {
     // MARK: - Helpers
     
     private func configureUI() {
-        self.backgroundColor = UIColor(red: 33/255, green: 33/255, blue: 33/255, alpha: 0.3)
+        self.backgroundColor = .clear
     }
     
     private func setAutolayout() {
