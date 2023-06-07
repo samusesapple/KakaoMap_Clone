@@ -8,9 +8,15 @@
 import UIKit
 import CoreLocation
 
+protocol MainViewControllerDelegate: AnyObject {
+    func didTappedMenuButton()
+}
+
 class MainViewController: UIViewController {
     
     private let viewModel = MainViewModel()
+    
+    weak var delegate: MainViewControllerDelegate?
     
     private let mapView: MTMapView = {
         let mapView = MTMapView()
@@ -60,8 +66,7 @@ class MainViewController: UIViewController {
     
     @objc private func menuButtonTapped() {
         print("메뉴 화면 띄워야함")
-        let vc = MenuViewController()
-        self.navigationController?.pushViewController(vc, animated: false)
+        delegate?.didTappedMenuButton()
     }
     
     @objc private func searchBarTapped() {
