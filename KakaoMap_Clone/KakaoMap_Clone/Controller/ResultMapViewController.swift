@@ -14,7 +14,7 @@ protocol ResultMapViewControllerDelegate: AnyObject {
     func needToShowMainVC()
 }
 
-class ResultMapViewController: UIViewController, CLLocationManagerDelegate {
+final class ResultMapViewController: UIViewController, CLLocationManagerDelegate {
     // MARK: - Properties
     
     private var mapPoint: MTMapPoint?
@@ -367,8 +367,8 @@ extension ResultMapViewController: MTMapViewDelegate {
             }
             self.mapPoint = MTMapPoint(geoCoord: MTMapPointGeo(latitude: lat, longitude: lon))
             
-            let customPoiImage = UIImage(named: "bluePoint")?.scalePreservingAspectRatio(targetSize: CGSize(width: 25, height: 25))
-            let selectedPoiImage = UIImage(named: "selectedBluePoint")?.scalePreservingAspectRatio(targetSize: CGSize(width: 35, height: 35))
+            let customPoiImage = UIImage(named: "bluePoint")?.resizeImage(targetSize: CGSize(width: 25, height: 25))
+            let selectedPoiImage = UIImage(named: "selectedBluePoint")?.resizeImage(targetSize: CGSize(width: 35, height: 35))
             
             poiItem = MTMapPOIItem()
             poiItem?.markerType = .customImage

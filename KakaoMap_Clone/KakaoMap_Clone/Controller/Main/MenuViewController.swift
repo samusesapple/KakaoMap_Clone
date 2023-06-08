@@ -11,7 +11,7 @@ protocol MenuViewControllerDelegate: AnyObject {
     func needToCloseMenuView()
 }
 
-class MenuViewController: UIViewController {
+final class MenuViewController: UIViewController {
 
     // MARK: - Properties
     

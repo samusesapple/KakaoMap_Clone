@@ -9,7 +9,7 @@ import UIKit
 import WebKit
 import JGProgressHUD
 
-class DetailViewController: UIViewController {
+final class DetailViewController: UIViewController {
 
     // MARK: - Properties
     

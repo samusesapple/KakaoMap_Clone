@@ -19,7 +19,7 @@ protocol CustomAlignmentAlertViewControllerDelegate: AnyObject {
     func shortDistanceFirstAlignment()
 }
 
-class CustomAlignmentAlertViewController: UIViewController {
+final class CustomAlignmentAlertViewController: UIViewController {
     
     private var alertView: CustomAlignmentAlertView?
     

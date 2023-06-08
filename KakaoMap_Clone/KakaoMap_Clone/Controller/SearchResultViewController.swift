@@ -13,7 +13,7 @@ protocol SearchResultViewControllerDelegate: AnyObject {
     func passTappedHistory(newHistories: [SearchHistory])
 }
 
-class SearchResultViewController: UIViewController {
+final class SearchResultViewController: UIViewController {
     // MARK: - Properties
     
     var viewModel: SearchResultViewModel!

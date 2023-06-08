@@ -20,7 +20,7 @@ final class LoginAlertViewController: UIViewController {
         view.layer.shadowRadius = 2.5
         view.layer.cornerRadius = 10
         
-        [cancelButton, iconImageView, guideLabel, kakaoLoginButton].forEach(view.addSubview)
+        [cancelButton, iconImageView, guideLabel, kakaoLoginButton, googleLoginButton, googleLoginButtonFooterLine].forEach(view.addSubview)
         return view
     }()
     
@@ -32,8 +32,7 @@ final class LoginAlertViewController: UIViewController {
     }()
     
     private let iconImageView: UIImageView = {
-        let image = UIImage(named: "selectedBluePoint")?.scalePreservingAspectRatio(targetSize: CGSize(width: 60,
-                                                                                                       height: 60))
+        let image = UIImage(named: "selectedBluePoint")?.resizeImage(targetSize: CGSize(width: 60, height: 60))
         let iv = UIImageView()
         iv.image = image
         return iv
@@ -59,6 +58,21 @@ final class LoginAlertViewController: UIViewController {
         button.tintColor = .black
         button.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .light)
         return button
+    }()
+    
+    private let googleLoginButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitle("구글 이메일로 로그인", for: .normal)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 15, weight: .light)
+        button.tintColor = .gray
+        button.backgroundColor = .clear
+        return button
+    }()
+    
+    private lazy var googleLoginButtonFooterLine: UIView = {
+        let view = UIView()
+        view.backgroundColor = .gray
+        return view
     }()
     
     // MARK: - Lifecycle
@@ -91,16 +105,22 @@ final class LoginAlertViewController: UIViewController {
     private func configureUI() {
         cancelButton.anchor(top: alertView.topAnchor, right: alertView.rightAnchor, paddingTop: 12, paddingRight: 15)
         
+        [iconImageView,
+         guideLabel,
+         kakaoLoginButton,
+         googleLoginButton, googleLoginButtonFooterLine].forEach { $0.centerX(inView: alertView) }
+        
         iconImageView.anchor(top: alertView.topAnchor, paddingTop: 25)
-        iconImageView.centerX(inView: alertView)
         
         guideLabel.anchor(top: iconImageView.bottomAnchor, paddingTop: 17)
-        guideLabel.centerX(inView: alertView)
         
-        kakaoLoginButton.centerX(inView: alertView)
         kakaoLoginButton.anchor(top: guideLabel.bottomAnchor, paddingTop: 20)
         kakaoLoginButton.setDimensions(height: 50,
                                        width: (view.frame.width / 2) + 30)
+        
+        googleLoginButton.anchor(top: kakaoLoginButton.bottomAnchor, paddingTop: 20)
+        googleLoginButtonFooterLine.anchor(top: googleLoginButton.bottomAnchor, paddingTop: -8,
+                                           width: 125, height: 1)
     }
     
     private func setButtonActions() {

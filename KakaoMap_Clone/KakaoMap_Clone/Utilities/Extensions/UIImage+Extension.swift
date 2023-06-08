@@ -9,7 +9,7 @@ import Foundation
 
 extension UIImage {
     
-    func scalePreservingAspectRatio(targetSize: CGSize) -> UIImage {
+    func resizeImage(targetSize: CGSize) -> UIImage {
         // Determine the scale factor that preserves aspect ratio
         let widthRatio = targetSize.width / size.width
         let heightRatio = targetSize.height / size.height
