@@ -8,11 +8,18 @@
 import Foundation
 
 class MainViewModel {
-    
+
     // MARK: - Stored Properties
     
     private var mapCoordinate: Coordinate?
     
+    private var menuOpened: Bool = false {
+        didSet {
+            self.menuOpened == true ? self.openMenu() : self.closeMenu()
+            print(menuOpened)
+        }
+    }
+
     private var mapAddress: String? {
         didSet {
             // 지도 주소 값 바뀔 때마다 mainVC UI 세팅하기
@@ -28,6 +35,15 @@ class MainViewModel {
     
     /// 지도 위치 주소 데이터로 UI 세팅하기
     var setAddress: (String) -> Void = { _ in }
+    
+    var needToOpenMenu: Bool {
+        get {
+            return menuOpened
+        }
+        set {
+            self.menuOpened = newValue
+        }
+    }
     
     // MARK: - Methods
     

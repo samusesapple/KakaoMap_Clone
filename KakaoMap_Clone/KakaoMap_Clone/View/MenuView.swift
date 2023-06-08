@@ -35,23 +35,16 @@ final class MenuView: UIView {
     
     private let favoritesButton = MenuOptionsButton(text: "즐겨찾기")
     
-    private let settingsButton = MenuOptionsButton(text: "설정")
+    private let loginButton = MenuOptionsButton(text: "로그인")
     
     private lazy var buttonsStackView: UIStackView = {
         let stack = UIStackView()
-        [reviewButton, favoritesButton, settingsButton].forEach(stack.addArrangedSubview)
+        [reviewButton, favoritesButton, loginButton].forEach(stack.addArrangedSubview)
         stack.axis = .vertical
         stack.alignment = .leading
         stack.spacing = 16
         stack.distribution = .fillEqually
         return stack
-    }()
-    
-    private lazy var menuView: UIView = {
-        let view = UIView()
-        view.backgroundColor = .white
-        [profileHeaderView, buttonsStackView].forEach(view.addSubview)
-        return view
     }()
     
     // MARK: - Lifecycle
@@ -69,18 +62,15 @@ final class MenuView: UIView {
     // MARK: - Helpers
     
     private func configureUI() {
-        self.backgroundColor = .clear
+        self.backgroundColor = .white
     }
     
     private func setAutolayout() {
-        self.addSubview(menuView)
-        menuView.anchor(left: self.leftAnchor,
-                        width: (self.frame.width / 3) * 2,
-                        height: self.frame.height)
-        print(menuView.frame.width)
-        profileHeaderView.anchor(top: menuView.topAnchor,
-                                 width: (self.frame.width / 3) * 2,
-                                 height: frame.height / 4)
+        [profileHeaderView, buttonsStackView].forEach(self.addSubview)
+
+        profileHeaderView.anchor(top: self.topAnchor,
+                                 width: self.frame.width,
+                                 height: self.frame.height / 4)
         
         buttonsStackView.anchor(top: profileHeaderView.bottomAnchor,
                                 left: self.leftAnchor,
@@ -100,7 +90,20 @@ final class MenuView: UIView {
                            paddingLeft: 10)
     }
     
-    func getMenuView() -> UIView {
-        return menuView
+    func configureUIwithUserData(image: UIImage, name: String) {
+        profileImage.image = image
+        profileName.text = name
+    }
+    
+    var checkReviewButton: MenuOptionsButton {
+        return reviewButton
+    }
+    
+    var favoritePlaceButton: MenuOptionsButton {
+        return favoritesButton
+    }
+    
+    var userLoginButton: MenuOptionsButton {
+        return loginButton
     }
 }

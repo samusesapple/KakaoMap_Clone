@@ -15,7 +15,6 @@ class MenuOptionsButton: UIButton {
         self.titleLabel?.font = UIFont.systemFont(ofSize: 16)
         self.setTitle(text, for: .normal)
         self.setTitleColor(.black, for: .normal)
-//        self.tintColor = .black
         self.backgroundColor = .clear
     }
     

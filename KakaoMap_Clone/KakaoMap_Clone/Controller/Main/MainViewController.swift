@@ -8,15 +8,11 @@
 import UIKit
 import CoreLocation
 
-protocol MainViewControllerDelegate: AnyObject {
-    func didTappedMenuButton()
-}
-
 class MainViewController: UIViewController {
     
     private let viewModel = MainViewModel()
-    
-    weak var delegate: MainViewControllerDelegate?
+        
+    private let menuVC = MenuViewController()
     
     private let mapView: MTMapView = {
         let mapView = MTMapView()
@@ -38,17 +34,42 @@ class MainViewController: UIViewController {
         super.viewDidLoad()
         navigationController?.isNavigationBarHidden = true
         
+        menuVC.delegate = self
         mapView.delegate = self
         
         setLocationManager()
         setAutolayout()
         setActions()
-        
-//        mapView.addGestureRecognizer(UIPanGestureRecognizer(target: self, action: #selector(swipedToOpenMenu)))
-        
+        setMapView()
+                
         viewModel.setAddress = { [weak self] address in
             DispatchQueue.main.async {
                 self?.searchBarView.getSearchBar().placeholder = address
+            }
+        }
+        
+        viewModel.openMenu = { [weak self] in
+            UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 0, options: .curveEaseInOut) { [weak self] in
+                self?.menuVC.view.transform = CGAffineTransform(translationX: 0, y: 0)
+            } completion: { [weak self] done in
+                if done {
+                    UIView.animate(withDuration: 0.1) {
+                        self?.menuVC.view.backgroundColor = UIColor(red: 33/255, green: 33/255, blue: 33/255, alpha: 0.8)
+                    }
+                }
+            }
+        }
+        
+        viewModel.closeMenu = { [weak self] in
+            UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 0, options: .curveEaseInOut) { [weak self] in
+                self?.menuVC.view.transform = CGAffineTransform(translationX: -(self?.menuVC.view.frame.width)!, y: 0)
+            } completion: { [weak self] done in
+                if done {
+                    self?.menuVC.view.backgroundColor = .clear
+                    self?.menuVC.menuContainer.transform = CGAffineTransform(translationX: 0, y: 0)
+                    print("메뉴 닫기 완료")
+                    return
+                }
             }
         }
     }
@@ -68,7 +89,7 @@ class MainViewController: UIViewController {
     
     @objc private func menuButtonTapped() {
         print("메뉴 화면 띄워야함")
-        delegate?.didTappedMenuButton()
+        viewModel.needToOpenMenu.toggle()
     }
     
     @objc private func searchBarTapped() {
@@ -79,6 +100,11 @@ class MainViewController: UIViewController {
         searchBarView.getSearchBar().resignFirstResponder()
         navigationController?.pushViewController(viewModel.getSearchVC(currentLon: location.coordinate.longitude,
                                                                        currentLat: location.coordinate.latitude)!, animated: false)
+    }
+    
+    @objc private func swipedToOpenMenu() {
+        print("SWIPE")
+
     }
     
     // MARK: - Helpers
@@ -124,6 +150,16 @@ class MainViewController: UIViewController {
                 return
             }
         }        
+    }
+    
+    private func setMapView() {
+        // mainVC 위에 menuVC 쌓기
+        self.addChild(menuVC)
+        self.view.addSubview(menuVC.view)
+        menuVC.didMove(toParent: self)
+        // menuVC 숨기기
+        menuVC.view.transform = CGAffineTransform(translationX: -menuVC.view.frame.width, y: 0)
+        
     }
     
     // 사용자의 환경설정 - 위치 허용으로 안내
@@ -194,5 +230,17 @@ extension MainViewController: MTMapViewDelegate {
     // 메모리 차지가 많을 경우, 캐시 정리
     override func didReceiveMemoryWarning() {
         mapView.didReceiveMemoryWarning()
+    }
+}
+
+// MARK: - MenuViewControllerDelegate
+
+extension MainViewController: MenuViewControllerDelegate {
+    func needToOpenMenuView() {
+        viewModel.needToOpenMenu = true
+    }
+    
+    func needToCloseMenuView() {
+        viewModel.needToOpenMenu = false
     }
 }
