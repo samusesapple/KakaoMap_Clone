@@ -11,7 +11,7 @@ final class MenuView: UIView {
     
     private let profileImage: UIImageView = {
         let iv = UIImageView()
-        iv.backgroundColor = .systemBlue
+        iv.image = UIImage(named: "defaultUserImage")
         iv.clipsToBounds = true
         iv.layer.cornerRadius = 25
         return iv
@@ -20,7 +20,7 @@ final class MenuView: UIView {
     private let profileName: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 17, weight: .medium)
-        label.text = "닉네임"
+        label.text = "로그인하세요"
         return label
     }()
     // 프로필 관련된 부분만 담은 연한 회색의 header view
@@ -90,9 +90,20 @@ final class MenuView: UIView {
                            paddingLeft: 10)
     }
     
-    func configureUIwithUserData(image: UIImage, name: String) {
-        profileImage.image = image
-        profileName.text = name
+    func configureUIwithUserData(imageURL: URL?, name: String?) {
+        guard let imageURL = imageURL,
+              let name = name else {
+            self.profileImage.image = UIImage(named: "defaultUserImage")
+            self.profileName.text = "로그인하세요"
+            return
+        }
+        DispatchQueue.global(qos: .userInitiated).async { [weak self] in
+            let data = try? Data(contentsOf: imageURL)
+            DispatchQueue.main.async {
+                self?.profileImage.image = UIImage(data: data!)
+                self?.profileName.text = name
+            }
+        }
     }
     
     var checkReviewButton: MenuOptionsButton {

@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import KakaoSDKUser
 
 final class LoginAlertViewController: UIViewController {
     
@@ -86,7 +87,6 @@ final class LoginAlertViewController: UIViewController {
         configureUI()
         setButtonActions()
     }
-
     
     // MARK: - Actions
     
@@ -97,7 +97,19 @@ final class LoginAlertViewController: UIViewController {
     @objc private func kakaoLoginButtonTapped() {
         // 로그인 된 경우 -> 로그아웃
         // 로그인 안 된 경우 -> 로그인
-        
+        if UserApi.isKakaoTalkLoginAvailable() {
+            UserApi.shared.loginWithKakaoTalk { [weak self] token, error in
+                if let error = error {
+                    print(error)
+                    return
+                }
+                print("카카오 로그인 성공")
+                _ = token
+                // 로그인 된 카카오톡 정보 UserDefaults에 저장 노티피케이션 센터에 등록 및 메뉴에 있는 프로필 세팅하기
+
+                self?.setLoginNotificationForKakaoTalkLogin()
+            }
+        }
         print("카카오 로그인 구현하기")
     }
     
@@ -128,4 +140,18 @@ final class LoginAlertViewController: UIViewController {
         kakaoLoginButton.addTarget(self, action: #selector(kakaoLoginButtonTapped), for: .touchUpInside)
     }
     
+    private func setLoginNotificationForKakaoTalkLogin() {
+        UserApi.shared.me {[weak self] user, error in
+            if let error = error {
+                print(error)
+                return
+            }
+            print(#function)
+            NotificationManager.postloginNotification(name: user?.kakaoAccount?.profile?.nickname,
+                                                      userEmail: user?.kakaoAccount?.email,
+                                                      profileImageURL: user?.kakaoAccount?.profile?.profileImageUrl,
+                                                      isKakaoLogin: true)
+            self?.cancelButtonTapped()
+        }
+    }
 }

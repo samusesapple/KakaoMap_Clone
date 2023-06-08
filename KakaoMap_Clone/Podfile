@@ -9,5 +9,7 @@ target 'KakaoMap_Clone' do
 
 pod 'Alamofire'
 pod 'JGProgressHUD'
+pod 'KakaoSDKAuth'
+pod 'KakaoSDKUser'
 
 end

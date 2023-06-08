@@ -21,6 +21,7 @@
 		F1954A832A2C644200E9D0C7 /* MenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1954A822A2C644200E9D0C7 /* MenuView.swift */; };
 		F1954A862A2C66C500E9D0C7 /* MenuOptionsButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1954A852A2C66C500E9D0C7 /* MenuOptionsButton.swift */; };
 		F19BA7902A1F7B1F003F348C /* UIImage+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = F19BA78F2A1F7B1F003F348C /* UIImage+Extension.swift */; };
+		F1A7C09D2A31D49400F96041 /* NotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1A7C09C2A31D49400F96041 /* NotificationManager.swift */; };
 		F1A92BA82A1F1CD800A3AA8F /* ResultMapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1A92BA72A1F1CD800A3AA8F /* ResultMapViewController.swift */; };
 		F1B8F7552A1CC0BC00D3B45E /* AddressResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1B8F7542A1CC0BC00D3B45E /* AddressResult.swift */; };
 		F1B8F7572A1CE5E900D3B45E /* KeywordResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1B8F7562A1CE5E900D3B45E /* KeywordResult.swift */; };
@@ -99,6 +100,7 @@
 		F1954A822A2C644200E9D0C7 /* MenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuView.swift; sourceTree = "<group>"; };
 		F1954A852A2C66C500E9D0C7 /* MenuOptionsButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuOptionsButton.swift; sourceTree = "<group>"; };
 		F19BA78F2A1F7B1F003F348C /* UIImage+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Extension.swift"; sourceTree = "<group>"; };
+		F1A7C09C2A31D49400F96041 /* NotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationManager.swift; sourceTree = "<group>"; };
 		F1A92BA72A1F1CD800A3AA8F /* ResultMapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultMapViewController.swift; sourceTree = "<group>"; };
 		F1B8F7542A1CC0BC00D3B45E /* AddressResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddressResult.swift; sourceTree = "<group>"; };
 		F1B8F7562A1CE5E900D3B45E /* KeywordResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeywordResult.swift; sourceTree = "<group>"; };
@@ -407,6 +409,7 @@
 			children = (
 				F10BA34F2A1CBAA500CCBE9D /* HttpClient.swift */,
 				F1EBC31F2A232CB50043CC46 /* LocationManager.swift */,
+				F1A7C09C2A31D49400F96041 /* NotificationManager.swift */,
 			);
 			path = Service;
 			sourceTree = "<group>";
@@ -570,6 +573,7 @@
 				F1954A862A2C66C500E9D0C7 /* MenuOptionsButton.swift in Sources */,
 				F1A92BA82A1F1CD800A3AA8F /* ResultMapViewController.swift in Sources */,
 				F1B8F7572A1CE5E900D3B45E /* KeywordResult.swift in Sources */,
+				F1A7C09D2A31D49400F96041 /* NotificationManager.swift in Sources */,
 				F1B8F75C2A1D9F0000D3B45E /* SearchResultViewController.swift in Sources */,
 				F1EBC3182A22FAA10043CC46 /* DetailViewController.swift in Sources */,
 				F10BA3462A1C5BD300CCBE9D /* CustomSearchBarView.swift in Sources */,
@@ -742,6 +746,7 @@
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_UIUserInterfaceStyle = Light;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -784,6 +789,7 @@
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_UIUserInterfaceStyle = Light;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
