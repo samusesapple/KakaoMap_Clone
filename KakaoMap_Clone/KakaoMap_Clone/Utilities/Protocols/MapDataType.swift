@@ -11,7 +11,6 @@ protocol MapDataType {
     var keyword: String? { get set }
     
     var mapCoordinate: Coordinate { get set }
-    var currentCoordinate: Coordinate { get set }
     
     var mapAddress: String { get set }
     

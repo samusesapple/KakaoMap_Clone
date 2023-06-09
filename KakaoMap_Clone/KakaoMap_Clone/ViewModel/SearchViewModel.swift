@@ -17,8 +17,9 @@ class SearchViewModel: MapDataType {
         }
     }
     
+    private let currentCoordinate: Coordinate = UserDefaultsManager.shared.currentCoordinate
+    
     var mapCoordinate: Coordinate
-    var currentCoordinate: Coordinate
     
     var mapAddress: String
     
@@ -60,9 +61,8 @@ class SearchViewModel: MapDataType {
     
 // MARK: - Initializer
     
-    init(mapCoordinate: Coordinate, currentCoordinate: Coordinate, mapAddress: String) {
+    init(mapCoordinate: Coordinate, mapAddress: String) {
         self.mapCoordinate = mapCoordinate
-        self.currentCoordinate = currentCoordinate
         self.mapAddress = mapAddress
     }
         

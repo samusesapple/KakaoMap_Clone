@@ -36,4 +36,21 @@ struct UserDefaultsManager {
         UserDefaults.standard.removeObject(forKey: "uid")
         UserDefaults.standard.removeObject(forKey: "isKakaoLogin")
     }
+    
+    // MARK: - Coordinate
+    
+    var currentCoordinate: Coordinate {
+        let longtitude = UserDefaults.standard.value(forKey: "currentLongtitude") as! Double
+        let latitude = UserDefaults.standard.value(forKey: "currentLatitude") as! Double
+        
+        return Coordinate(longtitude: longtitude, latitude: latitude)
+    }
+    
+    func setCurrentCoordinate(coordinate: Coordinate) {
+        let longtitude = coordinate.longtitude
+        let latitude = coordinate.latitude
+        
+        UserDefaults.standard.set(longtitude, forKey: "currentLongtitude")
+        UserDefaults.standard.set(latitude, forKey: "currentLatitude")
+    }
 }

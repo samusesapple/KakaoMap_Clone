@@ -12,7 +12,7 @@ class ResultMapViewModel: MapDataType {
     var keyword: String?
     
     var mapCoordinate: Coordinate
-    var currentCoordinate: Coordinate
+    private let currentCoordinate: Coordinate = UserDefaultsManager.shared.currentCoordinate
     
     var mapAddress: String
     
@@ -58,7 +58,6 @@ class ResultMapViewModel: MapDataType {
     init(mapData: MapDataType) {
         keyword = mapData.keyword
         mapCoordinate = mapData.mapCoordinate
-        currentCoordinate = mapData.currentCoordinate
         mapAddress = mapData.mapAddress
         searchResults = mapData.searchResults
         searchHistories = mapData.searchHistories
