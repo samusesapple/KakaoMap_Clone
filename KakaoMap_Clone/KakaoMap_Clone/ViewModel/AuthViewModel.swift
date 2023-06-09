@@ -100,6 +100,7 @@ class AuthViewModel {
     
     private func handleLogout() {
         try! FirebaseAuth.Auth.auth().signOut()
+        UserDefaultsManager.shared.removeUserInfo()
         // 로그아웃 상태 노티피케이션 post 하기
         NotificationManager.postLogoutNotification()
     }

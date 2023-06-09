@@ -408,8 +408,8 @@
 		F1F212EA2A19F775000443AB /* ViewModel */ = {
 			isa = PBXGroup;
 			children = (
-				F1B8F7582A1D98D300D3B45E /* MainViewModel.swift */,
 				F1DB31412A33208600B6D513 /* AuthViewModel.swift */,
+				F1B8F7582A1D98D300D3B45E /* MainViewModel.swift */,
 				F10BA34D2A1C9D0C00CCBE9D /* SearchViewModel.swift */,
 				F1B8F75D2A1DA08100D3B45E /* SearchResultViewModel.swift */,
 				F161EF192A25ECDA00ED9709 /* ResultMapViewModel.swift */,

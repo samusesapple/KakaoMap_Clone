@@ -59,16 +59,16 @@ final class MenuViewController: UIViewController {
     // 유저 로그인 한 경우 view 세팅
     @objc private func userDidLogIn(_ notification: Notification) {
         print("userDidLogIn - MenuVC 감지함")
-//        ["userName": name,
-//                 "userEmail": userEmail,
-//                 "profileImageURL": profileImageURL
-//                ] as [String : Any]
         guard let userInfo = notification.object as? [String: Any],
               let name = userInfo["userName"] as? String,
               let profileImageURL = userInfo["profileImageURL"] as? URL,
               let isKakaoLogin = userInfo["isKakaoLogin"] as? Bool else { return }
+        
         if isKakaoLogin {
             print("MenuVC 옵저버 - 카카오 로그인 감지 완료")
+            menuView.userLoginButton.setTitle("카카오계정 로그아웃", for: .normal)
+            menuView.configureUIwithUserData(imageURL: profileImageURL, name: name)
+            return
         }
         menuView.userLoginButton.setTitle("로그아웃", for: .normal)
         menuView.configureUIwithUserData(imageURL: profileImageURL, name: name)
