@@ -33,6 +33,9 @@ final class MenuViewController: UIViewController {
         setMenuViewButtonActions()
         
         view.addGestureRecognizer(UIPanGestureRecognizer(target: self, action: #selector(menuViewStartedSwiping)))
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
         // 로그인 상태 구독
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(userDidLogIn),

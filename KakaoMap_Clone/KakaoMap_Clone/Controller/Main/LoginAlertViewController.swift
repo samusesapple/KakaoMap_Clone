@@ -105,8 +105,8 @@ final class LoginAlertViewController: UIViewController {
                 }
                 print("카카오 로그인 성공")
                 _ = token
-                // 로그인 된 카카오톡 정보 UserDefaults에 저장 노티피케이션 센터에 등록 및 메뉴에 있는 프로필 세팅하기
-
+                // 로그인 된 카카오톡 정보 노티피케이션 센터에 등록 및 메뉴에 있는 프로필 세팅하기
+                // firebase에 해당 카카오톡 아이디로 회원가입 유무 확인 후, 없으면 가입하고 있으면 로그인시키기
                 self?.setLoginNotificationForKakaoTalkLogin()
             }
         }

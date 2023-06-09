@@ -129,7 +129,7 @@ final class ResultMapViewController: UIViewController, CLLocationManagerDelegate
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .gray
+//        view.backgroundColor = .gray
         
         setAutolayout()
         setActions()
