@@ -22,6 +22,8 @@ final class MenuViewController: UIViewController {
                                           width: (view.frame.width / 3) * 2,
                                           height: view.frame.height))
     
+    private let viewModel: AuthViewModel = AuthViewModel()
+    
     weak var delegate: MenuViewControllerDelegate?
     
     // MARK: - Lifecycle
@@ -88,19 +90,7 @@ final class MenuViewController: UIViewController {
     @objc private func loginButtonTapped() {
         // 로그인 상태인 경우, 로그아웃
         guard menuView.userLoginButton.titleLabel?.text == "로그인" else {
-            if UserDefaultsManager.shared.isKakaoLogin() {
-                UserApi.shared.logout { [weak self] error in
-                    if let _ = error {
-                        print("로그아웃 실패")
-                        return
-                    }
-                    print("카카오톡 로그아웃 완료")
-                    self?.handleLogout()
-                }
-                return
-            } else {
-                self.handleLogout()
-            }
+            viewModel.logout()
             return
         }
         let alertVC = LoginAlertViewController()
@@ -156,9 +146,5 @@ final class MenuViewController: UIViewController {
         menuView.userLoginButton.addTarget(self, action: #selector(loginButtonTapped), for: .touchUpInside)
     }
     
-    private func handleLogout() {
-        try! FirebaseAuth.Auth.auth().signOut()
-        // 로그아웃 상태 노티피케이션 post 하기
-        NotificationManager.postLogoutNotification()
-    }
+
 }

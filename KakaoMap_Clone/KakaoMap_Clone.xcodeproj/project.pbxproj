@@ -36,6 +36,7 @@
 		F1DB313A2A32F40100B6D513 /* Constant.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1DB31392A32F40100B6D513 /* Constant.swift */; };
 		F1DB313C2A32F9EE00B6D513 /* AuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1DB313B2A32F9EE00B6D513 /* AuthService.swift */; };
 		F1DB31402A3308CC00B6D513 /* UserDefaultsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1DB313F2A3308CC00B6D513 /* UserDefaultsManager.swift */; };
+		F1DB31422A33208600B6D513 /* AuthViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1DB31412A33208600B6D513 /* AuthViewModel.swift */; };
 		F1EBC3182A22FAA10043CC46 /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1EBC3172A22FAA10043CC46 /* DetailViewController.swift */; };
 		F1EBC31C2A2311870043CC46 /* MeasureFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1EBC31B2A2311870043CC46 /* MeasureFormatter.swift */; };
 		F1EBC31E2A232BB50043CC46 /* DestinationResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1EBC31D2A232BB50043CC46 /* DestinationResult.swift */; };
@@ -119,6 +120,7 @@
 		F1DB31392A32F40100B6D513 /* Constant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constant.swift; sourceTree = "<group>"; };
 		F1DB313B2A32F9EE00B6D513 /* AuthService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthService.swift; sourceTree = "<group>"; };
 		F1DB313F2A3308CC00B6D513 /* UserDefaultsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsManager.swift; sourceTree = "<group>"; };
+		F1DB31412A33208600B6D513 /* AuthViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthViewModel.swift; sourceTree = "<group>"; };
 		F1EBC3172A22FAA10043CC46 /* DetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewController.swift; sourceTree = "<group>"; };
 		F1EBC31B2A2311870043CC46 /* MeasureFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeasureFormatter.swift; sourceTree = "<group>"; };
 		F1EBC31D2A232BB50043CC46 /* DestinationResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DestinationResult.swift; sourceTree = "<group>"; };
@@ -407,6 +409,7 @@
 			isa = PBXGroup;
 			children = (
 				F1B8F7582A1D98D300D3B45E /* MainViewModel.swift */,
+				F1DB31412A33208600B6D513 /* AuthViewModel.swift */,
 				F10BA34D2A1C9D0C00CCBE9D /* SearchViewModel.swift */,
 				F1B8F75D2A1DA08100D3B45E /* SearchResultViewModel.swift */,
 				F161EF192A25ECDA00ED9709 /* ResultMapViewModel.swift */,
@@ -574,6 +577,7 @@
 				F1DB313C2A32F9EE00B6D513 /* AuthService.swift in Sources */,
 				F1954A7E2A2B168D00E9D0C7 /* Coordinate.swift in Sources */,
 				F1B8F7552A1CC0BC00D3B45E /* AddressResult.swift in Sources */,
+				F1DB31422A33208600B6D513 /* AuthViewModel.swift in Sources */,
 				F1F211322A19CC76000443AB /* MainViewController.swift in Sources */,
 				F1EBC3202A232CB50043CC46 /* LocationManager.swift in Sources */,
 				F1DB313A2A32F40100B6D513 /* Constant.swift in Sources */,
