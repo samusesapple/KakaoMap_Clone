@@ -7,6 +7,7 @@
 
 import UIKit
 import KakaoSDKUser
+import FirebaseAuth
 
 protocol MenuViewControllerDelegate: AnyObject {
     func needToCloseMenuView()
@@ -65,7 +66,7 @@ final class MenuViewController: UIViewController {
               let profileImageURL = userInfo["profileImageURL"] as? URL,
               let isKakaoLogin = userInfo["isKakaoLogin"] as? Bool else { return }
         if isKakaoLogin {
-            print("카카오 로그인 감지 완료")
+            print("MenuVC 옵저버 - 카카오 로그인 감지 완료")
         }
         menuView.userLoginButton.setTitle("로그아웃", for: .normal)
         menuView.configureUIwithUserData(imageURL: profileImageURL, name: name)
@@ -87,14 +88,18 @@ final class MenuViewController: UIViewController {
     @objc private func loginButtonTapped() {
         // 로그인 상태인 경우, 로그아웃
         guard menuView.userLoginButton.titleLabel?.text == "로그인" else {
-            UserApi.shared.logout { error in
-                if let error = error {
-                    print("로그아웃 실패")
-                    return
+            if UserDefaultsManager.shared.isKakaoLogin() {
+                UserApi.shared.logout { [weak self] error in
+                    if let _ = error {
+                        print("로그아웃 실패")
+                        return
+                    }
+                    print("카카오톡 로그아웃 완료")
+                    self?.handleLogout()
                 }
-                print("카카오톡 로그아웃 완료")
-                // 로그아웃 상태 노티피케이션 post 하기
-                NotificationManager.postLogoutNotification()
+                return
+            } else {
+                self.handleLogout()
             }
             return
         }
@@ -149,5 +154,11 @@ final class MenuViewController: UIViewController {
         menuView.checkReviewButton.addTarget(self, action: #selector(reviewButtonTapped), for: .touchUpInside)
         menuView.favoritePlaceButton.addTarget(self, action: #selector(favoritesButtonTapped), for: .touchUpInside)
         menuView.userLoginButton.addTarget(self, action: #selector(loginButtonTapped), for: .touchUpInside)
+    }
+    
+    private func handleLogout() {
+        try! FirebaseAuth.Auth.auth().signOut()
+        // 로그아웃 상태 노티피케이션 post 하기
+        NotificationManager.postLogoutNotification()
     }
 }

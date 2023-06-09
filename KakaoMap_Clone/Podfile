@@ -12,4 +12,7 @@ pod 'JGProgressHUD'
 pod 'KakaoSDKAuth'
 pod 'KakaoSDKUser'
 
+pod 'FirebaseAuth'
+pod 'FirebaseFirestore'
+
 end

@@ -7,11 +7,15 @@
 
 import UIKit
 import KakaoSDKUser
+import FirebaseAuth
+import JGProgressHUD
 
 final class LoginAlertViewController: UIViewController {
     
     // MARK: - Properties
-        
+    
+    private let progressIndicator = JGProgressHUD(style: .dark)
+    
     private lazy var alertView: UIView = {
         let view = UIView()
         view.backgroundColor = .white
@@ -38,7 +42,7 @@ final class LoginAlertViewController: UIViewController {
         iv.image = image
         return iv
     }()
-
+    
     private let guideLabel: UILabel = {
         let label = UILabel()
         label.text = "로그인을 하면 별점, 즐겨찾기 등 \n더 많은 기능을 이용할 수 있습니다."
@@ -83,7 +87,7 @@ final class LoginAlertViewController: UIViewController {
         view.addSubview(alertView)
         alertView.setDimensions(height: view.frame.height / 3, width: view.frame.height / 3)
         alertView.centerInSuperview()
-
+        
         configureUI()
         setButtonActions()
     }
@@ -107,7 +111,7 @@ final class LoginAlertViewController: UIViewController {
                 _ = token
                 // 로그인 된 카카오톡 정보 노티피케이션 센터에 등록 및 메뉴에 있는 프로필 세팅하기
                 // firebase에 해당 카카오톡 아이디로 회원가입 유무 확인 후, 없으면 가입하고 있으면 로그인시키기
-                self?.setLoginNotificationForKakaoTalkLogin()
+                self?.setFirebaseForKakaoTalkLogin()
             }
         }
         print("카카오 로그인 구현하기")
@@ -140,18 +144,49 @@ final class LoginAlertViewController: UIViewController {
         kakaoLoginButton.addTarget(self, action: #selector(kakaoLoginButtonTapped), for: .touchUpInside)
     }
     
-    private func setLoginNotificationForKakaoTalkLogin() {
+    private func setFirebaseForKakaoTalkLogin() {
         UserApi.shared.me {[weak self] user, error in
-            if let error = error {
-                print(error)
+            guard let user = user,
+                  let email = user.kakaoAccount?.email,
+                  let nickName = user.kakaoAccount?.profile?.nickname,
+                  let password = user.id,
+                  error == nil else {
+                print(error!)
                 return
             }
-            print(#function)
-            NotificationManager.postloginNotification(name: user?.kakaoAccount?.profile?.nickname,
-                                                      userEmail: user?.kakaoAccount?.email,
-                                                      profileImageURL: user?.kakaoAccount?.profile?.profileImageUrl,
-                                                      isKakaoLogin: true)
-            self?.cancelButtonTapped()
+            
+            let kakaoAuthCredentials = AuthCredentials(email: email,
+                                                       nickName: nickName,
+                                                       password: String(password),
+                                                       isKakaoLogin: true)
+            
+            AuthService.logUserIn(withEmail: email, password: String(password)) { result, error in
+                guard let result = result,
+                      let email = result.user.email,
+                      error == nil else {
+                    print("새로운 유저 회원가입 필요")
+                    AuthService.registerUser(userInfo: kakaoAuthCredentials) {
+                        
+                        NotificationManager.postloginNotification(name: nickName,
+                                                                  userEmail: email,
+                                                                  profileImageURL: user.kakaoAccount?.profile?.profileImageUrl,
+                                                                  isKakaoLogin: true)
+                        self?.cancelButtonTapped()
+                    }
+                    return
+                }
+                print("기존 존재하는 유저로 로그인하기")
+                UserDefaultsManager.shared.setUserInfo(nickName: nickName,
+                                                       email: email,
+                                                       uid: result.user.uid,
+                                                       isKakaoLogin: true)
+                
+                NotificationManager.postloginNotification(name: nickName,
+                                                          userEmail: email,
+                                                          profileImageURL: user.kakaoAccount?.profile?.profileImageUrl,
+                                                          isKakaoLogin: true)
+                self?.cancelButtonTapped()
+            }
         }
     }
 }

@@ -8,13 +8,15 @@
 import UIKit
 import KakaoSDKCommon
 import KakaoSDKAuth
+import FirebaseCore
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         KakaoSDK.initSDK(appKey: "77e5990e107cbfe81c5db9c7d4f7fd67")
-        return false
+        FirebaseApp.configure()
+        return true
     }
 
     // MARK: UISceneSession Lifecycle

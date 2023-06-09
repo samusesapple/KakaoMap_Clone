@@ -32,6 +32,10 @@
 		F1B8F7622A1DD87500D3B45E /* ReviewStarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1B8F7612A1DD87500D3B45E /* ReviewStarView.swift */; };
 		F1B8F7662A1E097F00D3B45E /* CustomAlignmentAlertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1B8F7652A1E097F00D3B45E /* CustomAlignmentAlertView.swift */; };
 		F1B8F7682A1E109A00D3B45E /* CustomAlignmentAlertViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1B8F7672A1E109A00D3B45E /* CustomAlignmentAlertViewController.swift */; };
+		F1DB31382A32EC3D00B6D513 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = F1DB31372A32EC3D00B6D513 /* GoogleService-Info.plist */; };
+		F1DB313A2A32F40100B6D513 /* Constant.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1DB31392A32F40100B6D513 /* Constant.swift */; };
+		F1DB313C2A32F9EE00B6D513 /* AuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1DB313B2A32F9EE00B6D513 /* AuthService.swift */; };
+		F1DB31402A3308CC00B6D513 /* UserDefaultsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1DB313F2A3308CC00B6D513 /* UserDefaultsManager.swift */; };
 		F1EBC3182A22FAA10043CC46 /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1EBC3172A22FAA10043CC46 /* DetailViewController.swift */; };
 		F1EBC31C2A2311870043CC46 /* MeasureFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1EBC31B2A2311870043CC46 /* MeasureFormatter.swift */; };
 		F1EBC31E2A232BB50043CC46 /* DestinationResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1EBC31D2A232BB50043CC46 /* DestinationResult.swift */; };
@@ -111,6 +115,10 @@
 		F1B8F7612A1DD87500D3B45E /* ReviewStarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewStarView.swift; sourceTree = "<group>"; };
 		F1B8F7652A1E097F00D3B45E /* CustomAlignmentAlertView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomAlignmentAlertView.swift; sourceTree = "<group>"; };
 		F1B8F7672A1E109A00D3B45E /* CustomAlignmentAlertViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomAlignmentAlertViewController.swift; sourceTree = "<group>"; };
+		F1DB31372A32EC3D00B6D513 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		F1DB31392A32F40100B6D513 /* Constant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constant.swift; sourceTree = "<group>"; };
+		F1DB313B2A32F9EE00B6D513 /* AuthService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthService.swift; sourceTree = "<group>"; };
+		F1DB313F2A3308CC00B6D513 /* UserDefaultsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsManager.swift; sourceTree = "<group>"; };
 		F1EBC3172A22FAA10043CC46 /* DetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewController.swift; sourceTree = "<group>"; };
 		F1EBC31B2A2311870043CC46 /* MeasureFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeasureFormatter.swift; sourceTree = "<group>"; };
 		F1EBC31D2A232BB50043CC46 /* DestinationResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DestinationResult.swift; sourceTree = "<group>"; };
@@ -262,6 +270,7 @@
 				F1F212E72A19F74C000443AB /* Controller */,
 				F1F212E22A19DD91000443AB /* Utilities */,
 				F1F211362A19CC77000443AB /* Assets.xcassets */,
+				F1DB31372A32EC3D00B6D513 /* GoogleService-Info.plist */,
 				F1F2113B2A19CC77000443AB /* Info.plist */,
 				F1F2125B2A19D914000443AB /* KakaoMap-Bridge-Header.h */,
 			);
@@ -346,11 +355,12 @@
 		F1F212E22A19DD91000443AB /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
-				F1954A842A2C669100E9D0C7 /* Extensions */,
-				F1EBC31B2A2311870043CC46 /* MeasureFormatter.swift */,
+				F1DB31392A32F40100B6D513 /* Constant.swift */,
 				F1954A7D2A2B168D00E9D0C7 /* Coordinate.swift */,
-				F1954A7F2A2B190E00E9D0C7 /* Protocols */,
+				F1EBC31B2A2311870043CC46 /* MeasureFormatter.swift */,
 				F1954A852A2C66C500E9D0C7 /* MenuOptionsButton.swift */,
+				F1954A842A2C669100E9D0C7 /* Extensions */,
+				F1954A7F2A2B190E00E9D0C7 /* Protocols */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -410,6 +420,8 @@
 				F10BA34F2A1CBAA500CCBE9D /* HttpClient.swift */,
 				F1EBC31F2A232CB50043CC46 /* LocationManager.swift */,
 				F1A7C09C2A31D49400F96041 /* NotificationManager.swift */,
+				F1DB313B2A32F9EE00B6D513 /* AuthService.swift */,
+				F1DB313F2A3308CC00B6D513 /* UserDefaultsManager.swift */,
 			);
 			path = Service;
 			sourceTree = "<group>";
@@ -481,6 +493,7 @@
 				F1F212D42A19D9E1000443AB /* map_pin_red.png in Resources */,
 				F1F212C62A19D9E1000443AB /* map_pinup_custom@3x.png in Resources */,
 				F1F212CE2A19D9E1000443AB /* copyright.png in Resources */,
+				F1DB31382A32EC3D00B6D513 /* GoogleService-Info.plist in Resources */,
 				F1F212CD2A19D9E1000443AB /* map_pin_shadow@3x.png in Resources */,
 				F1F2113A2A19CC77000443AB /* LaunchScreen.storyboard in Resources */,
 				F1F212D12A19D9E1000443AB /* daum_copyright.png in Resources */,
@@ -558,10 +571,12 @@
 				F161EF1A2A25ECDA00ED9709 /* ResultMapViewModel.swift in Sources */,
 				F161EF182A25CC8500ED9709 /* SearchModel.swift in Sources */,
 				F1954A832A2C644200E9D0C7 /* MenuView.swift in Sources */,
+				F1DB313C2A32F9EE00B6D513 /* AuthService.swift in Sources */,
 				F1954A7E2A2B168D00E9D0C7 /* Coordinate.swift in Sources */,
 				F1B8F7552A1CC0BC00D3B45E /* AddressResult.swift in Sources */,
 				F1F211322A19CC76000443AB /* MainViewController.swift in Sources */,
 				F1EBC3202A232CB50043CC46 /* LocationManager.swift in Sources */,
+				F1DB313A2A32F40100B6D513 /* Constant.swift in Sources */,
 				F1B8F7602A1DCBD800D3B45E /* SearchResultTableViewCell.swift in Sources */,
 				F1EBC31E2A232BB50043CC46 /* DestinationResult.swift in Sources */,
 				F1F2112E2A19CC76000443AB /* AppDelegate.swift in Sources */,
@@ -576,6 +591,7 @@
 				F1A7C09D2A31D49400F96041 /* NotificationManager.swift in Sources */,
 				F1B8F75C2A1D9F0000D3B45E /* SearchResultViewController.swift in Sources */,
 				F1EBC3182A22FAA10043CC46 /* DetailViewController.swift in Sources */,
+				F1DB31402A3308CC00B6D513 /* UserDefaultsManager.swift in Sources */,
 				F10BA3462A1C5BD300CCBE9D /* CustomSearchBarView.swift in Sources */,
 				F1F212E62A19DDC2000443AB /* UIViewController+Extensions.swift in Sources */,
 				F1B8F7622A1DD87500D3B45E /* ReviewStarView.swift in Sources */,
