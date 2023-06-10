@@ -61,16 +61,23 @@ class ReviewStarView: UIView {
         reviewAveragePointLabel.text = String(averagePoint)
         totalReviewCountLabel.text = "(\(reviewCount))"
         guard let reviewStarText = reviewStars.text else { return }
-        let averagePointInt = Int(averagePoint)
+        let averagePointInt = Int(exactly: averagePoint.rounded())
         
         var stringArray = reviewStarText.map { String($0) }
         
         print(stringArray.count)
-        for index in 0...averagePointInt-1 {
+        for index in 0...averagePointInt!-1 {
             stringArray[index] = "★"
         }
         
         let finalString = stringArray.joined()
         reviewStars.text = finalString
+    }
+    
+    func configureNoReviewUI() {
+        reviewAveragePointLabel.text = nil
+        totalReviewCountLabel.text = nil
+        reviewStars.tintColor = .gray
+        reviewStars.text = "후기 미제공 업체"
     }
 }

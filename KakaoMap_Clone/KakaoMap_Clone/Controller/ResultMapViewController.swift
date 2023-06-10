@@ -163,7 +163,15 @@ final class ResultMapViewController: UIViewController, CLLocationManagerDelegate
         }
         
         viewModel.needToSetTargetPlaceUI = { [weak self] in
-                self?.configureUIwithDetailedData()
+            self?.configureUIwithDetailedData()
+        }
+        
+        viewModel.startFetchingData = { [weak progressHud] in
+            progressHud?.show(in: self.view)
+        }
+        
+        viewModel.finishFetchingData = { [weak progressHud] in
+            progressHud?.dismiss()
         }
     }
     
@@ -263,17 +271,36 @@ final class ResultMapViewController: UIViewController, CLLocationManagerDelegate
         distanceLabel.text = MeasureFormatter.measureDistance(distance: distance)
     }
     
+    /// 선택된 장소에 대한 크롤링 데이터로 UI 세팅하기
     private func configureUIwithDetailedData() {
-        guard let data = viewModel.targetPlaceData,
-              let reviewCount = data.comment?.kamapComntcnt,
-              let totalScore = data.comment?.scoresum,
-              let detailAddress = data.basicInfo?.address?.addrdetail,
-              let placeAddress = addressLabel.text else { return }
+        guard let targetPlace = viewModel.targetPlace,
+              let address = targetPlace.addressName,
+              let data = viewModel.targetPlaceData,
+              let reviewCount = data.comment?.scorecnt,
+              let totalScore = data.comment?.scoresum
+                else {
+            if let reviewStatus = viewModel.targetPlaceData?.comment?.reviewWriteBlocked {
+                if reviewStatus != "NONE" {
+                    print("후기 미제공 업체")
+                    // 상세 주소가 있는 경우 상세주소 세팅
+                    if let detailAddress = viewModel.targetPlaceData?.basicInfo?.address?.addrdetail {
+                        self.addressLabel.text = (viewModel.targetPlace?.addressName!)! + " \(detailAddress)"
+                    }
+                    reviewView.configureNoReviewUI()
+                }
+            }
+            print("지도뷰 \(viewModel.targetPlace?.id)- 크롤링한 데이터 세팅 실패")
+            return
+        }
         // 평균 별점
         let averageReviewPoint = (round((Double(totalScore) / Double(reviewCount)) * 10) / 10)
         // 상세 주소, 평균 별점, 썸네일 이미지 세팅
-        addressLabel.text = placeAddress + " \(detailAddress)"
-        reviewView.configureUI(averagePoint: averageReviewPoint, reviewCount: reviewCount)
+        DispatchQueue.main.async { [weak self] in
+            self?.reviewView.configureUI(averagePoint: averageReviewPoint, reviewCount: reviewCount)
+            if let detailAddress = data.basicInfo?.address?.addrdetail {
+                self?.addressLabel.text = address + " \(detailAddress)"
+            }
+        }
     }
     
     private func setAutolayout() {
@@ -359,10 +386,6 @@ extension ResultMapViewController: MTMapViewDelegate {
     func mapView(_ mapView: MTMapView!, selectedPOIItem poiItem: MTMapPOIItem!) -> Bool {
         let targetPlace = viewModel.filterResults(with: poiItem.tag)
         print("선택된 위치 장소 코드 : \(poiItem.tag)")
-        HttpClient.shared.getReviewForCertainPlace(placeCode: String(poiItem.tag)) { [weak self] placeData in
-            self?.configureUIwithData(place: targetPlace)
-            print("선택한 지도 정보도 세팅 필요")
-        }
         return false
     }
     

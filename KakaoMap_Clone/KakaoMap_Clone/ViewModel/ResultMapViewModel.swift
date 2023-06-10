@@ -65,6 +65,9 @@ class ResultMapViewModel: MapDataType {
     
     var needToSetTargetPlaceUI = { }
     
+    var startFetchingData = { }
+    var finishFetchingData = { }
+    
 // MARK: - Initializer
     
     init(mapData: MapDataType) {
@@ -105,8 +108,12 @@ class ResultMapViewModel: MapDataType {
  
     private func setTargetPlaceData() {
         guard let placeId = self.targetPlace?.id else { return }
+        
+        self.startFetchingData()
+        
         HttpClient.shared.getReviewForCertainPlace(placeCode: placeId) { [weak self] placeData in
             self?.targetPlaceData = placeData
+            self?.finishFetchingData()
         }
     }
 }

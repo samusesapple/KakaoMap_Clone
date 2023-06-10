@@ -84,9 +84,6 @@ class SearchResultTableViewCell: UITableViewCell {
         placeCategoryLabel.text = nil
         distanceLabel.text = nil
         addressLabel.text = nil
-//        reviewView.reviewAveragePointLabel.text = "리뷰 없음"
-//        reviewView.reviewStars.text = "☆☆☆☆☆"
-//        reviewView.totalReviewCountLabel.text = nil
     }
     
     // MARK: - Helpers
@@ -122,16 +119,18 @@ class SearchResultTableViewCell: UITableViewCell {
     }
     
     func setPlaceReviewData(data: CertainPlaceData) {
-        guard let reviewCount = data.comment?.kamapComntcnt,
+        guard let reviewCount = data.comment?.scorecnt,
               let totalScore = data.comment?.scoresum,
-              let detailAddress = data.basicInfo?.address?.addrdetail,
               let placeAddress = addressLabel.text else { return }
         // 평균 별점
         let averageReviewPoint = (round((Double(totalScore) / Double(reviewCount)) * 10) / 10)
-        // 상세 주소, 평균 별점, 썸네일 이미지 세팅
-        addressLabel.text = placeAddress + " \(detailAddress)"
+        // 평균 별점, 썸네일 이미지 세팅
         reviewView.configureUI(averagePoint: averageReviewPoint, reviewCount: reviewCount)
-        
+        // 상세 주소 있는 경우 세팅
+        if let detailAddress = data.basicInfo?.address?.addrdetail {
+            addressLabel.text = placeAddress + " \(detailAddress)"
+        }
+        // 이미지 있는 경우 세팅
         guard let imageURL = data.basicInfo?.mainphotourl else { return }
         placeImageView.sd_setImage(with: URL(string: imageURL))
     }

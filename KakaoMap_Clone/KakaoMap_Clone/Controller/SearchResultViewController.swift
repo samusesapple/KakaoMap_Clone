@@ -198,6 +198,9 @@ extension SearchResultViewController: UITableViewDelegate, UITableViewDataSource
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "resultCell", for: indexPath) as! SearchResultTableViewCell
         cell.configureUIwithData(data: viewModel.searchResults[indexPath.row])
+//        viewModel.getTargetPlaceData(index: indexPath.row) { placeData in
+//            cell.setPlaceReviewData(data: placeData)
+//        }
         HttpClient.shared.getReviewForCertainPlace(placeCode: viewModel.searchResults[indexPath.row].id!) { placeData in
             DispatchQueue.main.async {
                 cell.setPlaceReviewData(data: placeData)

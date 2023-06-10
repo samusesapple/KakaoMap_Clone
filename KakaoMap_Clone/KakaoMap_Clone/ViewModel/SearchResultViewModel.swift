@@ -63,7 +63,16 @@ class SearchResultViewModel: MapDataType {
         
 // MARK: - Methods
     
-//    func getDetailResultsForCertainData
+    func getTargetPlaceData(index: Int, completion: @escaping(CertainPlaceData) -> Void) {
+        showHud()
+        guard let placeID = searchResults[index].id else { return }
+        HttpClient.shared.getReviewForCertainPlace(placeCode: placeID) { [weak self] placeData in
+            self?.dismissHud()
+            DispatchQueue.main.async {
+                completion(placeData)
+            }
+        }
+    }
     
     /// 검색 히스토리 추가
     func updateNewTappedHistory(location: KeywordDocument) {
