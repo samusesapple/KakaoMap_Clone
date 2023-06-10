@@ -36,6 +36,9 @@ final class MenuViewController: UIViewController {
         setMenuViewButtonActions()
         
         view.addGestureRecognizer(UIPanGestureRecognizer(target: self, action: #selector(menuViewStartedSwiping)))
+        
+//        viewModel.logoutForTesting()
+        checkUserLoginStatusAndConfigureUI()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -56,22 +59,16 @@ final class MenuViewController: UIViewController {
     
     // MARK: - Actions
     
+
+    
     // 유저 로그인 한 경우 view 세팅
     @objc private func userDidLogIn(_ notification: Notification) {
         print("userDidLogIn - MenuVC 감지함")
         guard let userInfo = notification.object as? [String: Any],
               let name = userInfo["userName"] as? String,
-              let profileImageURL = userInfo["profileImageURL"] as? URL,
-              let isKakaoLogin = userInfo["isKakaoLogin"] as? Bool else { return }
-        
-        if isKakaoLogin {
-            print("MenuVC 옵저버 - 카카오 로그인 감지 완료")
-            menuView.userLoginButton.setTitle("카카오계정 로그아웃", for: .normal)
-            menuView.configureUIwithUserData(imageURL: profileImageURL, name: name)
-            return
-        }
-        menuView.userLoginButton.setTitle("로그아웃", for: .normal)
-        menuView.configureUIwithUserData(imageURL: profileImageURL, name: name)
+              let profileImageURL = userInfo["profileImageURL"] as? URL else { return }
+            
+        configureMenuUIwithKakaoLoginStatus(name: name, imageURL: profileImageURL)
     }
     
     @objc private func userDidLogout(_ notification: Notification) {
@@ -88,15 +85,13 @@ final class MenuViewController: UIViewController {
     }
     
     @objc private func loginButtonTapped() {
-        // 로그인 상태인 경우, 로그아웃
-        guard menuView.userLoginButton.titleLabel?.text == "로그인" else {
-            viewModel.logout()
-            return
+        // 로그아웃 불가능한 경우, 로그인
+        viewModel.logout {
+            let alertVC = LoginAlertViewController()
+            alertVC.modalPresentationStyle = UIModalPresentationStyle.overCurrentContext
+            alertVC.modalTransitionStyle = UIModalTransitionStyle.crossDissolve
+            self.present(alertVC, animated: true)
         }
-        let alertVC = LoginAlertViewController()
-        alertVC.modalPresentationStyle = UIModalPresentationStyle.overCurrentContext
-        alertVC.modalTransitionStyle = UIModalTransitionStyle.crossDissolve
-        self.present(alertVC, animated: true)
     }
     
     @objc private func menuViewStartedSwiping(sender: UIPanGestureRecognizer) {
@@ -140,11 +135,31 @@ final class MenuViewController: UIViewController {
         }
     }
     
+    /// 유저 로그인 여부 확인 후, 로그인 상태인 경우 UI 세팅
+    private func checkUserLoginStatusAndConfigureUI() {
+        guard let userData = viewModel.checkUserLoginStatus() else { return }
+        
+        print("유저 로그인 된 상태")
+        configureMenuUIwithKakaoLoginStatus(name: userData.name, imageURL: userData.imageURL)
+    }
+    
     private func setMenuViewButtonActions() {
         menuView.checkReviewButton.addTarget(self, action: #selector(reviewButtonTapped), for: .touchUpInside)
         menuView.favoritePlaceButton.addTarget(self, action: #selector(favoritesButtonTapped), for: .touchUpInside)
         menuView.userLoginButton.addTarget(self, action: #selector(loginButtonTapped), for: .touchUpInside)
     }
     
-
+    /// 카카오 로그인 여부에 따라 다른 UI 세팅하기
+    private func configureMenuUIwithKakaoLoginStatus(name: String, imageURL: URL) {
+        guard let isKakaoLogin = UserDefaultsManager.shared.isKakaoLogin() else { return }
+        if isKakaoLogin {
+            print("카카오로 세팅")
+            menuView.userLoginButton.setTitle("카카오계정 로그아웃", for: .normal)
+            menuView.configureUIwithUserData(imageURL: imageURL, name: name)
+            return
+        }
+        print("구글로 세팅")
+        menuView.userLoginButton.setTitle("로그아웃", for: .normal)
+        menuView.configureUIwithUserData(imageURL: imageURL, name: name)
+    }
 }

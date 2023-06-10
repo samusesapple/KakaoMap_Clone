@@ -54,7 +54,7 @@ struct AuthService {
     }
     
     /// 구글 로그인 및 UserDefaults에 유저 정보 저장
-    static func handleGoogleSignIn(result: GIDSignInResult?, completion: @escaping (URL) -> Void) {
+    static func handleGoogleSignIn(result: GIDSignInResult?, completion: @escaping (URL, String) -> Void) {
                 guard let user = result?.user,
                       let idToken = user.idToken?.tokenString
                 else {
@@ -64,11 +64,11 @@ struct AuthService {
                 let credential = GoogleAuthProvider.credential(withIDToken: idToken,
                                                                accessToken: user.accessToken.tokenString)
                 guard let email = user.profile?.email,
-                      let userName = user.profile?.name else { return }
+                      let userName = user.profile?.givenName else { return }
             
         FirebaseAuth.Auth.auth().signIn(with: credential) { result, error in
             guard let userUID = result?.user.uid,
-                  let photoURL = result?.user.photoURL,
+                  let imageURL = result?.user.photoURL,
                     error == nil else {
                 print("GOOGLE - credential error")
                 return
@@ -83,11 +83,8 @@ struct AuthService {
                     print(error!)
                     return
                 }
-                UserDefaultsManager.shared.setUserInfo(nickName: userName,
-                                                       email: email,
-                                                       uid: userUID,
-                                                       isKakaoLogin: false)
-                completion(photoURL)
+                
+                completion(imageURL, userUID)
             }
         }
     }

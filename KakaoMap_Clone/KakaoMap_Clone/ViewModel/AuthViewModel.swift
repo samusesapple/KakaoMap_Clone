@@ -44,8 +44,13 @@ class AuthViewModel {
     }
     
     /// 로그아웃 하기
-    func logout() {
-        if UserDefaultsManager.shared.isKakaoLogin() {
+    func logout(login: () -> Void) {
+        guard let isKakaoLogin = UserDefaultsManager.shared.isKakaoLogin() else {
+            login()
+            return
+        }
+                
+        if isKakaoLogin {
             UserApi.shared.logout { [weak self] error in
                 if let _ = error {
                     print("로그아웃 실패")
@@ -59,6 +64,30 @@ class AuthViewModel {
             self.handleLogout()
             print("구글 로그아웃 완료")
         }
+        return
+    }
+    
+    func logoutForTesting() {
+        GIDSignIn.sharedInstance.signOut()
+        self.handleLogout()
+        print("테스트 - 완료")
+        
+        UserApi.shared.logout { error in
+            if let _ = error {
+                print("테스트 - 로그아웃 실패")
+                return
+            }
+            print("테스트 - 카카오톡 로그아웃 완료")
+        }
+    }
+    
+    /// 유저 로그인 여부 확인 후, 유저 UserDefaults에 저장된 유저 정보 제공 (이메일, 이름, uid, 카카오 로그인 여부)
+     func checkUserLoginStatus() -> UserDefaultsModel? {
+        guard let user = FirebaseAuth.Auth.auth().currentUser else {
+            print("유저 로그인 안됨")
+            return nil
+        }
+        return UserDefaultsManager.shared.getUserInfo()
     }
     
 // MARK: - Helpers
@@ -69,6 +98,7 @@ class AuthViewModel {
                   let email = user.kakaoAccount?.email,
                   let nickName = user.kakaoAccount?.profile?.nickname,
                   let password = user.id,
+                  let imageURL = user.kakaoAccount?.profile?.profileImageUrl,
                   error == nil else {
                 print(error!)
                 return
@@ -84,6 +114,7 @@ class AuthViewModel {
             AuthService.logUserIn(withEmail: email, password: String(password)) { result, error in
                 guard let result = result,
                       let email = result.user.email,
+                      let imageURL = user.kakaoAccount?.profile?.profileImageUrl,
                       error == nil else {
                     print("새로운 유저 회원가입 필요")
                     AuthService.registerUser(userInfo: kakaoAuthCredentials) { userUID in
@@ -92,11 +123,12 @@ class AuthViewModel {
                         UserDefaultsManager.shared.setUserInfo(nickName: nickName,
                                                                email: email,
                                                                uid: userUID,
-                                                               isKakaoLogin: true)
+                                                               isKakaoLogin: true,
+                                                               imageURL: "\(imageURL)")
                         
                         NotificationManager.postloginNotification(name: nickName,
                                                                   userEmail: email,
-                                                                  profileImageURL: user.kakaoAccount?.profile?.profileImageUrl,
+                                                                  profileImageURL: imageURL,
                                                                   isKakaoLogin: true)
                         self?.finishedLogin()
                     }
@@ -106,18 +138,19 @@ class AuthViewModel {
                 UserDefaultsManager.shared.setUserInfo(nickName: nickName,
                                                        email: email,
                                                        uid: result.user.uid,
-                                                       isKakaoLogin: true)
+                                                       isKakaoLogin: true,
+                                                       imageURL: "\(imageURL)")
                 
                 NotificationManager.postloginNotification(name: nickName,
                                                           userEmail: email,
-                                                          profileImageURL: user.kakaoAccount?.profile?.profileImageUrl,
+                                                          profileImageURL: imageURL,
                                                           isKakaoLogin: true)
                 self?.finishedLogin()
             }
         }
     }
     
-    /// 구글 로그인, 유저 정보 Firestore에 저장, NotificationCenter에 구글 로그인 된 것 알리기
+    /// 구글 로그인, 유저 정보 Firestore와 UserDefaults에 저장, NotificationCenter에 구글 로그인 된 것 알리기
     private func handleGoogleLogin(presenter: UIViewController) {
         GIDSignIn.sharedInstance.signIn(withPresenting: presenter) { [weak self] result, error in
             guard error == nil else {
@@ -126,12 +159,18 @@ class AuthViewModel {
             }
             self?.startLogin()
             
-            AuthService.handleGoogleSignIn(result: result) { profileURL in
-                guard let name = result?.user.profile?.name,
+            AuthService.handleGoogleSignIn(result: result) { profileURL, userUID in
+                guard let name = result?.user.profile?.givenName,
                       let email = result?.user.profile?.email else {
                     print(#function)
                     return
                 }
+                
+                UserDefaultsManager.shared.setUserInfo(nickName: name,
+                                                       email: email,
+                                                       uid: userUID,
+                                                       isKakaoLogin: false,
+                                                       imageURL: "\(profileURL)")
                 // 노티피케이션 센터에 로그인 됨 알리기
                 NotificationManager.postloginNotification(name: name,
                                                           userEmail: email,
