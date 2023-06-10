@@ -46,6 +46,26 @@ class HttpClient {
         ]
     }
     
+    /// 지정된 위치에 해당하는 카카오맵 데이터 크롤링하기
+    func getReviewForCertainPlace(placeCode: String, completion: @escaping (CertainPlaceData) -> Void) {
+        let url = "https://place.map.kakao.com/main/v/" + placeCode
+        AF.request(url,
+                   method: .get,
+                   encoding: URLEncoding.default)
+        .responseDecodable(of: CertainPlaceData.self) { response in
+            let result = response.result
+            switch result {
+            case .success(let results):
+                print("해당 위치 정보 가져오기 성공")
+                completion(results)
+                return
+            case .failure(let error):
+                print("해당 위치 정보 가져오기 실패")
+                print(error)
+            }
+        }
+    }
+    
     /// 주소로 검색하기 (건물명, 도로명, 지번, 우편번호 및 좌표)
     func getLocationAddress(coordinate: Coordinate, completion: @escaping (CurrentAddressResult) -> Void) {
         let url = host + "geo/coord2regioncode.json"

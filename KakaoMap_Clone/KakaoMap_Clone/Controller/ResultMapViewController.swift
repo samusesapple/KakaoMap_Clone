@@ -129,8 +129,6 @@ final class ResultMapViewController: UIViewController, CLLocationManagerDelegate
     
     override func viewDidLoad() {
         super.viewDidLoad()
-//        view.backgroundColor = .gray
-        
         setAutolayout()
         setActions()
         setSearchBarAndAlignmentButtons()
@@ -162,6 +160,10 @@ final class ResultMapViewController: UIViewController, CLLocationManagerDelegate
                                                                             y: 0)
                 }
             }
+        }
+        
+        viewModel.needToSetTargetPlaceUI = { [weak self] in
+                self?.configureUIwithDetailedData()
         }
     }
     
@@ -261,6 +263,19 @@ final class ResultMapViewController: UIViewController, CLLocationManagerDelegate
         distanceLabel.text = MeasureFormatter.measureDistance(distance: distance)
     }
     
+    private func configureUIwithDetailedData() {
+        guard let data = viewModel.targetPlaceData,
+              let reviewCount = data.comment?.kamapComntcnt,
+              let totalScore = data.comment?.scoresum,
+              let detailAddress = data.basicInfo?.address?.addrdetail,
+              let placeAddress = addressLabel.text else { return }
+        // 평균 별점
+        let averageReviewPoint = (round((Double(totalScore) / Double(reviewCount)) * 10) / 10)
+        // 상세 주소, 평균 별점, 썸네일 이미지 세팅
+        addressLabel.text = placeAddress + " \(detailAddress)"
+        reviewView.configureUI(averagePoint: averageReviewPoint, reviewCount: reviewCount)
+    }
+    
     private func setAutolayout() {
         view.addSubview(headerContainerView)
         headerContainerView.anchor(top: view.topAnchor, left: view.leftAnchor, right: view.rightAnchor, height: 46 + 46 + 60)
@@ -343,7 +358,11 @@ extension ResultMapViewController: MTMapViewDelegate {
     
     func mapView(_ mapView: MTMapView!, selectedPOIItem poiItem: MTMapPOIItem!) -> Bool {
         let targetPlace = viewModel.filterResults(with: poiItem.tag)
-        configureUIwithData(place: targetPlace)
+        print("선택된 위치 장소 코드 : \(poiItem.tag)")
+        HttpClient.shared.getReviewForCertainPlace(placeCode: String(poiItem.tag)) { [weak self] placeData in
+            self?.configureUIwithData(place: targetPlace)
+            print("선택한 지도 정보도 세팅 필요")
+        }
         return false
     }
     

@@ -19,9 +19,11 @@ class SearchResultViewModel: MapDataType {
     var mapAddress: String
     
     var searchResults: [KeywordDocument]
-    
+        
     var searchHistories: [SearchHistory]? = []
     
+    var targetPlaceData: CertainPlaceData?
+
     private var selectedPlace: KeywordDocument?
     
     private var page: Int = 1
@@ -60,6 +62,8 @@ class SearchResultViewModel: MapDataType {
     }
         
 // MARK: - Methods
+    
+//    func getDetailResultsForCertainData
     
     /// 검색 히스토리 추가
     func updateNewTappedHistory(location: KeywordDocument) {
@@ -170,4 +174,5 @@ class SearchResultViewModel: MapDataType {
         resultMapVC.viewModel.targetPlace = targetPlace
         return resultMapVC
     }
+    
 }

@@ -11,15 +11,15 @@ class ReviewStarView: UIView {
 
     let reviewAveragePointLabel: UILabel = {
         let label = UILabel()
-        label.text = "3.5"
+//        label.text = "3.5"
         label.textColor = #colorLiteral(red: 0.8392156863, green: 0.1882352941, blue: 0.1921568627, alpha: 1)
         label.font = UIFont.systemFont(ofSize: 13)
         return label
     }()
     
-    let reviewStarts: UILabel = {
+    let reviewStars: UILabel = {
         let label = UILabel()
-        label.text = "★★★☆☆"
+        label.text = "☆☆☆☆☆"
         label.textColor = #colorLiteral(red: 0.8392156863, green: 0.1882352941, blue: 0.1921568627, alpha: 1)
         label.font = UIFont.systemFont(ofSize: 13)
         return label
@@ -27,7 +27,7 @@ class ReviewStarView: UIView {
     
     let totalReviewCountLabel: UILabel = {
         let label = UILabel()
-        label.text = "(39)"
+//        label.text = "(39)"
         label.font = UIFont.systemFont(ofSize: 13)
         label.textColor = .lightGray
         return label
@@ -46,14 +46,31 @@ class ReviewStarView: UIView {
     
     // MARK: - Helpers
     
-    func setAutolayout() {
+    private func setAutolayout() {
         addSubview(reviewAveragePointLabel)
         reviewAveragePointLabel.anchor(top: self.topAnchor, left: self.leftAnchor, bottom: self.bottomAnchor)
         
-        addSubview(reviewStarts)
-        reviewStarts.anchor(top: self.topAnchor, left: reviewAveragePointLabel.rightAnchor, bottom: self.bottomAnchor, paddingLeft: 4)
+        addSubview(reviewStars)
+        reviewStars.anchor(top: self.topAnchor, left: reviewAveragePointLabel.rightAnchor, bottom: self.bottomAnchor, paddingLeft: 4)
         
         addSubview(totalReviewCountLabel)
-        totalReviewCountLabel.anchor(top: self.topAnchor, left: reviewStarts.rightAnchor, bottom: self.bottomAnchor, paddingLeft: 4)
+        totalReviewCountLabel.anchor(top: self.topAnchor, left: reviewStars.rightAnchor, bottom: self.bottomAnchor, paddingLeft: 4)
+    }
+    
+    func configureUI(averagePoint: Double, reviewCount: Int) {
+        reviewAveragePointLabel.text = String(averagePoint)
+        totalReviewCountLabel.text = "(\(reviewCount))"
+        guard let reviewStarText = reviewStars.text else { return }
+        let averagePointInt = Int(averagePoint)
+        
+        var stringArray = reviewStarText.map { String($0) }
+        
+        print(stringArray.count)
+        for index in 0...averagePointInt-1 {
+            stringArray[index] = "★"
+        }
+        
+        let finalString = stringArray.joined()
+        reviewStars.text = finalString
     }
 }

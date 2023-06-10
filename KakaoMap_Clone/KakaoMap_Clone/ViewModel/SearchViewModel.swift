@@ -8,6 +8,7 @@
 import UIKit
 
 class SearchViewModel: MapDataType {
+    
 // MARK: - Stored Properties
     
     var keyword: String? {
@@ -30,6 +31,8 @@ class SearchViewModel: MapDataType {
         }
     }
     
+    var targetPlaceData: CertainPlaceData?
+
     var searchHistories: [SearchHistory]?
 
     private let searchOptions: [SearchOption] = {[

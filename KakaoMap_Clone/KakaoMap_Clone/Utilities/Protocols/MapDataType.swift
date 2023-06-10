@@ -15,7 +15,9 @@ protocol MapDataType {
     var mapAddress: String { get set }
     
     var searchResults: [KeywordDocument] { get set }
-
+    
+    var targetPlaceData: CertainPlaceData? { get set }
+    
     var searchHistories: [SearchHistory]? { get set }
     
     func checkIfDuplicatedHistoryExists(newHistory: SearchHistory) -> [SearchHistory]?

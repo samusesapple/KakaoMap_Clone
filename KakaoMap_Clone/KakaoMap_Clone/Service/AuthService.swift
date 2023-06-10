@@ -90,7 +90,7 @@ struct AuthService {
     }
     
     /// 카카오 로그인인 경우 기존의 이메일에 카카오 표식 붙여서 이메일 중복 방지
-    private static func kakaoEmail(email: String) -> String {
+    static func kakaoEmail(email: String) -> String {
         return "kakao_" + email
     }
 }

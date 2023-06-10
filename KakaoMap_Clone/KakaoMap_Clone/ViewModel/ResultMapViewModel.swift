@@ -19,7 +19,17 @@ class ResultMapViewModel: MapDataType {
     var searchResults: [KeywordDocument]
     var searchHistories: [SearchHistory]?
     
-    private var selectedPlace: KeywordDocument?
+    private var selectedPlace: KeywordDocument? {
+        didSet {
+            setTargetPlaceData()
+        }
+    }
+    
+    var targetPlaceData: CertainPlaceData? {
+        didSet {
+            needToSetTargetPlaceUI()
+        }
+    }
     
     private var page: Int = 1
     private var loading: Bool = false
@@ -52,6 +62,8 @@ class ResultMapViewModel: MapDataType {
     
     /// header footer view 화면에 보이지 않도록 애니메이션 효과 주기
     var needToHideHeaderAndFooterView = { }
+    
+    var needToSetTargetPlaceUI = { }
     
 // MARK: - Initializer
     
@@ -90,5 +102,11 @@ class ResultMapViewModel: MapDataType {
                 completion(guides)
         }
     }
-    
+ 
+    private func setTargetPlaceData() {
+        guard let placeId = self.targetPlace?.id else { return }
+        HttpClient.shared.getReviewForCertainPlace(placeCode: placeId) { [weak self] placeData in
+            self?.targetPlaceData = placeData
+        }
+    }
 }

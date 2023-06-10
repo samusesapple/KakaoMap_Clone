@@ -67,6 +67,7 @@ class AuthViewModel {
         return
     }
     
+    /// 테스트용 로그아웃
     func logoutForTesting() {
         GIDSignIn.sharedInstance.signOut()
         self.handleLogout()
@@ -119,32 +120,23 @@ class AuthViewModel {
                     print("새로운 유저 회원가입 필요")
                     AuthService.registerUser(userInfo: kakaoAuthCredentials) { userUID in
                         
-                        // UserDefaults에 로그인 된 유저 정보 저장 - 카카오 이메일이 아닌 기존의 이메일 저장하기
-                        UserDefaultsManager.shared.setUserInfo(nickName: nickName,
-                                                               email: email,
-                                                               uid: userUID,
-                                                               isKakaoLogin: true,
-                                                               imageURL: "\(imageURL)")
-                        
-                        NotificationManager.postloginNotification(name: nickName,
-                                                                  userEmail: email,
-                                                                  profileImageURL: imageURL,
-                                                                  isKakaoLogin: true)
+                        // UserDefaults에 로그인 된 유저 정보 저장 - 카카오 이메일 형태로 저장
+                        self?.postNotificationAndSaveUserDefault(name: nickName,
+                                                           email: AuthService.kakaoEmail(email: email),
+                                                           uid: userUID,
+                                                           isKakaoLogin: true,
+                                                           profileImageURL: imageURL)
                         self?.finishedLogin()
                     }
                     return
                 }
                 print("기존 존재하는 유저로 로그인하기")
-                UserDefaultsManager.shared.setUserInfo(nickName: nickName,
-                                                       email: email,
-                                                       uid: result.user.uid,
-                                                       isKakaoLogin: true,
-                                                       imageURL: "\(imageURL)")
                 
-                NotificationManager.postloginNotification(name: nickName,
-                                                          userEmail: email,
-                                                          profileImageURL: imageURL,
-                                                          isKakaoLogin: true)
+                self?.postNotificationAndSaveUserDefault(name: nickName,
+                                                   email: AuthService.kakaoEmail(email: email),
+                                                   uid: result.user.uid,
+                                                   isKakaoLogin: true,
+                                                   profileImageURL: imageURL)
                 self?.finishedLogin()
             }
         }
@@ -165,17 +157,11 @@ class AuthViewModel {
                     print(#function)
                     return
                 }
-                
-                UserDefaultsManager.shared.setUserInfo(nickName: name,
-                                                       email: email,
-                                                       uid: userUID,
-                                                       isKakaoLogin: false,
-                                                       imageURL: "\(profileURL)")
-                // 노티피케이션 센터에 로그인 됨 알리기
-                NotificationManager.postloginNotification(name: name,
-                                                          userEmail: email,
-                                                          profileImageURL: profileURL,
-                                                          isKakaoLogin: false)
+                self?.postNotificationAndSaveUserDefault(name: name,
+                                                   email: email,
+                                                   uid: userUID,
+                                                   isKakaoLogin: false,
+                                                   profileImageURL: profileURL)
                 print("구글 로그인 완료")
                 self?.finishedLogin()
             }
@@ -188,5 +174,19 @@ class AuthViewModel {
         UserDefaultsManager.shared.removeUserInfo()
         // 로그아웃 상태 노티피케이션 post 하기
         NotificationManager.postLogoutNotification()
+    }
+    
+    /// UserDefaults에 유저 정보 세팅 & NotificationCenter에 로그인 된 것 알리기
+    private func postNotificationAndSaveUserDefault(name: String, email: String, uid: String, isKakaoLogin: Bool, profileImageURL: URL) {
+        UserDefaultsManager.shared.setUserInfo(nickName: name,
+                                               email: email,
+                                               uid: uid,
+                                               isKakaoLogin: isKakaoLogin,
+                                               imageURL: "\(profileImageURL)")
+        // 노티피케이션 센터에 로그인 됨 알리기
+        NotificationManager.postloginNotification(name: name,
+                                                  userEmail: email,
+                                                  profileImageURL: profileImageURL,
+                                                  isKakaoLogin: isKakaoLogin)
     }
 }

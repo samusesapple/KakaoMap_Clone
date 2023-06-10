@@ -198,6 +198,12 @@ extension SearchResultViewController: UITableViewDelegate, UITableViewDataSource
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "resultCell", for: indexPath) as! SearchResultTableViewCell
         cell.configureUIwithData(data: viewModel.searchResults[indexPath.row])
+        HttpClient.shared.getReviewForCertainPlace(placeCode: viewModel.searchResults[indexPath.row].id!) { placeData in
+            DispatchQueue.main.async {
+                cell.setPlaceReviewData(data: placeData)
+                print("셀 크롤링한 데이터로 세팅 완료")
+            }
+        }
         return cell
     }
     
@@ -235,7 +241,6 @@ extension SearchResultViewController: ResultMapViewControllerDelegate {
     func needToShowMainVC() {
         cancelButtonTapped()
     }
-    
 }
 
 // MARK: - CustomAlignmentAlertViewControllerDelegate
