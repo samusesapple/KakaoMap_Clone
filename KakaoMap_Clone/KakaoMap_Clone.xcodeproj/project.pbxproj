@@ -37,6 +37,7 @@
 		F1DB313C2A32F9EE00B6D513 /* AuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1DB313B2A32F9EE00B6D513 /* AuthService.swift */; };
 		F1DB31402A3308CC00B6D513 /* UserDefaultsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1DB313F2A3308CC00B6D513 /* UserDefaultsManager.swift */; };
 		F1DB31422A33208600B6D513 /* AuthViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1DB31412A33208600B6D513 /* AuthViewModel.swift */; };
+		F1DB31492A341FFF00B6D513 /* credentials.plist in Resources */ = {isa = PBXBuildFile; fileRef = F1DB31482A341FFF00B6D513 /* credentials.plist */; };
 		F1EBC3182A22FAA10043CC46 /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1EBC3172A22FAA10043CC46 /* DetailViewController.swift */; };
 		F1EBC31C2A2311870043CC46 /* MeasureFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1EBC31B2A2311870043CC46 /* MeasureFormatter.swift */; };
 		F1EBC31E2A232BB50043CC46 /* DestinationResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1EBC31D2A232BB50043CC46 /* DestinationResult.swift */; };
@@ -121,6 +122,7 @@
 		F1DB313B2A32F9EE00B6D513 /* AuthService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthService.swift; sourceTree = "<group>"; };
 		F1DB313F2A3308CC00B6D513 /* UserDefaultsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsManager.swift; sourceTree = "<group>"; };
 		F1DB31412A33208600B6D513 /* AuthViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthViewModel.swift; sourceTree = "<group>"; };
+		F1DB31482A341FFF00B6D513 /* credentials.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = credentials.plist; sourceTree = "<group>"; };
 		F1EBC3172A22FAA10043CC46 /* DetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewController.swift; sourceTree = "<group>"; };
 		F1EBC31B2A2311870043CC46 /* MeasureFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeasureFormatter.swift; sourceTree = "<group>"; };
 		F1EBC31D2A232BB50043CC46 /* DestinationResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DestinationResult.swift; sourceTree = "<group>"; };
@@ -272,6 +274,7 @@
 				F1F212E72A19F74C000443AB /* Controller */,
 				F1F212E22A19DD91000443AB /* Utilities */,
 				F1F211362A19CC77000443AB /* Assets.xcassets */,
+				F1DB31482A341FFF00B6D513 /* credentials.plist */,
 				F1DB31372A32EC3D00B6D513 /* GoogleService-Info.plist */,
 				F1F2113B2A19CC77000443AB /* Info.plist */,
 				F1F2125B2A19D914000443AB /* KakaoMap-Bridge-Header.h */,
@@ -507,6 +510,7 @@
 				F1F212CA2A19D9E1000443AB /* detail_button.png in Resources */,
 				F1F212DD2A19D9E1000443AB /* noimage.png in Resources */,
 				F1F212CF2A19D9E1000443AB /* th_line.png in Resources */,
+				F1DB31492A341FFF00B6D513 /* credentials.plist in Resources */,
 				F1F212D82A19D9E1000443AB /* info_box_tail.png in Resources */,
 				F1F212C72A19D9E1000443AB /* map_pin_custom.png in Resources */,
 				F1F212D72A19D9E1000443AB /* map_pinup_custom.png in Resources */,

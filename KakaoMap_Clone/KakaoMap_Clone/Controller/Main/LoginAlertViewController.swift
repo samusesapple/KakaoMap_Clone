@@ -114,7 +114,12 @@ final class LoginAlertViewController: UIViewController {
     @objc private func kakaoLoginButtonTapped() {
         // 로그인 안 된 경우 -> 로그인
         viewModel.kakaotalkLogin()
-        print("카카오 로그인 구현하기")
+        print("카카오 로그인")
+    }
+    
+    @objc private func googleLoginButtonTapped() {
+        viewModel.googleLogin(presenter: self)
+        print("구글 로그인")
     }
     
     // MARK: - Helpers
@@ -142,6 +147,7 @@ final class LoginAlertViewController: UIViewController {
     private func setButtonActions() {
         cancelButton.addTarget(self, action: #selector(cancelButtonTapped), for: .touchUpInside)
         kakaoLoginButton.addTarget(self, action: #selector(kakaoLoginButtonTapped), for: .touchUpInside)
+        googleLoginButton.addTarget(self, action: #selector(googleLoginButtonTapped), for: .touchUpInside)
     }
     
 

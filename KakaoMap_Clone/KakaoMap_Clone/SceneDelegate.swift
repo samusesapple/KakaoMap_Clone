@@ -7,6 +7,7 @@
 
 import UIKit
 import KakaoSDKAuth
+import GoogleSignIn
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
@@ -30,6 +31,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                 _ = AuthController.handleOpenUrl(url: url)
             }
         }
+        guard let googleURL = URLContexts.first?.url else { return }
+        let _ = GIDSignIn.sharedInstance.handle(googleURL)
     }
     
     func sceneDidDisconnect(_ scene: UIScene) {

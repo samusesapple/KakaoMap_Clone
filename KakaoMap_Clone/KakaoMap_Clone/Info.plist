@@ -7,12 +7,23 @@
 		<dict>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>kakaotalk_auth</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
 				<string>kakao77e5990e107cbfe81c5db9c7d4f7fd67</string>
 			</array>
 		</dict>
-		<dict/>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>google_auth</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.googleusercontent.apps.275753076919-lid55nelj3eqje3evgmp8pmga68uovvl</string>
+			</array>
+		</dict>
 	</array>
 	<key>KAKAO_APP_KEY</key>
 	<string>77e5990e107cbfe81c5db9c7d4f7fd67</string>

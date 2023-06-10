@@ -93,7 +93,7 @@ final class MainViewController: UIViewController {
     }
     
     @objc private func searchBarTapped() {
-        guard let location = LocationManager.shared.location  else {
+        guard let location = LocationManager.shared.location else {
             print("위치 정보 없음")
             return
         }
@@ -144,7 +144,7 @@ final class MainViewController: UIViewController {
         
         DispatchQueue.global(qos: .background).async { [weak self] in
             self?.mapView.currentLocationTrackingMode = .onWithoutHeading
-            guard let coordinate = LocationManager.shared.location?.coordinate
+            guard LocationManager.shared.location?.coordinate != nil
                 else {
                 print("location update 아직 안된 상태")
                 return
@@ -159,7 +159,6 @@ final class MainViewController: UIViewController {
         menuVC.didMove(toParent: self)
         // menuVC 숨기기
         menuVC.view.transform = CGAffineTransform(translationX: -menuVC.view.frame.width, y: 0)
-        
     }
     
     // 사용자의 환경설정 - 위치 허용으로 안내
@@ -190,7 +189,7 @@ extension MainViewController: CLLocationManagerDelegate {
             LocationManager.shared.startUpdatingLocation()
             DispatchQueue.global(qos: .background).async { [weak self] in
                 self?.mapView.showCurrentLocationMarker = true
-                self?.mapView.currentLocationTrackingMode = .onWithHeading
+                self?.mapView.currentLocationTrackingMode = .onWithoutHeading
                 self?.mapView.showCurrentLocationMarker = true
                 DispatchQueue.main.async {
                     self?.mapView.setMapCenter(MTMapPoint(geoCoord: MTMapPointGeo(latitude: LocationManager.shared.location?.coordinate.latitude ?? 37.576568, longitude: LocationManager.shared.location?.coordinate.longitude ?? 127.029148)), animated: true)
@@ -210,11 +209,11 @@ extension MainViewController: CLLocationManagerDelegate {
     }
     
     // 위치 업데이트 된 경우 실행
-    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        let currentLocation: CLLocation = locations[locations.count-1]
-        mapView.setMapCenter(MTMapPoint(geoCoord: MTMapPointGeo(latitude: currentLocation.coordinate.latitude,
-                                                                longitude: currentLocation.coordinate.latitude)), animated: true)
-    }
+//    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+//        guard let currentLocation = locations.last else { return }
+//        mapView.setMapCenter(MTMapPoint(geoCoord: MTMapPointGeo(latitude: currentLocation.coordinate.latitude,
+//                                                                longitude: currentLocation.coordinate.latitude)), animated: true)
+//    }
     
 }
 
