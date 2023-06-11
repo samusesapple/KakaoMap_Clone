@@ -22,12 +22,12 @@ struct FirestoreManager {
         
         let uid = UserDefaultsManager.shared.getUserInfo().uid
         
-        let data = ["placeName": placeName,
-                    "placeID": placeId,
-                    "address": address,
-                    "coordinate": [
-                        "longtitude": longtitude,
-                        "latitude": latitude
+        let data = ["placeName": placeName, // 장소명
+                    "placeID": placeId, // 장소 고유 id
+                    "address": address, // 도로명 주소
+                    "coordinate": [     // 해당 장소의 위치 좌표
+                        "longtitude": longtitude, // 위도
+                        "latitude": latitude // 경도
                     ]] as [String : Any]
         
         COLLECTION_FAVORITE.document(uid).collection("favorites").document(placeId).setData(data) { error in

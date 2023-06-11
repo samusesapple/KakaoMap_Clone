@@ -305,10 +305,12 @@ final class ResultMapViewController: UIViewController, CLLocationManagerDelegate
             self.saveButton.setImage(UIImage(named: "save")?
                 .withRenderingMode(.alwaysTemplate)
                 .resizeImage(targetSize: CGSize(width: 25, height: 25)), for: .normal)
+            self.saveButton.tintColor = .gray
         } else {
             self.saveButton.setImage(UIImage(named: "save.filled")?
                 .withRenderingMode(.alwaysTemplate)
                 .resizeImage(targetSize: CGSize(width: 25, height: 25)), for: .normal)
+            self.saveButton.tintColor = #colorLiteral(red: 0.9450980392, green: 0.768627451, blue: 0.05882352941, alpha: 1)
         }
     }
     
@@ -321,7 +323,7 @@ final class ResultMapViewController: UIViewController, CLLocationManagerDelegate
         self.saveButton.setImage(UIImage(named: "save.filled")?
             .withRenderingMode(.alwaysTemplate)
             .resizeImage(targetSize: CGSize(width: 25, height: 25)), for: .normal)
-        
+        self.saveButton.tintColor = #colorLiteral(red: 0.9450980392, green: 0.768627451, blue: 0.05882352941, alpha: 1)
         viewModel.changeFavoritePlaceStatus()
     }
     
