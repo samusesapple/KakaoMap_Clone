@@ -78,7 +78,7 @@ final class ResultMapViewController: UIViewController, CLLocationManagerDelegate
         let view = UIView()
         view.backgroundColor = .white
         view.setupShadow(opacity: 0.3, radius: 1.5, offset: CGSize(width: 0, height: -2.0), color: .black)
-        [placeNameLabel, placeCategoryLabel, reviewView, addressLabel, navigationButton, distanceLabel].forEach { view.addSubview($0) }
+        [placeNameLabel, placeCategoryLabel, reviewView, addressLabel, navigationButton, distanceLabel, buttonStackView].forEach { view.addSubview($0) }
         return view
     }()
     
@@ -119,6 +119,41 @@ final class ResultMapViewController: UIViewController, CLLocationManagerDelegate
         label.font = UIFont.systemFont(ofSize: 13, weight: .medium)
         label.textColor = #colorLiteral(red: 0.03529411765, green: 0.5176470588, blue: 0.8901960784, alpha: 1)
         return label
+    }()
+    
+    private let saveButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setImage(UIImage(named: "save")?
+            .withRenderingMode(.alwaysTemplate)
+            .resizeImage(targetSize: CGSize(width: 25, height: 25)), for: .normal)
+        button.tintColor = .gray
+        return button
+    }()
+    
+    private let phoneCallButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setImage(UIImage(named: "phone")?
+            .withRenderingMode(.alwaysTemplate)
+            .resizeImage(targetSize: CGSize(width: 30, height: 30)), for: .normal)
+        button.tintColor = .gray
+        return button
+    }()
+    
+    private lazy var buttonStackView: UIStackView = {
+        let spaceLine = UIView()
+        spaceLine.backgroundColor = .lightGray.withAlphaComponent(0.5)
+        spaceLine.setDimensions(height: 35, width: 1)
+       let sv = UIStackView(arrangedSubviews: [UIView(),
+                                               phoneCallButton,
+                                               spaceLine,
+                                               saveButton,
+                                               UIView()])
+        sv.distribution = .equalSpacing
+        sv.alignment = .center
+        sv.layer.borderWidth = 1
+        sv.layer.cornerRadius = 8
+        sv.layer.borderColor = UIColor.lightGray.withAlphaComponent(0.5).cgColor
+        return sv
     }()
     
     // MARK: - Lifecycle
@@ -249,6 +284,85 @@ final class ResultMapViewController: UIViewController, CLLocationManagerDelegate
     }
     
     // MARK: - Helpers
+    
+    private func setAutolayout() {
+        view.addSubview(headerContainerView)
+        headerContainerView.anchor(top: view.topAnchor, left: view.leftAnchor, right: view.rightAnchor, height: 46 + 46 + 60)
+        
+        searchBarView.anchor(top: headerContainerView.topAnchor, left: view.leftAnchor, right: view.rightAnchor, paddingTop: 60, paddingLeft: 15, paddingRight: 15, height: 46)
+        
+        buttonsView.anchor(top: searchBarView.bottomAnchor, left: headerContainerView.leftAnchor, right: headerContainerView.rightAnchor, paddingBottom: 10, height: 46)
+        
+        view.addSubview(footerContainerView)
+        footerContainerView.anchor(left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor, height: 190)
+        
+        placeNameLabel.anchor(top: footerContainerView.topAnchor, left: footerContainerView.leftAnchor, paddingTop: 16, paddingLeft: 16)
+        placeCategoryLabel.anchor(left: placeNameLabel.rightAnchor, bottom: placeNameLabel.bottomAnchor, paddingLeft: 5)
+        
+        reviewView.anchor(top: placeNameLabel.bottomAnchor, left: placeNameLabel.leftAnchor, paddingTop: 5, width: 100)
+        addressLabel.anchor(top: reviewView.bottomAnchor, left: placeNameLabel.leftAnchor, paddingTop: 7)
+        
+        navigationButton.anchor(top: footerContainerView.topAnchor, right: footerContainerView.rightAnchor, paddingTop: 12, paddingRight: 16, width: 50, height: 50)
+        
+        distanceLabel.anchor(top: navigationButton.bottomAnchor, paddingTop: 4)
+        distanceLabel.centerX(inView: navigationButton)
+        
+        buttonStackView.anchor(top: distanceLabel.bottomAnchor, left: footerContainerView.leftAnchor, right: footerContainerView.rightAnchor, paddingTop: 15, paddingLeft: 20, paddingRight: 20)
+    }
+    
+    private func setActions() {
+        searchBarView.getMenuButton().addTarget(self, action: #selector(listButtonTapped), for: .touchUpInside)
+        searchBarView.getSearchBar().searchTextField.addTarget(self, action: #selector(searchBarTapped), for: .editingDidBegin)
+        searchBarView.getCancelButton().addTarget(self, action: #selector(cancelButtonTapped), for: .touchUpInside)
+        
+        centerAlignmentButton.addTarget(self, action: #selector(centerAlignmentButtonTapped), for: .touchUpInside)
+        accuracyAlignmentButton.addTarget(self, action: #selector(accuracyAlignmentButtonTapped), for: .touchUpInside)
+        
+        navigationButton.addTarget(self, action: #selector(navigationButtonTapped), for: .touchUpInside)
+    }
+    
+    private func setSearchBarAndAlignmentButtons() {
+        searchBarView.getSearchBar().showsCancelButton = false
+        searchBarView.getSearchBar().text = viewModel.keyword
+        
+        if viewModel.isMapBasedData {
+            centerAlignmentButton.setTitle("지도중심 ▾", for: .normal)
+        } else {
+            centerAlignmentButton.setTitle("내위치중심 ▾", for: .normal)
+        }
+        
+        if viewModel.isAccuracyAlignment {
+            accuracyAlignmentButton.setTitle("정확도순 ▾", for: .normal)
+        } else {
+            accuracyAlignmentButton.setTitle("거리순 ▾", for: .normal)
+        }
+    }
+    
+    /// mapView 세팅 - 선택된 장소 유무에 따라 맵뷰의 중심점 세팅하기
+    private func setTargetMapView(with place: KeywordDocument?) {
+        mapView.delegate = self
+        mapView.currentLocationTrackingMode = .off
+        
+        makeMarker()
+        
+        guard let place = place,
+              let stringLon = place.x,
+              let stringLat = place.y,
+              let lon = Double(stringLon),
+              let lat = Double(stringLat),
+              let placeId = place.id,
+              let poiItems = mapView.poiItems as? [MTMapPOIItem]
+        else {
+            mapView.fitAreaToShowAllPOIItems()
+            mapView.zoomOut(animated: true)
+            return
+        }
+        mapView.setMapCenter(MTMapPoint(geoCoord: MTMapPointGeo(latitude: lat, longitude: lon)), zoomLevel: .min, animated: true)
+        
+        let targetPoi = poiItems.filter({ $0.tag == Int(placeId) })[0]
+        mapView.select(targetPoi, animated: true)
+    }
+    
     /// 장소 선택 유무에 따라 다른 UI를 띄우기
     private func checkIfTargetPlaceExists() {
         guard let targetPlace = viewModel.targetPlace else {
@@ -286,7 +400,7 @@ final class ResultMapViewController: UIViewController, CLLocationManagerDelegate
                     if let detailAddress = viewModel.targetPlaceData?.basicInfo?.address?.addrdetail {
                         self.addressLabel.text = (viewModel.targetPlace?.addressName!)! + " \(detailAddress)"
                     }
-                    reviewView.configureNoReviewUI()
+                    reviewView.configureBannedReviewUI()
                 }
             }
             print("지도뷰 \(viewModel.targetPlace?.id)- 크롤링한 데이터 세팅 실패")
@@ -301,81 +415,6 @@ final class ResultMapViewController: UIViewController, CLLocationManagerDelegate
                 self?.addressLabel.text = address + " \(detailAddress)"
             }
         }
-    }
-    
-    private func setAutolayout() {
-        view.addSubview(headerContainerView)
-        headerContainerView.anchor(top: view.topAnchor, left: view.leftAnchor, right: view.rightAnchor, height: 46 + 46 + 60)
-        
-        searchBarView.anchor(top: headerContainerView.topAnchor, left: view.leftAnchor, right: view.rightAnchor, paddingTop: 60, paddingLeft: 15, paddingRight: 15, height: 46)
-        
-        buttonsView.anchor(top: searchBarView.bottomAnchor, left: headerContainerView.leftAnchor, right: headerContainerView.rightAnchor, paddingBottom: 10, height: 46)
-        
-        view.addSubview(footerContainerView)
-        footerContainerView.anchor(left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor, height: 160)
-        
-        placeNameLabel.anchor(top: footerContainerView.topAnchor, left: footerContainerView.leftAnchor, paddingTop: 16, paddingLeft: 16)
-        placeCategoryLabel.anchor(left: placeNameLabel.rightAnchor, bottom: placeNameLabel.bottomAnchor, paddingLeft: 5)
-        
-        reviewView.anchor(top: placeNameLabel.bottomAnchor, left: placeNameLabel.leftAnchor, paddingTop: 5, width: 100)
-        addressLabel.anchor(top: reviewView.bottomAnchor, left: placeNameLabel.leftAnchor, paddingTop: 7)
-        
-        navigationButton.anchor(top: footerContainerView.topAnchor, right: footerContainerView.rightAnchor, paddingTop: 12, paddingRight: 16, width: 50, height: 50)
-        
-        distanceLabel.anchor(top: navigationButton.bottomAnchor, paddingTop: 4)
-        distanceLabel.centerX(inView: navigationButton)
-    }
-    
-    private func setActions() {
-        searchBarView.getMenuButton().addTarget(self, action: #selector(listButtonTapped), for: .touchUpInside)
-        searchBarView.getSearchBar().searchTextField.addTarget(self, action: #selector(searchBarTapped), for: .editingDidBegin)
-        searchBarView.getCancelButton().addTarget(self, action: #selector(cancelButtonTapped), for: .touchUpInside)
-        
-        centerAlignmentButton.addTarget(self, action: #selector(centerAlignmentButtonTapped), for: .touchUpInside)
-        accuracyAlignmentButton.addTarget(self, action: #selector(accuracyAlignmentButtonTapped), for: .touchUpInside)
-        
-        navigationButton.addTarget(self, action: #selector(navigationButtonTapped), for: .touchUpInside)
-    }
-    
-    private func setSearchBarAndAlignmentButtons() {
-        searchBarView.getSearchBar().showsCancelButton = false
-        searchBarView.getSearchBar().text = viewModel.keyword
-        
-        if viewModel.isMapBasedData {
-            centerAlignmentButton.setTitle("지도중심 ▾", for: .normal)
-        } else {
-            centerAlignmentButton.setTitle("내위치중심 ▾", for: .normal)
-        }
-        
-        if viewModel.isAccuracyAlignment {
-            accuracyAlignmentButton.setTitle("정확도순 ▾", for: .normal)
-        } else {
-            accuracyAlignmentButton.setTitle("거리순 ▾", for: .normal)
-        }
-    }
-    /// mapView 세팅 - 선택된 장소 유무에 따라 맵뷰의 중심점 세팅하기
-    private func setTargetMapView(with place: KeywordDocument?) {
-        mapView.delegate = self
-        mapView.currentLocationTrackingMode = .off
-        
-        makeMarker()
-        
-        guard let place = place,
-              let stringLon = place.x,
-              let stringLat = place.y,
-              let lon = Double(stringLon),
-              let lat = Double(stringLat),
-              let placeId = place.id,
-              let poiItems = mapView.poiItems as? [MTMapPOIItem]
-        else {
-            mapView.fitAreaToShowAllPOIItems()
-            mapView.zoomOut(animated: true)
-            return
-        }
-        mapView.setMapCenter(MTMapPoint(geoCoord: MTMapPointGeo(latitude: lat, longitude: lon)), zoomLevel: .min, animated: true)
-        
-        let targetPoi = poiItems.filter({ $0.tag == Int(placeId) })[0]
-        mapView.select(targetPoi, animated: true)
     }
 }
 

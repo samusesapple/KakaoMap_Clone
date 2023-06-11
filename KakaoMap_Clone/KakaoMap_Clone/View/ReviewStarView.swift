@@ -11,7 +11,6 @@ class ReviewStarView: UIView {
 
     let reviewAveragePointLabel: UILabel = {
         let label = UILabel()
-//        label.text = "3.5"
         label.textColor = #colorLiteral(red: 0.8392156863, green: 0.1882352941, blue: 0.1921568627, alpha: 1)
         label.font = UIFont.systemFont(ofSize: 13)
         return label
@@ -27,7 +26,6 @@ class ReviewStarView: UIView {
     
     let totalReviewCountLabel: UILabel = {
         let label = UILabel()
-//        label.text = "(39)"
         label.font = UIFont.systemFont(ofSize: 13)
         label.textColor = .lightGray
         return label
@@ -65,8 +63,12 @@ class ReviewStarView: UIView {
         
         var stringArray = reviewStarText.map { String($0) }
         
-        print(stringArray.count)
-        for index in 0...averagePointInt!-1 {
+        guard let averagePointInt = averagePointInt else {
+            configureNoReviewExistUI()
+            return
+        }
+        
+        for index in 0..<averagePointInt {
             stringArray[index] = "★"
         }
         
@@ -74,10 +76,18 @@ class ReviewStarView: UIView {
         reviewStars.text = finalString
     }
     
-    func configureNoReviewUI() {
-        reviewAveragePointLabel.text = nil
+    func configureBannedReviewUI() {
+        reviewAveragePointLabel.textColor = .gray
+        reviewAveragePointLabel.text = "리뷰 없음"
         totalReviewCountLabel.text = nil
         reviewStars.tintColor = .gray
         reviewStars.text = "후기 미제공 업체"
+    }
+    
+    func configureNoReviewExistUI() {
+        reviewAveragePointLabel.textColor = .gray
+        reviewAveragePointLabel.text = "리뷰 없음"
+        totalReviewCountLabel.text = ""
+        reviewStars.text = nil
     }
 }

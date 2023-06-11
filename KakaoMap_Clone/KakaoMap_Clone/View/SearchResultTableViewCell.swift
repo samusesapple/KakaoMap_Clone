@@ -121,7 +121,31 @@ class SearchResultTableViewCell: UITableViewCell {
     func setPlaceReviewData(data: CertainPlaceData) {
         guard let reviewCount = data.comment?.scorecnt,
               let totalScore = data.comment?.scoresum,
-              let placeAddress = addressLabel.text else { return }
+              let placeAddress = addressLabel.text else {
+            guard let reviewNotBlocked = data.comment?.reviewWriteBlocked else {
+                reviewView.configureBannedReviewUI()
+                guard let imageURL = data.basicInfo?.mainphotourl else {
+                    placeImageView.image = UIImage(named: "imagePlaceholder")
+                    return
+                }
+                placeImageView.sd_setImage(with: URL(string: imageURL))
+                return
+            }
+            if reviewNotBlocked == "NONE" {
+                reviewView.configureNoReviewExistUI()
+                guard let imageURL = data.basicInfo?.mainphotourl else {
+                    placeImageView.image = UIImage(named: "imagePlaceholder")
+                    return
+                }
+                placeImageView.sd_setImage(with: URL(string: imageURL))
+            }
+//            if data.comment!.reviewWriteBlocked == "NONE" {
+//                reviewView.configureNoReviewExistUI()
+//            } else {
+//                reviewView.configureBannedReviewUI()
+//            }
+            return
+        }
         // 평균 별점
         let averageReviewPoint = (round((Double(totalScore) / Double(reviewCount)) * 10) / 10)
         // 평균 별점, 썸네일 이미지 세팅
@@ -131,7 +155,10 @@ class SearchResultTableViewCell: UITableViewCell {
             addressLabel.text = placeAddress + " \(detailAddress)"
         }
         // 이미지 있는 경우 세팅
-        guard let imageURL = data.basicInfo?.mainphotourl else { return }
+        guard let imageURL = data.basicInfo?.mainphotourl else {
+            placeImageView.image = UIImage(named: "imagePlaceholder")
+            return
+        }
         placeImageView.sd_setImage(with: URL(string: imageURL))
     }
 }
