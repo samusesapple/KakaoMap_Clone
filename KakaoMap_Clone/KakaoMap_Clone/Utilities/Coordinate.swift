@@ -21,4 +21,5 @@ struct Coordinate {
     var totalCoordinate: String {
         return "\(longtitude),\(latitude)"
     }
+    
 }

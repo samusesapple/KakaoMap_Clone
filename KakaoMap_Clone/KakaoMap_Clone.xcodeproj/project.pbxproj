@@ -20,6 +20,8 @@
 		F1954A812A2B192100E9D0C7 /* MapDataType.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1954A802A2B192100E9D0C7 /* MapDataType.swift */; };
 		F1954A832A2C644200E9D0C7 /* MenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1954A822A2C644200E9D0C7 /* MenuView.swift */; };
 		F1954A862A2C66C500E9D0C7 /* MenuOptionsButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1954A852A2C66C500E9D0C7 /* MenuOptionsButton.swift */; };
+		F199002A2A359E880002AD2A /* FirestoreManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F19900292A359E880002AD2A /* FirestoreManager.swift */; };
+		F199002C2A35B3D70002AD2A /* FavoritePlace.swift in Sources */ = {isa = PBXBuildFile; fileRef = F199002B2A35B3D70002AD2A /* FavoritePlace.swift */; };
 		F19BA7902A1F7B1F003F348C /* UIImage+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = F19BA78F2A1F7B1F003F348C /* UIImage+Extension.swift */; };
 		F1A7C09D2A31D49400F96041 /* NotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1A7C09C2A31D49400F96041 /* NotificationManager.swift */; };
 		F1A92BA82A1F1CD800A3AA8F /* ResultMapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1A92BA72A1F1CD800A3AA8F /* ResultMapViewController.swift */; };
@@ -106,6 +108,8 @@
 		F1954A802A2B192100E9D0C7 /* MapDataType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapDataType.swift; sourceTree = "<group>"; };
 		F1954A822A2C644200E9D0C7 /* MenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuView.swift; sourceTree = "<group>"; };
 		F1954A852A2C66C500E9D0C7 /* MenuOptionsButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuOptionsButton.swift; sourceTree = "<group>"; };
+		F19900292A359E880002AD2A /* FirestoreManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirestoreManager.swift; sourceTree = "<group>"; };
+		F199002B2A35B3D70002AD2A /* FavoritePlace.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoritePlace.swift; sourceTree = "<group>"; };
 		F19BA78F2A1F7B1F003F348C /* UIImage+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Extension.swift"; sourceTree = "<group>"; };
 		F1A7C09C2A31D49400F96041 /* NotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationManager.swift; sourceTree = "<group>"; };
 		F1A92BA72A1F1CD800A3AA8F /* ResultMapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultMapViewController.swift; sourceTree = "<group>"; };
@@ -407,6 +411,7 @@
 				F1EBC31D2A232BB50043CC46 /* DestinationResult.swift */,
 				F161EF172A25CC8500ED9709 /* SearchModel.swift */,
 				F1DB314A2A34528900B6D513 /* CertainPlaceData.swift */,
+				F199002B2A35B3D70002AD2A /* FavoritePlace.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -430,6 +435,7 @@
 				F1EBC31F2A232CB50043CC46 /* LocationManager.swift */,
 				F1A7C09C2A31D49400F96041 /* NotificationManager.swift */,
 				F1DB313B2A32F9EE00B6D513 /* AuthService.swift */,
+				F19900292A359E880002AD2A /* FirestoreManager.swift */,
 				F1DB313F2A3308CC00B6D513 /* UserDefaultsManager.swift */,
 			);
 			path = Service;
@@ -588,6 +594,7 @@
 				F1F211322A19CC76000443AB /* MainViewController.swift in Sources */,
 				F1EBC3202A232CB50043CC46 /* LocationManager.swift in Sources */,
 				F1DB313A2A32F40100B6D513 /* Constant.swift in Sources */,
+				F199002C2A35B3D70002AD2A /* FavoritePlace.swift in Sources */,
 				F1B8F7602A1DCBD800D3B45E /* SearchResultTableViewCell.swift in Sources */,
 				F1DB314B2A34528900B6D513 /* CertainPlaceData.swift in Sources */,
 				F1EBC31E2A232BB50043CC46 /* DestinationResult.swift in Sources */,
@@ -609,6 +616,7 @@
 				F1B8F7622A1DD87500D3B45E /* ReviewStarView.swift in Sources */,
 				F10BA34E2A1C9D0C00CCBE9D /* SearchViewModel.swift in Sources */,
 				F1EBC31C2A2311870043CC46 /* MeasureFormatter.swift in Sources */,
+				F199002A2A359E880002AD2A /* FirestoreManager.swift in Sources */,
 				F19BA7902A1F7B1F003F348C /* UIImage+Extension.swift in Sources */,
 				F1B8F7662A1E097F00D3B45E /* CustomAlignmentAlertView.swift in Sources */,
 				F1EBC3242A2587AA0043CC46 /* MenuViewController.swift in Sources */,

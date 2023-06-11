@@ -7,7 +7,7 @@
 
 import UIKit
 
-class SearchViewModel: MapDataType {
+final class SearchViewModel: MapDataType {
     
 // MARK: - Stored Properties
     

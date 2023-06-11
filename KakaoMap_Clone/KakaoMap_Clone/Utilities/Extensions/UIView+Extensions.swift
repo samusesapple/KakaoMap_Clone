@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Toast_Swift
 
 public struct AnchoredConstraints {
     public var top, leading, bottom, trailing, width, height: NSLayoutConstraint?
@@ -125,5 +126,16 @@ extension UIView {
         layer.borderColor = UIColor.lightGray.cgColor
         layer.cornerRadius = self.frame.height / 2
         clipsToBounds = true
+    }
+    
+    func makeToast(message: String) {
+        var style = ToastStyle()
+        style.backgroundColor = .darkGray
+        style.messageColor = .white
+        
+        makeToast(message,
+                  duration: 1.0,
+                  position: .center,
+                  style: style)
     }
 }

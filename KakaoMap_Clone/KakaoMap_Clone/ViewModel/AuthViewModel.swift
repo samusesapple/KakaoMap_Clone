@@ -10,7 +10,7 @@ import KakaoSDKUser
 import FirebaseAuth
 import GoogleSignIn
 
-class AuthViewModel {
+final class AuthViewModel {
     
     var startLogin: () -> Void = { }
     

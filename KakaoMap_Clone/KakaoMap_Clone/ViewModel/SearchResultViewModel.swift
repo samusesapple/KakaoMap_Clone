@@ -7,7 +7,7 @@
 
 import Foundation
 
-class SearchResultViewModel: MapDataType {
+final class SearchResultViewModel: MapDataType {
     
 // MARK: - Stored Properties
 
@@ -66,7 +66,7 @@ class SearchResultViewModel: MapDataType {
     func getTargetPlaceData(index: Int, completion: @escaping(CertainPlaceData) -> Void) {
         showHud()
         guard let placeID = searchResults[index].id else { return }
-        HttpClient.shared.getReviewForCertainPlace(placeCode: placeID) { [weak self] placeData in
+        HttpClient.shared.getDetailDataForTargetPlace(placeCode: placeID) { [weak self] placeData in
             self?.dismissHud()
             DispatchQueue.main.async {
                 completion(placeData)

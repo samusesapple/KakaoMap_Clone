@@ -8,7 +8,7 @@
 import Foundation
 import Alamofire
 
-class HttpClient {
+final class HttpClient {
     
     static let shared = HttpClient()
     
@@ -47,7 +47,7 @@ class HttpClient {
     }
     
     /// 지정된 위치에 해당하는 카카오맵 데이터 크롤링하기
-    func getReviewForCertainPlace(placeCode: String, completion: @escaping (CertainPlaceData) -> Void) {
+    func getDetailDataForTargetPlace(placeCode: String, completion: @escaping (CertainPlaceData) -> Void) {
         let url = "https://place.map.kakao.com/main/v/" + placeCode
         AF.request(url,
                    method: .get,

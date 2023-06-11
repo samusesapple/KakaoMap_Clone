@@ -220,6 +220,10 @@ final class ResultMapViewController: UIViewController, CLLocationManagerDelegate
                                  position: .center,
                                  style: style)
         }
+        
+        viewModel.configureButtonForFavoritePlace = { [weak self] isFavoritePlace in
+            self?.configureButtonUIforFavoritePlace(isFavoritePlace)
+        }
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -295,8 +299,25 @@ final class ResultMapViewController: UIViewController, CLLocationManagerDelegate
         viewModel.headerFooterIsHidden.toggle()
     }
     
+    private func configureButtonUIforFavoritePlace(_ isFavoritePlace: Bool) {
+        if !isFavoritePlace {
+            self.saveButton.setImage(UIImage(named: "save")?
+                .withRenderingMode(.alwaysTemplate)
+                .resizeImage(targetSize: CGSize(width: 25, height: 25)), for: .normal)
+        } else {
+            self.saveButton.setImage(UIImage(named: "save.filled")?
+                .withRenderingMode(.alwaysTemplate)
+                .resizeImage(targetSize: CGSize(width: 25, height: 25)), for: .normal)
+        }
+    }
+    
     @objc private func saveButtonTapped() {
         print("Firebase에 장소 저장")
+        self.saveButton.setImage(UIImage(named: "save.filled")?
+            .withRenderingMode(.alwaysTemplate)
+            .resizeImage(targetSize: CGSize(width: 25, height: 25)), for: .normal)
+        
+        viewModel.changeFavoritePlaceStatus()
     }
     
     @objc private func phoneCallButtonTapped() {

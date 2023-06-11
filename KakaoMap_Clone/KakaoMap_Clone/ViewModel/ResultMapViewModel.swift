@@ -7,7 +7,7 @@
 
 import Foundation
 
-class ResultMapViewModel: MapDataType {
+final class ResultMapViewModel: MapDataType {
     
     var keyword: String?
     
@@ -47,6 +47,12 @@ class ResultMapViewModel: MapDataType {
         }
     }
     
+    private var isFavoritePlace: Bool = false {
+        didSet {
+            configureButtonForFavoritePlace(isFavoritePlace)
+        }
+    }
+    
 // MARK: - Computed Properties
 
     var targetPlace: KeywordDocument? {
@@ -69,6 +75,9 @@ class ResultMapViewModel: MapDataType {
     var finishFetchingData = { }
     
     var showNoPhoneNumberToast = { }
+        
+    /// 해당되는 장소가 즐겨찾기에 위치한 장소라면 true, 아니라면 false를 리턴하는 클로저
+    var configureButtonForFavoritePlace: (Bool) -> Void = { _ in }
     
 // MARK: - Initializer
     
@@ -84,6 +93,9 @@ class ResultMapViewModel: MapDataType {
     func filterResults(with id: Int) -> KeywordDocument {
         let targetPlace = searchResults.filter({ $0.id == String(id) }).first
         self.targetPlace = targetPlace
+        self.checkIfPlaceIsFavoritePlace(placeID: targetPlace!.id!) { [weak self] isFavoritePlace in
+            self?.isFavoritePlace = isFavoritePlace
+        }
         return targetPlace!
     }
     
@@ -126,15 +138,43 @@ class ResultMapViewModel: MapDataType {
         }
     }
     
+    /// 즐겨찾기에 추가 된 경우 : 즐겨찾기 해제 / 즐겨찾기 추가 안된 경우 : 즐겨찾기 추가
+    func changeFavoritePlaceStatus() {
+        guard let targetPlace = targetPlace,
+              let placeID = targetPlace.id else { return }
+        if isFavoritePlace {
+            FirestoreManager.shared.removeFavorite(placeID: placeID) { [weak self] in
+                self?.isFavoritePlace = false
+            }
+        } else {
+            FirestoreManager.shared.addFavoritePlace(place: targetPlace) { [weak self] in
+                self?.isFavoritePlace = true
+            }
+        }
+    }
+    
     /// 해당되는 장소에 대한 세부 데이터 받아오기 (별점, 리뷰, 사진 등)
     private func setTargetPlaceData() {
         guard let placeId = self.targetPlace?.id else { return }
         
         self.startFetchingData()
         
-        HttpClient.shared.getReviewForCertainPlace(placeCode: placeId) { [weak self] placeData in
+        HttpClient.shared.getDetailDataForTargetPlace(placeCode: placeId) { [weak self] placeData in
             self?.targetPlaceData = placeData
             self?.finishFetchingData()
+        }
+    }
+    
+    private func checkIfPlaceIsFavoritePlace(placeID: String, completion: @escaping (Bool) -> Void) {
+        FirestoreManager.shared.checkIfIsFavoritePlace(placeID: placeID) { isFavoritePlace in
+            if !isFavoritePlace {
+                completion(false)
+                return
+            }
+            if isFavoritePlace {
+                completion(true)
+                return
+            }
         }
     }
 }

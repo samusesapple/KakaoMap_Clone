@@ -7,7 +7,7 @@
 
 import UIKit
 
-class MenuOptionsButton: UIButton {
+final class MenuOptionsButton: UIButton {
 
     init(text: String) {
         super.init(frame: .zero)

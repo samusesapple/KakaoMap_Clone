@@ -202,7 +202,7 @@ extension SearchResultViewController: UITableViewDelegate, UITableViewDataSource
 //            cell.setPlaceReviewData(data: placeData)
 //        }
         
-        HttpClient.shared.getReviewForCertainPlace(placeCode: viewModel.searchResults[indexPath.row].id!) { placeData in
+        HttpClient.shared.getDetailDataForTargetPlace(placeCode: viewModel.searchResults[indexPath.row].id!) { placeData in
             DispatchQueue.main.async {
                 cell.setPlaceReviewData(data: placeData)
                 print("셀 크롤링한 데이터로 세팅 완료")
