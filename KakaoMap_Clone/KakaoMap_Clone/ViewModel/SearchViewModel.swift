@@ -53,6 +53,8 @@ class SearchViewModel: MapDataType {
     var showProgressHUD = { }
     var dismissProgressHUD = { }
     
+    var showNoResultToast = { }
+    
     /// 결과 보여주는 ResultVC 띄우기
     var presentResultVC = { }
     
@@ -152,7 +154,6 @@ class SearchViewModel: MapDataType {
     
     /// 유저 현재 좌표 기준으로 특정 키워드에 해당되는 장소 제공 / address부분에 원하는 지역 입력하면 해당 지역의 키워드 장소 제공
     private func search(keyword: String, currentCoordinate: Coordinate, address: String = "", completion: @escaping ([KeywordDocument]) -> Void) {
-//        self.mapAddress = address
         
         HttpClient.shared.searchKeyword(with: address == "" ? keyword : "\(address) \(keyword)",
                                         coordinate: currentCoordinate,
@@ -160,9 +161,9 @@ class SearchViewModel: MapDataType {
             guard let keywordResultArray = result?.documents,
                   let totalPage = result?.meta?.pageableCount,
                       totalPage > 1 else {
-                print("SearchVM - 결과 없음")
-
+                // 검색 결과 존재하지 않음에 대한 토스트 메세지 띄우기
                 self?.dismissProgressHUD()
+                self?.showNoResultToast()
                 return
             }
             

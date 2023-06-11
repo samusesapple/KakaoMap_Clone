@@ -68,6 +68,8 @@ class ResultMapViewModel: MapDataType {
     var startFetchingData = { }
     var finishFetchingData = { }
     
+    var showNoPhoneNumberToast = { }
+    
 // MARK: - Initializer
     
     init(mapData: MapDataType) {
@@ -111,6 +113,7 @@ class ResultMapViewModel: MapDataType {
         guard let phoneNumber = targetPlace?.phone,
               phoneNumber.map({ $0 }).count > 9 else {
             // 전화번호 없음을 알리는 토스트 메세지 띄우기
+            showNoPhoneNumberToast()
             print("전화번호 없음")
             return
         }

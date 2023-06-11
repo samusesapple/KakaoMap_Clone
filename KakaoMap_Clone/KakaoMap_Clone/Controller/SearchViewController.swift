@@ -7,6 +7,7 @@
 
 import UIKit
 import JGProgressHUD
+import Toast_Swift
 
 final class SearchViewController: UIViewController {
     
@@ -96,6 +97,18 @@ final class SearchViewController: UIViewController {
         
         viewModel.setSearchBar = { [weak self] keyword in
             self?.searchBarView.getSearchBar().text = keyword
+        }
+        
+        viewModel.showNoResultToast = { [weak self] in
+            var style = ToastStyle()
+            style.backgroundColor = .gray
+            style.messageColor = .white
+            style.messageAlignment = .center
+            
+            self?.view.makeToast("검색 결과가 존재하지 않습니다. 맞춤법을 확인해주세요.",
+                                 duration: 1.5,
+                                 position: .center,
+                                 style: style)
         }
     }
     

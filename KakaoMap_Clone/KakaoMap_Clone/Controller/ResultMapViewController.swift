@@ -8,6 +8,7 @@
 import UIKit
 import CoreLocation
 import JGProgressHUD
+import Toast_Swift
 
 protocol ResultMapViewControllerDelegate: AnyObject {
     func needToShowSearchVC()
@@ -207,6 +208,17 @@ final class ResultMapViewController: UIViewController, CLLocationManagerDelegate
         
         viewModel.finishFetchingData = { [weak progressHud] in
             progressHud?.dismiss()
+        }
+        
+        viewModel.showNoPhoneNumberToast = { [weak self] in
+            var style = ToastStyle()
+            style.backgroundColor = .darkGray
+            style.messageColor = .white
+            
+            self?.view.makeToast("전화번호가 제공되지 않은 업체입니다.",
+                                 duration: 1.5,
+                                 position: .center,
+                                 style: style)
         }
     }
     
