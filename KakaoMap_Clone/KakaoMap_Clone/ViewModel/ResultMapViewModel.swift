@@ -14,7 +14,7 @@ class ResultMapViewModel: MapDataType {
     var mapCoordinate: Coordinate
     private let currentCoordinate: Coordinate = UserDefaultsManager.shared.currentCoordinate
     
-    var mapAddress: String
+    var mapAddress: CurrentAddressDocument
     
     var searchResults: [KeywordDocument]
     var searchHistories: [SearchHistory]?

@@ -20,10 +20,10 @@ class MainViewModel {
         }
     }
 
-    private var mapAddress: String? {
+    private var mapAddress: CurrentAddressDocument? {
         didSet {
             // 지도 주소 값 바뀔 때마다 mainVC UI 세팅하기
-            setAddress(mapAddress!)
+            setAddress(mapAddress!.addressName!)
         }
     }
     
@@ -54,13 +54,12 @@ class MainViewModel {
         self.mapCoordinate = mapCoordinate
 
         HttpClient.shared.getLocationAddress(coordinate: mapCoordinate) { [weak self] result in
-            guard let document = result.documents?.first,
-                  let address = document.addressName else {
+            guard let document = result.documents?.first else {
                 print("SearchVM - document 없음")
                 return
             }
             // 지도 주소 변수 초기화하기
-            self?.mapAddress = address
+            self?.mapAddress = document
         }
     }
     

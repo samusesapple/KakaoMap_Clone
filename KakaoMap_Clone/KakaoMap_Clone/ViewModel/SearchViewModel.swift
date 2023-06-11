@@ -22,7 +22,7 @@ class SearchViewModel: MapDataType {
     
     var mapCoordinate: Coordinate
     
-    var mapAddress: String
+    var mapAddress: CurrentAddressDocument
     
     var searchResults: [KeywordDocument] = [] {
         didSet {
@@ -64,7 +64,7 @@ class SearchViewModel: MapDataType {
     
 // MARK: - Initializer
     
-    init(mapCoordinate: Coordinate, mapAddress: String) {
+    init(mapCoordinate: Coordinate, mapAddress: CurrentAddressDocument) {
         self.mapCoordinate = mapCoordinate
         self.mapAddress = mapAddress
     }
@@ -105,36 +105,54 @@ class SearchViewModel: MapDataType {
     
     /// 키워드로 검색하기
     func getKeywordSearchResult(with keyword: String) {
+        guard let mapAddress = mapAddress.addressName else { return }
         showProgressHUD()
         self.keyword = keyword
         
-        if currentCoordinate.totalCoordinate != mapCoordinate.totalCoordinate {
-            HttpClient.shared.getLocationAddress(coordinate: mapCoordinate) { [weak self] result in
-                guard let address = result.documents?[0].addressName,
-                      let currentCoordinate = self?.currentCoordinate
-                else {
-                    print(#function)
-                    self?.dismissProgressHUD()
-                    return
-                }
-                
+        checkIfCityIsSame { [weak self] isSameCity in
+            guard let currentCoordinate = self?.currentCoordinate else { return }
+            // 현재 위치를 기준으로 검색 (키워드에 장소 정보는 안들어감)
+            if !isSameCity {
                 self?.search(keyword: keyword,
                              currentCoordinate: currentCoordinate,
-                             address: address, completion: { keywordResultArray in
+                             address: mapAddress,
+                             completion: { keywordResultArray in
+                    print("지도 위치 기준으로 검색")
+                    self?.dismissProgressHUD()
                     self?.searchResults = keywordResultArray
                 })
+                return
             }
-        } else {
-            search(keyword: keyword,
-                   currentCoordinate: currentCoordinate) { [weak self] keywordResultArray in
-                self?.searchResults = keywordResultArray
+            // 이동한 지역에 있는 장소를 키워드로 검색
+            if isSameCity {
+                self?.search(keyword: keyword,
+                             currentCoordinate: currentCoordinate,
+                             completion: { keywordResultArray in
+                    print("현재 위치 기준으로 검색")
+                    self?.dismissProgressHUD()
+                    self?.searchResults = keywordResultArray
+                })
+                return
+            }
+        }
+    }
+    
+    /// 지도상의 위치와 현재 유저가 위치한 시, 구가 다른지 확인 -> 다를 경우 false, 같을 경우 true 값을 받게 됨
+    private func checkIfCityIsSame(completion: @escaping (Bool) -> Void) {
+        HttpClient.shared.getLocationAddress(coordinate: currentCoordinate) { [weak self] result in
+            guard let document = result.documents,
+                  let city = document[0].cityName  else { return }
+            if self?.mapAddress.cityName == city {
+                completion(true)
+            } else {
+                completion(false)
             }
         }
     }
     
     /// 유저 현재 좌표 기준으로 특정 키워드에 해당되는 장소 제공 / address부분에 원하는 지역 입력하면 해당 지역의 키워드 장소 제공
     private func search(keyword: String, currentCoordinate: Coordinate, address: String = "", completion: @escaping ([KeywordDocument]) -> Void) {
-        self.mapAddress = address
+//        self.mapAddress = address
         
         HttpClient.shared.searchKeyword(with: address == "" ? keyword : "\(address) \(keyword)",
                                         coordinate: currentCoordinate,

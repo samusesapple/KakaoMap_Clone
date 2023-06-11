@@ -12,7 +12,7 @@ protocol MapDataType {
     
     var mapCoordinate: Coordinate { get set }
     
-    var mapAddress: String { get set }
+    var mapAddress: CurrentAddressDocument { get set }
     
     var searchResults: [KeywordDocument] { get set }
     

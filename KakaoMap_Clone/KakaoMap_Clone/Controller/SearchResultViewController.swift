@@ -201,6 +201,7 @@ extension SearchResultViewController: UITableViewDelegate, UITableViewDataSource
 //        viewModel.getTargetPlaceData(index: indexPath.row) { placeData in
 //            cell.setPlaceReviewData(data: placeData)
 //        }
+        
         HttpClient.shared.getReviewForCertainPlace(placeCode: viewModel.searchResults[indexPath.row].id!) { placeData in
             DispatchQueue.main.async {
                 cell.setPlaceReviewData(data: placeData)
