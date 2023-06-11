@@ -9,6 +9,7 @@ import UIKit
 import CoreLocation
 import JGProgressHUD
 import Toast_Swift
+import FirebaseAuth
 
 protocol ResultMapViewControllerDelegate: AnyObject {
     func needToShowSearchVC()
@@ -312,6 +313,10 @@ final class ResultMapViewController: UIViewController, CLLocationManagerDelegate
     }
     
     @objc private func saveButtonTapped() {
+        guard let _ = Auth.auth().currentUser else {
+            view.makeToast(message: "즐겨찾기 기능은 로그인 유저에게만 제공됩니다.")
+            return
+        }
         print("Firebase에 장소 저장")
         self.saveButton.setImage(UIImage(named: "save.filled")?
             .withRenderingMode(.alwaysTemplate)

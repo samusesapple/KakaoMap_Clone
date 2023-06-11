@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import FirebaseAuth
 
 final class ResultMapViewModel: MapDataType {
     
@@ -166,6 +167,7 @@ final class ResultMapViewModel: MapDataType {
     }
     
     private func checkIfPlaceIsFavoritePlace(placeID: String, completion: @escaping (Bool) -> Void) {
+        guard let _ = Auth.auth().currentUser else { return }
         FirestoreManager.shared.checkIfIsFavoritePlace(placeID: placeID) { isFavoritePlace in
             if !isFavoritePlace {
                 completion(false)
