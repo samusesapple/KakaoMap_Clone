@@ -14,7 +14,8 @@ class CustomSearchBarView: UIView {
     private let menuButton: UIButton = {
         let button = UIButton(type: .system)
         button.tintColor = .black
-        button.setImage(UIImage(systemName: "list.bullet"), for: .normal)
+        button.setImage(UIImage(named: "menu")?.withRenderingMode(.alwaysTemplate)
+            .resizeImage(targetSize: CGSize(width: 30, height: 30)), for: .normal)
         return button
     }()
     
@@ -107,9 +108,11 @@ class CustomSearchBarView: UIView {
             searchBar.searchTextField.clearButtonMode = .never
             menuButton.tintColor = #colorLiteral(red: 0.03529411765, green: 0.5176470588, blue: 0.8901960784, alpha: 1)
             if !isDetailView {
-                menuButton.setImage(UIImage(systemName: "map.fill"), for: .normal)
+                menuButton.setImage(UIImage(named: "map")?.withRenderingMode(.alwaysTemplate)
+                    .resizeImage(targetSize: CGSize(width: 30, height: 30)), for: .normal)
             } else if isDetailView {
-                menuButton.setImage(UIImage(systemName: "list.bullet"), for: .normal)
+                menuButton.setImage(UIImage(named: "menu")?.withRenderingMode(.alwaysTemplate)
+                    .resizeImage(targetSize: CGSize(width: 30, height: 30)), for: .normal)
             }
         }
     }

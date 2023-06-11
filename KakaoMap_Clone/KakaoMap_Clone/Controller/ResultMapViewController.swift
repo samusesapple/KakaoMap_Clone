@@ -142,7 +142,7 @@ final class ResultMapViewController: UIViewController, CLLocationManagerDelegate
     private lazy var buttonStackView: UIStackView = {
         let spaceLine = UIView()
         spaceLine.backgroundColor = .lightGray.withAlphaComponent(0.5)
-        spaceLine.setDimensions(height: 35, width: 1)
+        spaceLine.setDimensions(height: 38, width: 1)
        let sv = UIStackView(arrangedSubviews: [UIView(),
                                                phoneCallButton,
                                                spaceLine,
@@ -283,6 +283,15 @@ final class ResultMapViewController: UIViewController, CLLocationManagerDelegate
         viewModel.headerFooterIsHidden.toggle()
     }
     
+    @objc private func saveButtonTapped() {
+        print("Firebase에 장소 저장")
+    }
+    
+    @objc private func phoneCallButtonTapped() {
+        print("해당 장소에 전화하기")
+        viewModel.callToTargetPlace()
+    }
+    
     // MARK: - Helpers
     
     private func setAutolayout() {
@@ -319,6 +328,9 @@ final class ResultMapViewController: UIViewController, CLLocationManagerDelegate
         accuracyAlignmentButton.addTarget(self, action: #selector(accuracyAlignmentButtonTapped), for: .touchUpInside)
         
         navigationButton.addTarget(self, action: #selector(navigationButtonTapped), for: .touchUpInside)
+        
+        phoneCallButton.addTarget(self, action: #selector(phoneCallButtonTapped), for: .touchUpInside)
+        saveButton.addTarget(self, action: #selector(saveButtonTapped), for: .touchUpInside)
     }
     
     private func setSearchBarAndAlignmentButtons() {

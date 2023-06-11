@@ -106,6 +106,24 @@ class ResultMapViewModel: MapDataType {
         }
     }
  
+    /// 선택된 장소에 해당하는 전화번호에 전화하기
+    func callToTargetPlace() {
+        guard let phoneNumber = targetPlace?.phone,
+              phoneNumber.map({ $0 }).count > 9 else {
+            // 전화번호 없음을 알리는 토스트 메세지 띄우기
+            print("전화번호 없음")
+            return
+        }
+        if let phoneCallURL = URL(string: "tel://\(phoneNumber)") {
+        print("전화번호: \(phoneNumber)")
+          let application:UIApplication = UIApplication.shared
+          if (application.canOpenURL(phoneCallURL)) {
+              application.open(phoneCallURL, options: [:], completionHandler: nil)
+          }
+        }
+    }
+    
+    /// 해당되는 장소에 대한 세부 데이터 받아오기 (별점, 리뷰, 사진 등)
     private func setTargetPlaceData() {
         guard let placeId = self.targetPlace?.id else { return }
         
