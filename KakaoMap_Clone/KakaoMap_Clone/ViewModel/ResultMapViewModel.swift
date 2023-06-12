@@ -64,6 +64,15 @@ final class ResultMapViewModel: MapDataType {
             selectedPlace = newValue
         }
     }
+    
+    /// 유저의 로그인 상태
+    var userLoginStatus: Bool = {
+        guard let _ = Auth.auth().currentUser else {
+            return false
+        }
+        return true
+    }()
+    
     /// header footer view 화면에 보이도록 애니메이션 효과 주기
     var needToShowHeaderAndFooterView = { }
     
@@ -167,7 +176,7 @@ final class ResultMapViewModel: MapDataType {
     }
     
     private func checkIfPlaceIsFavoritePlace(placeID: String, completion: @escaping (Bool) -> Void) {
-        guard let _ = Auth.auth().currentUser else { return }
+        guard userLoginStatus == true else { return }
         FirestoreManager.shared.checkIfIsFavoritePlace(placeID: placeID) { isFavoritePlace in
             if !isFavoritePlace {
                 completion(false)

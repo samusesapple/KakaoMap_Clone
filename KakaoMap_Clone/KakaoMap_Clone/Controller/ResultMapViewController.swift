@@ -315,7 +315,7 @@ final class ResultMapViewController: UIViewController, CLLocationManagerDelegate
     }
     
     @objc private func saveButtonTapped() {
-        guard let _ = Auth.auth().currentUser else {
+        guard viewModel.userLoginStatus == true else {
             view.makeToast(message: "즐겨찾기 기능은 로그인 유저에게만 제공됩니다.")
             return
         }
