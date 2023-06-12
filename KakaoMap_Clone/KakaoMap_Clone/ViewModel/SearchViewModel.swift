@@ -31,7 +31,7 @@ final class SearchViewModel: MapDataType {
         }
     }
     
-    var targetPlaceData: CertainPlaceData?
+    var targetPlaceData: TargetPlaceDetail?
 
     var searchHistories: [SearchHistory]?
 

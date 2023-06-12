@@ -300,20 +300,6 @@ final class ResultMapViewController: UIViewController, CLLocationManagerDelegate
         viewModel.headerFooterIsHidden.toggle()
     }
     
-    private func configureButtonUIforFavoritePlace(_ isFavoritePlace: Bool) {
-        if !isFavoritePlace {
-            self.saveButton.setImage(UIImage(named: "save")?
-                .withRenderingMode(.alwaysTemplate)
-                .resizeImage(targetSize: CGSize(width: 25, height: 25)), for: .normal)
-            self.saveButton.tintColor = .gray
-        } else {
-            self.saveButton.setImage(UIImage(named: "save.filled")?
-                .withRenderingMode(.alwaysTemplate)
-                .resizeImage(targetSize: CGSize(width: 25, height: 25)), for: .normal)
-            self.saveButton.tintColor = #colorLiteral(red: 0.9450980392, green: 0.768627451, blue: 0.05882352941, alpha: 1)
-        }
-    }
-    
     @objc private func saveButtonTapped() {
         guard viewModel.userLoginStatus == true else {
             view.makeToast(message: "즐겨찾기 기능은 로그인 유저에게만 제공됩니다.")
@@ -468,6 +454,21 @@ final class ResultMapViewController: UIViewController, CLLocationManagerDelegate
             }
         }
     }
+    
+    private func configureButtonUIforFavoritePlace(_ isFavoritePlace: Bool) {
+        if !isFavoritePlace {
+            self.saveButton.setImage(UIImage(named: "save")?
+                .withRenderingMode(.alwaysTemplate)
+                .resizeImage(targetSize: CGSize(width: 25, height: 25)), for: .normal)
+            self.saveButton.tintColor = .gray
+        } else {
+            self.saveButton.setImage(UIImage(named: "save.filled")?
+                .withRenderingMode(.alwaysTemplate)
+                .resizeImage(targetSize: CGSize(width: 25, height: 25)), for: .normal)
+            self.saveButton.tintColor = #colorLiteral(red: 0.9450980392, green: 0.768627451, blue: 0.05882352941, alpha: 1)
+        }
+    }
+    
 }
 
 // MARK: - MTMapViewDelegate

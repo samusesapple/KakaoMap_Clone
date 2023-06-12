@@ -7,7 +7,7 @@
 import Foundation
 
 // MARK: - CertainPlaceData
-struct CertainPlaceData: Codable {
+struct TargetPlaceDetail: Codable {
     let basicInfo: BasicInfo?
     let comment: Comment?
     let menuInfo: MenuInfo?

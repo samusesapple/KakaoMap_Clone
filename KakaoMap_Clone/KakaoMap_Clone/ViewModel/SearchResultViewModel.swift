@@ -22,7 +22,7 @@ final class SearchResultViewModel: MapDataType {
         
     var searchHistories: [SearchHistory]? = []
     
-    var targetPlaceData: CertainPlaceData?
+    var targetPlaceData: TargetPlaceDetail?
 
     private var selectedPlace: KeywordDocument?
     
@@ -63,7 +63,7 @@ final class SearchResultViewModel: MapDataType {
         
 // MARK: - Methods
     
-    func getTargetPlaceData(index: Int, completion: @escaping(CertainPlaceData) -> Void) {
+    func getTargetPlaceData(index: Int, completion: @escaping(TargetPlaceDetail) -> Void) {
         showHud()
         guard let placeID = searchResults[index].id else { return }
         HttpClient.shared.getDetailDataForTargetPlace(placeCode: placeID) { [weak self] placeData in

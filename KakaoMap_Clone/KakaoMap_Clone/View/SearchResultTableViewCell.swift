@@ -118,7 +118,7 @@ class SearchResultTableViewCell: UITableViewCell {
         distanceLabel.text = MeasureFormatter.measureDistance(distance: distance)
     }
     
-    func setPlaceReviewData(data: CertainPlaceData) {
+    func setPlaceReviewData(data: TargetPlaceDetail) {
         guard let reviewCount = data.comment?.scorecnt,
               let totalScore = data.comment?.scoresum,
               let placeAddress = addressLabel.text else {

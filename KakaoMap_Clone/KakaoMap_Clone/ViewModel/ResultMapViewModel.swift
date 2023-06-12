@@ -26,7 +26,7 @@ final class ResultMapViewModel: MapDataType {
         }
     }
     
-    var targetPlaceData: CertainPlaceData? {
+    var targetPlaceData: TargetPlaceDetail? {
         didSet {
             needToSetTargetPlaceUI()
         }
