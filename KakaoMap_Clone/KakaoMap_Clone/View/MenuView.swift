@@ -31,11 +31,14 @@ final class MenuView: UIView {
         return view
     }()
     
-    private let reviewButton = MenuOptionsButton(text: "작성한 후기")
+    private let reviewButton = MenuOptionsButton(text: "작성한 후기",
+                                                 image: UIImage(systemName: "pencil.line"))
     
-    private let favoritesButton = MenuOptionsButton(text: "즐겨찾기")
+    private let favoritesButton = MenuOptionsButton(text: "즐겨찾기",
+                                                    image: UIImage(systemName: "star"))
     
-    private let loginButton = MenuOptionsButton(text: "로그인")
+    private let loginButton = MenuOptionsButton(text: "로그인",
+                                                image: UIImage(systemName: "person.circle"))
     
     private lazy var buttonsStackView: UIStackView = {
         let stack = UIStackView()

@@ -16,6 +16,11 @@ final class AuthViewModel {
     
     var finishedLogin: () -> Void = { }
     
+    var showLoginToast: () -> Void = { }
+    
+    var startFetching: () -> Void = { }
+    var finishFetching: () -> Void = { }
+    
 // MARK: - Methods
     
     /// 카카오톡 로그인하기
@@ -84,11 +89,32 @@ final class AuthViewModel {
     
     /// 유저 로그인 여부 확인 후, 유저 UserDefaults에 저장된 유저 정보 제공 (이메일, 이름, uid, 카카오 로그인 여부)
      func checkUserLoginStatus() -> UserDefaultsModel? {
-        guard let user = FirebaseAuth.Auth.auth().currentUser else {
+        guard let _ = FirebaseAuth.Auth.auth().currentUser else {
             print("유저 로그인 안됨")
             return nil
         }
         return UserDefaultsManager.shared.getUserInfo()
+    }
+    
+    /// 유저 즐겨찾기 리스트 받기
+    func getFavoriteViewController(completion: @escaping (FavoriteViewController) -> Void) {
+        guard let _ = checkUserLoginStatus() else {
+            print("로그인 필요")
+            showLoginToast()
+            return
+        }
+        self.startFetching()
+
+        FirestoreManager.shared.getFavoritePlaceList { [weak self] places in
+            self?.finishFetching()
+            
+            let favoriteViewModel = FavoriteViewModel(placeList: places)
+            let favoriteVC = FavoriteViewController()
+            favoriteVC.viewModel = favoriteViewModel
+            DispatchQueue.main.async {
+                completion(favoriteVC)
+            }
+        }
     }
     
 // MARK: - Helpers

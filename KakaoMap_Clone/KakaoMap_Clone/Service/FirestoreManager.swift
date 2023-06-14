@@ -50,7 +50,7 @@ struct FirestoreManager {
     }
     
     /// 즐겨찾기 취소
-    func removeFavorite(placeID: String, completion: @escaping () -> Void) {
+    func removeFavorite(placeID: String, completion: @escaping ([FavoritePlace]) -> Void) {
         let userUID = UserDefaultsManager.shared.getUserInfo().uid
         COLLECTION_FAVORITE.document(userUID).collection("favorites").document(placeID).delete { error in
             if let error = error {
@@ -58,7 +58,9 @@ struct FirestoreManager {
                 return
             }
             print("삭제 성공")
-            completion()
+            getFavoritePlaceList { favoritePlaces in
+                completion(favoritePlaces)
+            }
         }
     }
     

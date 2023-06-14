@@ -30,32 +30,34 @@ class SearchResultTableViewCell: UITableViewCell {
     
     private let reviewView = ReviewStarView()
     
-    private let distanceLabel: UILabel = {
-        let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 13)
-        label.textColor = .darkGray
-        return label
-    }()
+    private let distanceAddressStackView = DistanceAddressStackView()
     
-    private let addressLabel: UILabel = {
-        let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 13)
-        label.textColor = .darkGray
-        label.numberOfLines = 1
-        return label
-    }()
-    
-    private lazy var hStackView: UIStackView = {
-        let middleView = UIView()
-        middleView.setDimensions(height: 13, width: 1)
-        middleView.backgroundColor = .lightGray.withAlphaComponent(0.5)
-        
-        let stack = UIStackView(arrangedSubviews: [distanceLabel, middleView, addressLabel])
-        stack.alignment = .leading
-        stack.spacing = 6
-        stack.distribution = .fill
-        return stack
-    }()
+//    private let distanceLabel: UILabel = {
+//        let label = UILabel()
+//        label.font = UIFont.systemFont(ofSize: 13)
+//        label.textColor = .darkGray
+//        return label
+//    }()
+//    
+//    private let addressLabel: UILabel = {
+//        let label = UILabel()
+//        label.font = UIFont.systemFont(ofSize: 13)
+//        label.textColor = .darkGray
+//        label.numberOfLines = 1
+//        return label
+//    }()
+//    
+//    private lazy var hStackView: UIStackView = {
+//        let middleView = UIView()
+//        middleView.setDimensions(height: 13, width: 1)
+//        middleView.backgroundColor = .lightGray.withAlphaComponent(0.5)
+//        
+//        let stack = UIStackView(arrangedSubviews: [distanceLabel, middleView, addressLabel])
+//        stack.alignment = .leading
+//        stack.spacing = 6
+//        stack.distribution = .fill
+//        return stack
+//    }()
     
     private let placeImageView: UIImageView = {
         let iv = UIImageView()
@@ -82,8 +84,6 @@ class SearchResultTableViewCell: UITableViewCell {
         placeImageView.image = UIImage(named: "imagePlaceholder")
         placeNameLabel.text = nil
         placeCategoryLabel.text = nil
-        distanceLabel.text = nil
-        addressLabel.text = nil
     }
     
     // MARK: - Helpers
@@ -103,25 +103,23 @@ class SearchResultTableViewCell: UITableViewCell {
         placeImageView.setDimensions(height: 85, width: 85)
         placeImageView.anchor(bottom: contentView.bottomAnchor, right: contentView.rightAnchor, paddingBottom: 18, paddingRight: 17)
         
-        contentView.addSubview(hStackView)
-        hStackView.anchor(top: reviewView.bottomAnchor, left: contentView.leftAnchor, paddingTop: 8, paddingLeft: 17)
-        
-        addressLabel.anchor(right: placeImageView.leftAnchor, paddingRight: 12)
-    }
+        contentView.addSubview(distanceAddressStackView)
+        distanceAddressStackView.anchor(top: reviewView.bottomAnchor, left: contentView.leftAnchor,right: placeImageView.leftAnchor, paddingTop: 8, paddingLeft: 17, paddingRight: 10)
+        }
     
     func configureUIwithData(data: KeywordDocument) {
         placeNameLabel.text = data.placeName
-        addressLabel.text = data.roadAddressName
+        distanceAddressStackView.addressLabel.text = data.roadAddressName
         placeCategoryLabel.text = data.categoryGroupName
         
         guard let distance = data.distance else { return }
-        distanceLabel.text = MeasureFormatter.measureDistance(distance: distance)
+        distanceAddressStackView.distanceLabel.text = MeasureFormatter.measureDistance(distance: distance)
     }
     
     func setPlaceReviewData(data: TargetPlaceDetail) {
         guard let reviewCount = data.comment?.scorecnt,
               let totalScore = data.comment?.scoresum,
-              let placeAddress = addressLabel.text else {
+              let placeAddress = distanceAddressStackView.addressLabel.text else {
             guard let reviewNotBlocked = data.comment?.reviewWriteBlocked else {
                 reviewView.configureBannedReviewUI()
                 guard let imageURL = data.basicInfo?.mainphotourl else {
@@ -152,7 +150,7 @@ class SearchResultTableViewCell: UITableViewCell {
         reviewView.configureUI(averagePoint: averageReviewPoint, reviewCount: reviewCount)
         // 상세 주소 있는 경우 세팅
         if let detailAddress = data.basicInfo?.address?.addrdetail {
-            addressLabel.text = placeAddress + " \(detailAddress)"
+            distanceAddressStackView.addressLabel.text = placeAddress + " \(detailAddress)"
         }
         // 이미지 있는 경우 세팅
         guard let imageURL = data.basicInfo?.mainphotourl else {

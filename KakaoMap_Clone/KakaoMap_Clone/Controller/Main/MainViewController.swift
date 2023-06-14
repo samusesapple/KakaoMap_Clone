@@ -74,6 +74,10 @@ final class MainViewController: UIViewController {
         }
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        navigationController?.isNavigationBarHidden = true
+    }
+    
     // MARK: - Actions
     
     @objc private func showCurrentLocation() {
@@ -136,11 +140,11 @@ final class MainViewController: UIViewController {
     
     // 위치 사용 권한 허용 체크 및 locationManager 세팅 및 searchBar - placeholder 현재 위치로 세팅
     private func setLocationManager() {
-        LocationManager.shared.delegate = self
-        LocationManager.shared.desiredAccuracy = kCLLocationAccuracyBest  // 배터리 최적화
         if LocationManager.shared.authorizationStatus != .authorizedAlways || LocationManager.shared.authorizationStatus != .authorizedWhenInUse {
             LocationManager.shared.requestWhenInUseAuthorization()
         }
+        LocationManager.shared.delegate = self
+        LocationManager.shared.desiredAccuracy = kCLLocationAccuracyBest  // 배터리 최적화
         
         DispatchQueue.global(qos: .background).async { [weak self] in
             self?.mapView.currentLocationTrackingMode = .onWithoutHeading
@@ -187,15 +191,7 @@ extension MainViewController: CLLocationManagerDelegate {
         case .authorizedAlways, .authorizedWhenInUse:
             print("GPS 권한설정 허용됨")
             LocationManager.shared.startUpdatingLocation()
-            DispatchQueue.global(qos: .background).async { [weak self] in
-                self?.mapView.showCurrentLocationMarker = true
-                self?.mapView.currentLocationTrackingMode = .onWithoutHeading
-                self?.mapView.showCurrentLocationMarker = true
-                DispatchQueue.main.async {
-                    self?.mapView.setMapCenter(MTMapPoint(geoCoord: MTMapPointGeo(latitude: LocationManager.shared.location?.coordinate.latitude ?? 37.576568, longitude: LocationManager.shared.location?.coordinate.longitude ?? 127.029148)), animated: true)
-                }
-            }
-            
+
         case .restricted, .notDetermined:
             print("GPS 권한설정 X")
             LocationManager.shared.requestWhenInUseAuthorization()
@@ -235,10 +231,10 @@ extension MainViewController: MTMapViewDelegate {
 // MARK: - MenuViewControllerDelegate
 
 extension MainViewController: MenuViewControllerDelegate {
-    func needToOpenMenuView() {
-        viewModel.needToOpenMenu = true
+    func needToPresent(viewController: FavoriteViewController) {
+        self.navigationController?.pushViewController(viewController, animated: true)
     }
-    
+
     func needToCloseMenuView() {
         viewModel.needToOpenMenu = false
     }

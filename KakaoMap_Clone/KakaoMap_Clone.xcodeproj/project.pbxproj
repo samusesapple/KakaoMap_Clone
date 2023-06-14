@@ -13,6 +13,10 @@
 		F10BA34C2A1C829500CCBE9D /* MenuCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10BA34B2A1C829500CCBE9D /* MenuCollectionViewCell.swift */; };
 		F10BA34E2A1C9D0C00CCBE9D /* SearchViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10BA34D2A1C9D0C00CCBE9D /* SearchViewModel.swift */; };
 		F10BA3502A1CBAA500CCBE9D /* HttpClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10BA34F2A1CBAA500CCBE9D /* HttpClient.swift */; };
+		F13C69E72A39BE3A0015CFE8 /* DistanceAddressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F13C69E62A39BE3A0015CFE8 /* DistanceAddressView.swift */; };
+		F13C69E92A39C4600015CFE8 /* FavoriteViewTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F13C69E82A39C4600015CFE8 /* FavoriteViewTableViewCell.swift */; };
+		F13C69EB2A39C6E80015CFE8 /* FavoriteViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F13C69EA2A39C6E80015CFE8 /* FavoriteViewController.swift */; };
+		F13C69ED2A39CA520015CFE8 /* FavoriteViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F13C69EC2A39CA520015CFE8 /* FavoriteViewModel.swift */; };
 		F15A4F832A31BA8900793806 /* LoginAlertViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F15A4F822A31BA8900793806 /* LoginAlertViewController.swift */; };
 		F161EF182A25CC8500ED9709 /* SearchModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F161EF172A25CC8500ED9709 /* SearchModel.swift */; };
 		F161EF1A2A25ECDA00ED9709 /* ResultMapViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F161EF192A25ECDA00ED9709 /* ResultMapViewModel.swift */; };
@@ -101,6 +105,10 @@
 		F10BA34B2A1C829500CCBE9D /* MenuCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuCollectionViewCell.swift; sourceTree = "<group>"; };
 		F10BA34D2A1C9D0C00CCBE9D /* SearchViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewModel.swift; sourceTree = "<group>"; };
 		F10BA34F2A1CBAA500CCBE9D /* HttpClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HttpClient.swift; sourceTree = "<group>"; };
+		F13C69E62A39BE3A0015CFE8 /* DistanceAddressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DistanceAddressView.swift; sourceTree = "<group>"; };
+		F13C69E82A39C4600015CFE8 /* FavoriteViewTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteViewTableViewCell.swift; sourceTree = "<group>"; };
+		F13C69EA2A39C6E80015CFE8 /* FavoriteViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteViewController.swift; sourceTree = "<group>"; };
+		F13C69EC2A39CA520015CFE8 /* FavoriteViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteViewModel.swift; sourceTree = "<group>"; };
 		F15A4F822A31BA8900793806 /* LoginAlertViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginAlertViewController.swift; sourceTree = "<group>"; };
 		F161EF172A25CC8500ED9709 /* SearchModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchModel.swift; sourceTree = "<group>"; };
 		F161EF192A25ECDA00ED9709 /* ResultMapViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultMapViewModel.swift; sourceTree = "<group>"; };
@@ -221,6 +229,16 @@
 			path = Pods;
 			sourceTree = "<group>";
 		};
+		F13C69E52A39BE1A0015CFE8 /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				F10BA3452A1C5BD300CCBE9D /* CustomSearchBarView.swift */,
+				F1B8F7612A1DD87500D3B45E /* ReviewStarView.swift */,
+				F13C69E62A39BE3A0015CFE8 /* DistanceAddressView.swift */,
+			);
+			path = Components;
+			sourceTree = "<group>";
+		};
 		F1954A7F2A2B190E00E9D0C7 /* Protocols */ = {
 			isa = PBXGroup;
 			children = (
@@ -245,6 +263,7 @@
 				F1F211312A19CC76000443AB /* MainViewController.swift */,
 				F1EBC3232A2587AA0043CC46 /* MenuViewController.swift */,
 				F15A4F822A31BA8900793806 /* LoginAlertViewController.swift */,
+				F13C69EA2A39C6E80015CFE8 /* FavoriteViewController.swift */,
 			);
 			path = Main;
 			sourceTree = "<group>";
@@ -392,12 +411,12 @@
 			isa = PBXGroup;
 			children = (
 				F1F211382A19CC77000443AB /* LaunchScreen.storyboard */,
-				F10BA3452A1C5BD300CCBE9D /* CustomSearchBarView.swift */,
+				F13C69E52A39BE1A0015CFE8 /* Components */,
 				F1B8F7652A1E097F00D3B45E /* CustomAlignmentAlertView.swift */,
-				F1B8F7612A1DD87500D3B45E /* ReviewStarView.swift */,
 				F10BA34B2A1C829500CCBE9D /* MenuCollectionViewCell.swift */,
 				F1B8F75F2A1DCBD800D3B45E /* SearchResultTableViewCell.swift */,
 				F1954A822A2C644200E9D0C7 /* MenuView.swift */,
+				F13C69E82A39C4600015CFE8 /* FavoriteViewTableViewCell.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -420,6 +439,7 @@
 			isa = PBXGroup;
 			children = (
 				F1DB31412A33208600B6D513 /* AuthViewModel.swift */,
+				F13C69EC2A39CA520015CFE8 /* FavoriteViewModel.swift */,
 				F1B8F7582A1D98D300D3B45E /* MainViewModel.swift */,
 				F10BA34D2A1C9D0C00CCBE9D /* SearchViewModel.swift */,
 				F1B8F75D2A1DA08100D3B45E /* SearchResultViewModel.swift */,
@@ -602,9 +622,12 @@
 				F10BA3502A1CBAA500CCBE9D /* HttpClient.swift in Sources */,
 				F1954A812A2B192100E9D0C7 /* MapDataType.swift in Sources */,
 				F10BA34A2A1C762A00CCBE9D /* SearchViewController.swift in Sources */,
+				F13C69ED2A39CA520015CFE8 /* FavoriteViewModel.swift in Sources */,
 				F1B8F7592A1D98D300D3B45E /* MainViewModel.swift in Sources */,
 				F10BA34C2A1C829500CCBE9D /* MenuCollectionViewCell.swift in Sources */,
+				F13C69E72A39BE3A0015CFE8 /* DistanceAddressView.swift in Sources */,
 				F1954A862A2C66C500E9D0C7 /* MenuOptionsButton.swift in Sources */,
+				F13C69EB2A39C6E80015CFE8 /* FavoriteViewController.swift in Sources */,
 				F1A92BA82A1F1CD800A3AA8F /* ResultMapViewController.swift in Sources */,
 				F1B8F7572A1CE5E900D3B45E /* KeywordResult.swift in Sources */,
 				F1A7C09D2A31D49400F96041 /* NotificationManager.swift in Sources */,
@@ -617,6 +640,7 @@
 				F10BA34E2A1C9D0C00CCBE9D /* SearchViewModel.swift in Sources */,
 				F1EBC31C2A2311870043CC46 /* MeasureFormatter.swift in Sources */,
 				F199002A2A359E880002AD2A /* FirestoreManager.swift in Sources */,
+				F13C69E92A39C4600015CFE8 /* FavoriteViewTableViewCell.swift in Sources */,
 				F19BA7902A1F7B1F003F348C /* UIImage+Extension.swift in Sources */,
 				F1B8F7662A1E097F00D3B45E /* CustomAlignmentAlertView.swift in Sources */,
 				F1EBC3242A2587AA0043CC46 /* MenuViewController.swift in Sources */,
@@ -795,7 +819,7 @@
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_OBJC_BRIDGING_HEADER = "/Users/samsung/Desktop/KakaoMap_Clone/KakaoMap_Clone/KakaoMap-Bridge-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "/Users/samsung/Documents/GitHub/KakaoMap_Clone/KakaoMap_Clone/KakaoMap_Clone/KakaoMap-Bridge-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
@@ -838,7 +862,7 @@
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_OBJC_BRIDGING_HEADER = "/Users/samsung/Desktop/KakaoMap_Clone/KakaoMap_Clone/KakaoMap-Bridge-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "/Users/samsung/Documents/GitHub/KakaoMap_Clone/KakaoMap_Clone/KakaoMap_Clone/KakaoMap-Bridge-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};

@@ -153,7 +153,7 @@ final class ResultMapViewModel: MapDataType {
         guard let targetPlace = targetPlace,
               let placeID = targetPlace.id else { return }
         if isFavoritePlace {
-            FirestoreManager.shared.removeFavorite(placeID: placeID) { [weak self] in
+            FirestoreManager.shared.removeFavorite(placeID: placeID) { [weak self] _ in
                 self?.isFavoritePlace = false
             }
         } else {

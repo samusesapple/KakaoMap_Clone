@@ -11,6 +11,7 @@ import FirebaseAuth
 
 protocol MenuViewControllerDelegate: AnyObject {
     func needToCloseMenuView()
+    func needToPresent(viewController: FavoriteViewController)
 }
 
 final class MenuViewController: UIViewController {
@@ -37,8 +38,11 @@ final class MenuViewController: UIViewController {
         
         view.addGestureRecognizer(UIPanGestureRecognizer(target: self, action: #selector(menuViewStartedSwiping)))
         
-//        viewModel.logoutForTesting()
         checkUserLoginStatusAndConfigureUI()
+        
+        viewModel.showLoginToast = { [weak self] in
+            self?.view.makeToast(message: "로그인이 필요합니다.")
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -55,6 +59,7 @@ final class MenuViewController: UIViewController {
     
     override func viewWillDisappear(_ animated: Bool) {
         NotificationCenter.default.removeObserver(self)
+        
     }
     
     // MARK: - Actions
@@ -72,7 +77,7 @@ final class MenuViewController: UIViewController {
     }
     
     @objc private func userDidLogout(_ notification: Notification) {
-        menuView.userLoginButton.setTitle("로그인", for: .normal)
+        menuView.userLoginButton.setTitle("   로그인", for: .normal)
         menuView.configureUIwithUserData(imageURL: nil, name: nil)
     }
     
@@ -81,7 +86,12 @@ final class MenuViewController: UIViewController {
     }
     
     @objc private func favoritesButtonTapped() {
-        print("즐겨찾기한 장소 리스트 보여주기")
+        self.delegate?.needToCloseMenuView()
+
+        viewModel.getFavoriteViewController { [weak self] favoriteVC in
+            // mainVC에게 favoriteVC 보여주도록 시켜야함
+            self?.delegate?.needToPresent(viewController: favoriteVC)
+        }
     }
     
     @objc private func loginButtonTapped() {
@@ -154,12 +164,12 @@ final class MenuViewController: UIViewController {
         guard let isKakaoLogin = UserDefaultsManager.shared.isKakaoLogin() else { return }
         if isKakaoLogin {
             print("카카오로 세팅")
-            menuView.userLoginButton.setTitle("카카오계정 로그아웃", for: .normal)
+            menuView.userLoginButton.setTitle("   카카오계정 로그아웃", for: .normal)
             menuView.configureUIwithUserData(imageURL: imageURL, name: name)
             return
         }
         print("구글로 세팅")
-        menuView.userLoginButton.setTitle("로그아웃", for: .normal)
+        menuView.userLoginButton.setTitle("   로그아웃", for: .normal)
         menuView.configureUIwithUserData(imageURL: imageURL, name: name)
     }
 }
