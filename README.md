@@ -23,10 +23,19 @@
 <br>
 <br>
 
+### Firestore 데이터 구조
+---
+<img width="593" alt="image" src="https://github.com/samusesapple/KakaoMap_Clone/assets/126672733/583dcc8c-717e-4f00-9817-c6efbb2d7c69">
+<img width="506" alt="image" src="https://github.com/samusesapple/KakaoMap_Clone/assets/126672733/0eb33c6d-1070-4702-a3f6-b6c52c5dd54c">
+<br>
+<br>
+<br>
+
 ### 구현 기능
 ---
 * 카카오, 구글 로그인
-* 키워드로 지도 중심 장소 검색
+* 현재위치/지도 중심 장소 검색 및 거리순/정확도순 정렬 
+* 키워드 선택하여 검색
 * 해당 장소로 가는 자동차 경로 확인
 * 해당 장소에 대한 카카오맵 평점 및 리뷰 확인
 * 로그인 유저에게 장소 즐겨찾기 기능 제공
@@ -46,7 +55,8 @@
 ![ezgif-2-1c036475d4](https://github.com/samusesapple/KakaoMap_Clone/assets/126672733/dcbabaf0-e162-4a5f-ac95-c828ebf58fa1)
 ![ezgif-2-9cb88c6691](https://github.com/samusesapple/KakaoMap_Clone/assets/126672733/e9b3c3b7-369d-4560-86c5-f3adabec683e)
 ![ezgif-2-e6e930e99e](https://github.com/samusesapple/KakaoMap_Clone/assets/126672733/7a787eef-29fd-47f2-bf3f-7fde3edeeb5d)
-
+![ezgif-1-117834d42c](https://github.com/samusesapple/KakaoMap_Clone/assets/126672733/496a09e9-9c8a-44fd-9614-766ee3b170ec)
+![ezgif-1-a57f5fe2d0](https://github.com/samusesapple/KakaoMap_Clone/assets/126672733/1a302aa5-424c-4a54-b970-36a49fda6580)
 
 
 <br>
