@@ -36,9 +36,11 @@
 * 카카오, 구글 로그인
 * 현재위치/지도 중심 장소 검색 및 거리순/정확도순 정렬 
 * 키워드 선택하여 검색
+* 검색 기록으로 재검색 혹은 장소 정보 확인
 * 해당 장소로 가는 자동차 경로 확인
 * 해당 장소에 대한 카카오맵 평점 및 리뷰 확인
 * 로그인 유저에게 장소 즐겨찾기 기능 제공
+* 전화번호 제공 업체인 경우 업체 전화 기능
 <br>
 <br>
 <br>
@@ -58,8 +60,7 @@
 ![ezgif-1-117834d42c](https://github.com/samusesapple/KakaoMap_Clone/assets/126672733/496a09e9-9c8a-44fd-9614-766ee3b170ec)
 ![ezgif-1-a57f5fe2d0](https://github.com/samusesapple/KakaoMap_Clone/assets/126672733/1a302aa5-424c-4a54-b970-36a49fda6580)
 ![ezgif-5-9c972ac2e1](https://github.com/samusesapple/KakaoMap_Clone/assets/126672733/d901ebdd-4390-4082-9918-23bca6a5e1e1)
-
-
+![ezgif-5-bc3add653b](https://github.com/samusesapple/KakaoMap_Clone/assets/126672733/3b7f4f26-ab58-42f4-a600-677b0d617ba3)
 <br>
 <br>
 <br>
