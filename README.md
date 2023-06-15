@@ -57,6 +57,7 @@
 ![ezgif-2-e6e930e99e](https://github.com/samusesapple/KakaoMap_Clone/assets/126672733/7a787eef-29fd-47f2-bf3f-7fde3edeeb5d)
 ![ezgif-1-117834d42c](https://github.com/samusesapple/KakaoMap_Clone/assets/126672733/496a09e9-9c8a-44fd-9614-766ee3b170ec)
 ![ezgif-1-a57f5fe2d0](https://github.com/samusesapple/KakaoMap_Clone/assets/126672733/1a302aa5-424c-4a54-b970-36a49fda6580)
+![ezgif-5-9c972ac2e1](https://github.com/samusesapple/KakaoMap_Clone/assets/126672733/d901ebdd-4390-4082-9918-23bca6a5e1e1)
 
 
 <br>
