@@ -45,6 +45,7 @@ struct FirestoreManager {
         COLLECTION_FAVORITE.document(userUID).collection("favorites").getDocuments { snapshot, error in
             guard let data = snapshot else { return }
             let favorites = data.documents.map { FavoritePlace(dictionary: $0.data()) }
+            
             completion(favorites)
         }
     }

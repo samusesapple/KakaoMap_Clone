@@ -13,6 +13,14 @@ class FavoriteViewController: UIViewController {
     
     var viewModel: FavoriteViewModel!
     
+    private var placeHolder: UILabel = {
+        let label = UILabel()
+        label.text = "즐겨찾기 한 장소가 없습니다."
+        label.font = UIFont.systemFont(ofSize: 15, weight: .semibold)
+        label.tintColor = .darkGray.withAlphaComponent(0.7)
+        return label
+    }()
+    
     private lazy var tableView: UITableView = {
         let tv = UITableView()
         tv.backgroundColor = .white
@@ -29,19 +37,19 @@ class FavoriteViewController: UIViewController {
         super.viewDidLoad()
         
         title = "즐겨찾기"
-        self.navigationController?.isNavigationBarHidden = false
         navigationController?.navigationBar.tintColor = .black
         
         view.backgroundColor = .white
-        view.addSubview(tableView)
-        tableView.anchor(top: view.safeAreaLayoutGuide.topAnchor,
-                         left: view.leftAnchor,
-                         bottom: view.bottomAnchor,
-                         right: view.rightAnchor)
         
+        setAutolayout()
+
         viewModel.needToReloadTableView = { [weak self] in
             self?.tableView.reloadData()
         }
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        self.navigationController?.isNavigationBarHidden = false
     }
 
     // MARK: - Actions
@@ -52,6 +60,13 @@ class FavoriteViewController: UIViewController {
 
     // MARK: - Helpers
     
+    func setAutolayout() {
+        view.addSubview(tableView)
+        tableView.anchor(top: view.safeAreaLayoutGuide.topAnchor,
+                         left: view.leftAnchor,
+                         bottom: view.bottomAnchor,
+                         right: view.rightAnchor)
+    }
 }
 
 // MARK: - UITableViewDelegate

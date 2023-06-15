@@ -58,6 +58,12 @@ class FavoriteViewTableViewCell: UITableViewCell {
             print("place id 없음")
             return
         }
+        starButton.setImage(UIImage(systemName: "star")?
+            .withRenderingMode(.alwaysTemplate)
+            .resizeImage(targetSize: CGSize(width: 30,
+                                            height: 30)),
+                        for: .normal)
+        starButton.tintColor = .gray
         viewModel.removeFavorite(id: id)
     }
     
@@ -87,7 +93,7 @@ class FavoriteViewTableViewCell: UITableViewCell {
     func configureUIwithData(_ data: FavoritePlace) {
         placeNameLabel.text = data.placeName
         distanceAddressStackView.addressLabel.text = data.address
+//        distanceAddressStackView.distanceLabel.text = MeasureFormatter.measureDistance(distance: distance)
         self.id = data.placeID
-        print(id)
     }
 }

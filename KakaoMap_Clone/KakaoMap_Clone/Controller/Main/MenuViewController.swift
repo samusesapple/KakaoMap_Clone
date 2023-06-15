@@ -64,8 +64,6 @@ final class MenuViewController: UIViewController {
     
     // MARK: - Actions
     
-
-    
     // 유저 로그인 한 경우 view 세팅
     @objc private func userDidLogIn(_ notification: Notification) {
         print("userDidLogIn - MenuVC 감지함")
@@ -80,15 +78,10 @@ final class MenuViewController: UIViewController {
         menuView.userLoginButton.setTitle("   로그인", for: .normal)
         menuView.configureUIwithUserData(imageURL: nil, name: nil)
     }
-    
-    @objc private func reviewButtonTapped() {
-        print("작성한 리뷰 리스트 띄우기")
-    }
-    
-    @objc private func favoritesButtonTapped() {
-        self.delegate?.needToCloseMenuView()
 
+    @objc private func favoritesButtonTapped() {
         viewModel.getFavoriteViewController { [weak self] favoriteVC in
+            self?.delegate?.needToCloseMenuView()
             // mainVC에게 favoriteVC 보여주도록 시켜야함
             self?.delegate?.needToPresent(viewController: favoriteVC)
         }
@@ -154,7 +147,6 @@ final class MenuViewController: UIViewController {
     }
     
     private func setMenuViewButtonActions() {
-        menuView.checkReviewButton.addTarget(self, action: #selector(reviewButtonTapped), for: .touchUpInside)
         menuView.favoritePlaceButton.addTarget(self, action: #selector(favoritesButtonTapped), for: .touchUpInside)
         menuView.userLoginButton.addTarget(self, action: #selector(loginButtonTapped), for: .touchUpInside)
     }

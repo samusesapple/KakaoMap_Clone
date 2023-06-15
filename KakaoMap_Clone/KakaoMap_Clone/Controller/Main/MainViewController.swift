@@ -82,12 +82,16 @@ final class MainViewController: UIViewController {
     
     @objc private func showCurrentLocation() {
         print("현재 위치로 이동")
-        if LocationManager.shared.authorizationStatus == .authorizedAlways || LocationManager.shared.authorizationStatus == .authorizedWhenInUse {
-            guard let currentCoordinate = LocationManager.shared.location?.coordinate else { return }
-            let currentLongtitude = currentCoordinate.longitude
-            let currentLatitude = currentCoordinate.latitude
-            mapView.setMapCenter(MTMapPoint(geoCoord: MTMapPointGeo(latitude: currentLatitude,
-                                                                    longitude: currentLongtitude)), animated: true)
+        DispatchQueue.global(qos: .userInteractive).async { [weak self] in
+            if LocationManager.shared.authorizationStatus == .authorizedAlways || LocationManager.shared.authorizationStatus == .authorizedWhenInUse {
+                guard let currentCoordinate = LocationManager.shared.location?.coordinate else { return }
+                let currentLongtitude = currentCoordinate.longitude
+                let currentLatitude = currentCoordinate.latitude
+                DispatchQueue.main.async {
+                    self?.mapView.setMapCenter(MTMapPoint(geoCoord: MTMapPointGeo(latitude: currentLatitude,
+                                                                            longitude: currentLongtitude)), animated: true)
+                }
+            }
         }
     }
     

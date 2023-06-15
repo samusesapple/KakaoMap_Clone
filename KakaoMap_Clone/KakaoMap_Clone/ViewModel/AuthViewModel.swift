@@ -107,7 +107,7 @@ final class AuthViewModel {
 
         FirestoreManager.shared.getFavoritePlaceList { [weak self] places in
             self?.finishFetching()
-            
+
             let favoriteViewModel = FavoriteViewModel(placeList: places)
             let favoriteVC = FavoriteViewController()
             favoriteVC.viewModel = favoriteViewModel
@@ -116,7 +116,7 @@ final class AuthViewModel {
             }
         }
     }
-    
+
 // MARK: - Helpers
     /// 카카오톡 로그인 된 유저 정보를 Firebase에 저장 / Firebase 앱 로그인 실행, NotificationCenter에 카카오톡 로그인 알리기
     private func setFirebaseForKakaoTalkLogin() {

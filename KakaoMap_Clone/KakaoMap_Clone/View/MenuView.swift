@@ -31,9 +31,6 @@ final class MenuView: UIView {
         return view
     }()
     
-    private let reviewButton = MenuOptionsButton(text: "작성한 후기",
-                                                 image: UIImage(systemName: "pencil.line"))
-    
     private let favoritesButton = MenuOptionsButton(text: "즐겨찾기",
                                                     image: UIImage(systemName: "star"))
     
@@ -42,7 +39,7 @@ final class MenuView: UIView {
     
     private lazy var buttonsStackView: UIStackView = {
         let stack = UIStackView()
-        [reviewButton, favoritesButton, loginButton].forEach(stack.addArrangedSubview)
+        [favoritesButton, loginButton].forEach(stack.addArrangedSubview)
         stack.axis = .vertical
         stack.alignment = .leading
         stack.spacing = 16
@@ -108,11 +105,7 @@ final class MenuView: UIView {
             }
         }
     }
-    
-    var checkReviewButton: MenuOptionsButton {
-        return reviewButton
-    }
-    
+
     var favoritePlaceButton: MenuOptionsButton {
         return favoritesButton
     }

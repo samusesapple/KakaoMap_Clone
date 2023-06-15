@@ -15,15 +15,14 @@ final class DetailViewController: UIViewController {
     
     private let webView = WKWebView()
     
-    private let request: URLRequest?
+    private let url: URL?
     
     private let progressHud = JGProgressHUD(style: .dark)
     
     // MARK: - Lifecycle
     
     init(url: String) {
-        let url = URL(string: url)!
-        self.request = URLRequest(url: url)
+        self.url = URL(string: url)
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -48,12 +47,12 @@ final class DetailViewController: UIViewController {
     private func configureWebview() {
         webView.uiDelegate = self
         webView.navigationDelegate = self
-        DispatchQueue.main.async { [weak self] in
-            guard let request = self?.request,
-                  let webView = self?.webView else { return }
-            self?.webView.load(request)
-            self?.progressHud.show(in: webView)
-        }
+        
+        guard let url = url else { return }
+        
+        let request = URLRequest(url: url)
+        webView.load(request)
+        progressHud.show(in: webView)
     }
 }
 
@@ -61,8 +60,6 @@ final class DetailViewController: UIViewController {
 
 extension DetailViewController: WKUIDelegate, WKNavigationDelegate {
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
-        DispatchQueue.main.async { [weak self] in
-            self?.progressHud.dismiss()
-        }
+        progressHud.dismiss()
     }
 }

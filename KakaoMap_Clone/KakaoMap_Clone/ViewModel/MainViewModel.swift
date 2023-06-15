@@ -16,7 +16,6 @@ final class MainViewModel {
     private var menuOpened: Bool = false {
         didSet {
             self.menuOpened == true ? self.openMenu() : self.closeMenu()
-            print(menuOpened)
         }
     }
 

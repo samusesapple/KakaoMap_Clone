@@ -162,6 +162,7 @@ extension SearchViewController: UICollectionViewDelegate, UICollectionViewDataSo
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         // 지도 위치 근처에 있는 선택된 카테고리의 장소 보여줘야함
         print(viewModel.getSearchOptions[indexPath.row].title)
+        viewModel.getKeywordSearchResult(with: viewModel.getSearchOptions[indexPath.row].title)
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
