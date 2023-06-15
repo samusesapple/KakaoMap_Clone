@@ -25,7 +25,7 @@
 
 ### Firestore 데이터 구조
 ---
-<img width="593" alt="image" src="https://github.com/samusesapple/KakaoMap_Clone/assets/126672733/583dcc8c-717e-4f00-9817-c6efbb2d7c69">
+<img width="489" alt="image" src="https://github.com/samusesapple/KakaoMap_Clone/assets/126672733/6b635208-1f82-46b0-8174-b46021a15b66">
 <img width="506" alt="image" src="https://github.com/samusesapple/KakaoMap_Clone/assets/126672733/0eb33c6d-1070-4702-a3f6-b6c52c5dd54c">
 <br>
 <br>
