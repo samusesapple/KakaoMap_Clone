@@ -11,14 +11,28 @@
 ### 사용 기술, 라이브러리 및 프레임워크
 ---
 * Core Location
+* Firebase (Firestore & Auth)
+* UserDefaults
 * KakaoMap API SDK (DaumMap)
 * MVVM
+* WKWebView
 * Alamofire
 * JGProgressHUD
+* Toast
 <br>
 <br>
 <br>
 
+### 구현 기능
+---
+* 카카오, 구글 로그인
+* 키워드로 지도 중심 장소 검색
+* 해당 장소로 가는 자동차 경로 확인
+* 해당 장소에 대한 카카오맵 평점 및 리뷰 확인
+* 로그인 유저에게 장소 즐겨찾기 기능 제공
+<br>
+<br>
+<br>
 
 ### 진행 기간
 ---
@@ -27,6 +41,17 @@
 <br>
 <br>
 
+### 시연 영상
+---
+![ezgif-2-1c036475d4](https://github.com/samusesapple/KakaoMap_Clone/assets/126672733/dcbabaf0-e162-4a5f-ac95-c828ebf58fa1)
+![ezgif-2-9cb88c6691](https://github.com/samusesapple/KakaoMap_Clone/assets/126672733/e9b3c3b7-369d-4560-86c5-f3adabec683e)
+![ezgif-2-e6e930e99e](https://github.com/samusesapple/KakaoMap_Clone/assets/126672733/7a787eef-29fd-47f2-bf3f-7fde3edeeb5d)
+
+
+
+<br>
+<br>
+<br>
 
 ### 문제해결 및 과정
 ---
