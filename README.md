@@ -11,10 +11,13 @@
 ### 사용 기술, 라이브러리 및 프레임워크
 ---
 * Core Location
+* Firebase (Firestore & Auth)
+* UserDefaults
 * KakaoMap API SDK (DaumMap)
 * MVVM
 * Alamofire
 * JGProgressHUD
+* Toast
 <br>
 <br>
 <br>
